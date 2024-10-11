@@ -31,6 +31,11 @@ SESSION_CONFIGS = [
         app_sequence=['practice_round'],
         num_demo_participants=3,
     ),
+    dict(
+        name='search_game',
+        app_sequence=['word_search'],
+        num_demo_participants=2,
+    ),
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
