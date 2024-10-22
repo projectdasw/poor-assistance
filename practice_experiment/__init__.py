@@ -167,7 +167,7 @@ def live_method(player: Player, data):
 
 class Game3(Page):
     live_method = live_method
-    # timeout_seconds = 3 * 60
+    timeout_seconds = 30
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -177,6 +177,10 @@ class Game3(Page):
     @staticmethod
     def js_vars(player: Player):
         return dict(my_id=player.id_in_group)
+
+
+class Game3_Results(Page):
+    pass
 # COGNITIVE TASK DEVOPS
 
 class Game4(Page):
@@ -194,4 +198,4 @@ class Results(Page):
         player.payoff = player.endowment
 
 
-page_sequence = [Intro, Game1, Game2, Confirmation_Cognitive_Task, Buytime, WaitToStart, Game3, Game4, Results]
+page_sequence = [Intro, Game1, Game2, Confirmation_Cognitive_Task, Buytime, WaitToStart, Game3, Game3_Results, Game4, Results]
