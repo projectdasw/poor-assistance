@@ -1,0 +1,47 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Sesi Latihan</span>
+{{ endblock }}
+
+{{ block content }}
+    <div class="badge bg-warning text-dark mb-2">
+        <h5 class="m-0">Latihan</h5>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header">
+            <span class="badge bg-success fs-6 me-2">
+                Periode : {{ player.round_number }}
+            </span>
+            <span class="badge bg-danger fs-6">
+                Endowment Anda: {{ player.endowment }}
+            </span>
+        </div>
+        <div class="card-body">
+            <h1 class="card-title">Cognitive Task</h1>
+            <div class="card-text">
+                <p>
+                    Pada ronde 3 ini, Anda akan bermain permainan menghitung jumlah angka/huruf tertentu yang muncul
+                    dari sebaron angka/huruf. Anda akan mendapatkan lama waktu bermain tergantung alokasi yang anda
+                    lakukan.
+                </p>
+                <p>
+                    Biaya waktu per 20 detik permainan adalah 10
+                </p>
+                <div class="mt-4">
+                    <span>Apakah Anda bersedia mengikuti Cognitive Task?</span>
+                    <div class="mt-1">
+                        <button class="otree-btn-next btn btn-outline-primary">
+                            Ya
+                        </button>
+                        <button class="btn btn-outline-danger">Tidak</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{{ endblock }}

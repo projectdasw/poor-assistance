@@ -1,0 +1,19 @@
+{% block styles  %}
+    <link href="{% static 'fontawesome/css/all.css' %}" rel="stylesheet"/>
+    <link href="{% static 'fontawesome/css/solid.css' %}" rel="stylesheet"/>
+    <link href="{% static 'fontawesome/css/brands.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Selamat Datang di Eksperimen</span>
+{{ endblock }}
+
+{{ block content }}
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <h2 class="mt-3">Selamat Datang di Eksperimen</h2>
+        <button class="otree-btn-next btn btn-outline-primary">
+            <span>Lanjut</span>
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </div>
+{{ endblock }}

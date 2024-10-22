@@ -1,0 +1,26 @@
+{% block styles  %}
+    <link href="{% static 'fontawesome/css/all.css' %}" rel="stylesheet"/>
+    <link href="{% static 'fontawesome/css/solid.css' %}" rel="stylesheet"/>
+    <link href="{% static 'fontawesome/css/brands.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Sesi Latihan</span>
+{{ endblock }}
+
+{{ block content }}
+    <div class="d-flex flex-column align-items-start mb-2">
+        <div class="badge bg-warning text-dark mb-2">
+            <h5 class="m-0">Latihan</h5>
+        </div>
+        <span class="badge bg-success fs-6">
+            Periode : {{ player.round_number }}
+        </span>
+        Endowment Anda saat ini: {{ player.endowment }}
+        Endowment pada periode ini akan digunakan pada periode berikutnya
+    </div>
+    <button class="otree-btn-next btn btn-outline-primary">
+        <span>Lanjut</span>
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+{{ endblock }}

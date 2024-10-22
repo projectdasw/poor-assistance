@@ -1,40 +1,53 @@
 from os import environ
 
 SESSION_CONFIGS = [
-     dict(
-         name='anp',
-         app_sequence=['anp'],
-         num_demo_participants=3,
-     ),
+    dict(
+        display_name='Poor Assistance Experiment',
+        name='poor_assistance_experiment',
+        app_sequence=['practice_experiment'],
+        num_demo_participants=1
+    ),
+
+    # dict(
+    #     display_name='Risky Option Game',
+    #     name='risky_option',
+    #     app_sequence=['risky_option'],
+    #     num_demo_participants=1
+    # ),
+    #  dict(
+    #      name='anp',
+    #      app_sequence=['anp'],
+    #      num_demo_participants=3,
+    #  ),
     dict(
          name='image',
          app_sequence=['image_rating'],
-         num_demo_participants=3,
+         num_demo_participants=1,
      ),
-    dict(
-        name='instructions',
-        app_sequence=['instructions'],
-        num_demo_participants=3,
-    ),
-    dict(
-        name='survey',
-        app_sequence=['survey'],
-        num_demo_participants=3,
-    ),
-    dict(
-        name='sustainability',
-        app_sequence=['instructions','practice_round','image_rating','survey'],
-        num_demo_participants=3,
-    ),
-    dict(
-        name='practice',
-        app_sequence=['practice_round'],
-        num_demo_participants=3,
-    ),
+    # dict(
+    #     name='instructions',
+    #     app_sequence=['instructions'],
+    #     num_demo_participants=3,
+    # ),
+    # dict(
+    #     name='survey',
+    #     app_sequence=['survey'],
+    #     num_demo_participants=3,
+    # ),
+    # dict(
+    #     name='sustainability',
+    #     app_sequence=['instructions','practice_round','image_rating','survey'],
+    #     num_demo_participants=3,
+    # ),
+    # dict(
+    #     name='practice',
+    #     app_sequence=['practice_round'],
+    #     num_demo_participants=3,
+    # ),
     dict(
         name='search_game',
         app_sequence=['word_search'],
-        num_demo_participants=2,
+        num_demo_participants=1,
     ),
 ]
 

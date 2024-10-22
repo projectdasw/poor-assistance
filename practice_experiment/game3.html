@@ -1,0 +1,127 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Sesi Latihan</span>
+{{ endblock }}
+
+{{ block content }}
+    <div class="badge bg-warning text-dark mb-2">
+        <h5 class="m-0">Latihan</h5>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header">
+            <span class="badge bg-success fs-6 me-2">
+                Periode : {{ player.round_number }}
+            </span>
+            <span class="badge bg-primary fs-6 me-2">
+                Ronde : 3
+            </span>
+            <span class="badge bg-danger fs-6">
+                Endowment Anda: {{ player.endowment }}
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="card-title">
+                <h1>Cognitive Task - Word Search</h1>
+                <div class="alert alert-success" role="alert">
+                    Petunjuk : Cari Kata dan Susun Kata
+                </div>
+            </div>
+            <div class="card-text">
+                <div class="d-flex flex-row justify-content-center">
+                    <table class="table table-bordered text-center w-25 me-3">
+                        {{ for row in board }}
+                        <tr>
+                            {{ for char in row }}
+                            <td>{{ char }}</td>
+                            {{ endfor }}
+                        </tr>
+                        {{ endfor }}
+                    </table>
+                    <div>
+                        <div class="input-group mb-1">
+                            <input type="text" class="form-control" id="word" minlength="3"
+                                   placeholder="Masukkan Kata" aria-label="Masukkan Kata" required>
+                            <button class="btn btn-outline-success" type="button" onclick="sendWord()">
+                                Kirim
+                            </button>
+                        </div>
+                        <div id="news"></div>
+                        <strong class="mt-1">Kata yang telah ditemukan</strong>
+                        <p id="found-words"></p>
+                        <strong>Nilai Anda</strong>
+                        <table class="table table-striped">
+                            <tbody id="scores-tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    <button class="otree-btn-next btn btn-outline-primary">-->
+<!--        <span>Lanjut</span>-->
+<!--        <i class="fa-solid fa-chevron-right"></i>-->
+<!--    </button>-->
+    <script>
+        let input = document.getElementById('word');
+        let newsDiv = document.getElementById('news');
+        let scoresBody = document.getElementById('scores-tbody');
+        let foundWords = document.getElementById('found-words');
+
+        input.addEventListener("keydown", function (event) {
+            newsDiv.innerHTML = '';
+            if (event.key === "Enter") {
+                sendWord();
+            }
+        });
+
+        function sendWord() {
+            if (input.reportValidity()) {
+                liveSend({'word': input.value});
+                input.value = '';
+            }
+        }
+
+        function showNews(word, msg, success) {
+            let color = success ? 'green' : 'red';
+            newsDiv.innerHTML = `<span style="color: ${color}">${word}: ${msg}</span>`;
+        }
+
+        function liveRecv(data) {
+            if ('news' in data) {
+                let {success, is_in_board, already_found, is_in_lexicon, word, id_in_group} = data.news;
+                if (id_in_group === js_vars.my_id) {
+                    let feedback;
+                    if (success) {
+                        feedback = '+1';
+                    } else if (already_found) {
+                        feedback = 'Already found';
+                    } else if (!is_in_board) {
+                        feedback = 'Not in board';
+                    } else {
+                        feedback = 'Not in lexicon';
+                    }
+                    showNews(word, feedback, success);
+                }
+            }
+            scoresBody.innerHTML = '';
+            for (let [id_in_group, score] of data.scores) {
+                let playerName = `Player ${id_in_group}`;
+                if (id_in_group === js_vars.my_id) {
+                    playerName += ' (you)';
+                }
+                scoresBody.insertAdjacentHTML('beforeend', `<td>${score} points</td>`);
+            }
+            foundWords.innerHTML = data.found_words.join(', ');
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            liveSend({});
+    });
+</script>
+{{ endblock }}
