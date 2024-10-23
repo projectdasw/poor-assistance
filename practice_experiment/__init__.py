@@ -15,7 +15,7 @@ def load_word_list():
 class Constants(BaseConstants):
     name_in_url = 'practice_experiment'
     players_per_group = None
-    num_rounds = 10  # 10 periods
+    num_rounds = 1  # 10 periods
     initial_endowment = 100
     additional_endowment = 30
     deduction = 50
