@@ -29,11 +29,16 @@ SESSION_CONFIGS = [
     #     app_sequence=['instructions'],
     #     num_demo_participants=3,
     # ),
-    # dict(
-    #     name='survey',
-    #     app_sequence=['survey'],
-    #     num_demo_participants=3,
-    # ),
+    dict(
+        name='survey',
+        app_sequence=['survey'],
+        num_demo_participants=1,
+    ),
+    dict(
+        name='pay_random',
+        app_sequence=['pay_random'],
+        num_demo_participants=1,
+    ),
     # dict(
     #     name='sustainability',
     #     app_sequence=['instructions','practice_round','image_rating','survey'],

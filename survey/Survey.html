@@ -1,10 +1,35 @@
 {% extends "global/Page.html" %}
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Survey</span>
+{{ endblock }}
 
 {% block content %}
-    <h2>Survei terhadap Konsumsi Produk Berkelanjutan</h2>
-    <form method="post">
-        {{ formfields }}
-
-        <button type="submit">Submit</button>
-    </form>
+    <div class="card mb-3">
+        <div class="card-header">
+            <span class="badge bg-success fs-6 me-2">
+                Demographic & Survey
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="card-title">
+                <h1>Survei Eksperimen</h1>
+                <p>
+                    Silahkan isi survei dibawh ini
+                </p>
+            </div>
+            <div class="card-text">
+                {{ formfields }}
+            </div>
+        </div>
+    </div>
+    <button class="otree-btn-next btn btn-outline-primary">
+        <span>Lanjut</span>
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
 {% endblock %}
