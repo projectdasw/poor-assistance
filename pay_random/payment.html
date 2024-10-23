@@ -1,0 +1,55 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Sesi Latihan</span>
+{{ endblock }}
+
+{{ block content }}
+    <span class="badge bg-danger fs-6 mb-2">
+        Sedang dalam Tahap Front-End
+    </span>
+    <div class="card mb-3">
+        <div class="card-header">
+            <span class="badge bg-success fs-6 me-2">
+                Payment
+            </span>
+        </div>
+        <div class="card-body">
+            <h1 class="card-title">Pembayaran Anda</h1>
+            <div class="alert alert-success" role="alert">
+                Kalkulasi Perhitungan : <strong>(Jumlah Payoff Periode x 1000) + Uang Kehadiran 10000</strong>
+            </div>
+            <div class="card-text">
+                <table class="table">
+                    <thead>
+                        <th>Periode</th>
+                        <th>Payoff Periode</th>
+                        <th>Uang Kehadiran</th>
+                        <th>Total Pembayaran</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                100 x 1000 = 10000
+                            </td>
+                            <td>10000</td>
+                            <td>20000</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <span class="badge bg-primary fs-5">
+                    Pembayaran yang Anda dapatkan sebesar 20000
+                </span>
+            </div>
+        </div>
+    </div>
+    <button class="otree-btn-next btn btn-outline-primary">
+        <span>Lanjut</span>
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+{{ endblock }}
