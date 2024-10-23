@@ -40,8 +40,8 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     endowment = models.IntegerField(initial=0)
-    option_price = models.IntegerField(label='Jumlah yang ingin di investasikan')
-    option_allocation = models.IntegerField(label='Jumlah yang ingin di alokasi')
+    option_price = models.IntegerField(initial=0, label='Jumlah yang ingin di investasikan')
+    option_allocation = models.IntegerField(initial=0, label='Jumlah yang ingin di alokasi')
     score = models.IntegerField(initial=0)
 
 
@@ -180,7 +180,9 @@ class Game3(Page):
 
 
 class Game3_Results(Page):
-    pass
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        player.endowment = player.endowment + player.score
 # COGNITIVE TASK DEVOPS
 
 class Game4(Page):
@@ -198,4 +200,5 @@ class Results(Page):
         player.payoff = player.endowment
 
 
-page_sequence = [Intro, Game1, Game2, Confirmation_Cognitive_Task, Buytime, WaitToStart, Game3, Game3_Results, Game4, Results]
+page_sequence = [Intro, Game1, Game2, Confirmation_Cognitive_Task, Buytime, WaitToStart, Game3, Game3_Results, Game4,
+                 Results]
