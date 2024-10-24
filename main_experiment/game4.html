@@ -1,0 +1,93 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Sesi Latihan</span>
+{{ endblock }}
+
+{{ block content }}
+    <div class="badge bg-warning text-dark mb-2">
+        <h5 class="m-0">Latihan</h5>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header">
+            <span class="badge bg-success fs-6 me-2">
+                Periode : {{ player.round_number }}
+            </span>
+            <span class="badge bg-primary fs-6 me-2">
+                Ronde : 4
+            </span>
+            <span class="badge bg-danger fs-6">
+                Endowment Anda: {{ player.endowment }}
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="card-title">
+                <h1>ASIAN Handicap - Allocation</h1>
+                <p>
+                    Pada ronde ini, Anda memiliki kembali kesempatan untuk meningkatkan Endowment yang Anda miliki
+                    sekarang dari skema investasi sebagai berikut
+                </p>
+            </div>
+            <div class="card-text">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>Return</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Peluang</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                            <tr>
+                            <td>Alokasi</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">
+                        Isikan Alokasi sesuai kalkulasi Anda sendiri
+                    </h4>
+                    <hr>
+                    <p>
+                        <ol>
+                            <li>
+                                Jika Anda sukses, maka alokasi Anda akan dikalikan return yang tertera
+                            </li>
+                            <li>
+                                Jika Anda gagal, maka Anda mendapatkan 0 dari alokasi Anda
+                            </li>
+                        </ol>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="otree-btn-next btn btn-outline-primary">
+        <span>Lanjut</span>
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+{{ endblock }}

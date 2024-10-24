@@ -1,0 +1,121 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Sesi Latihan</span>
+{{ endblock }}
+
+{{ block content }}
+    <div class="badge bg-warning text-dark mb-2">
+        <h5 class="m-0">Latihan</h5>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header">
+            <span class="badge bg-success fs-6 me-2">
+                Periode : {{ player.round_number }}
+            </span>
+            <span class="badge bg-primary fs-6 me-2">
+                Ronde : 2
+            </span>
+            <span class="badge bg-danger fs-6">
+                Endowment Anda: {{ player.endowment }}
+            </span>
+        </div>
+        <div class="card-body">
+            <h1 class="card-title">Risky Option for Allocation</h1>
+            <div class="card-text">
+                <div id="option_allocation"></div>
+                <p>
+                    Anda dapat mengalokasikan Endowment Anda dengan bertaruh untuk mendapatkan keuntungan lebih banyak.
+                    Berikut peluang keuntungan dari investasi ini:
+                </p>
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Keuntungan 2x</h5>
+                                <p class="card-text">
+                                    Anda bisa mendapatkan 2x dari alokasi Anda dengan investasi peluang 40%
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Keuntungan 0.5x</h5>
+                                <p class="card-text">
+                                    Anda bisa mendapatkan 0.5x dari alokasi Anda dengan investasi peluang 40%
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Keuntungan 0x</h5>
+                                <p class="card-text">
+                                    Anda bisa mendapatkan 0x dari alokasi Anda dengan investasi peluang 20%
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    {{ formfields }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="otree-btn-next btn btn-outline-primary">
+        <span>Lanjut</span>
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script>
+        Highcharts.chart('option_allocation', {
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                text: ''
+            },
+            plotOptions: {
+                series: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                }
+            },
+            series: [
+                {
+                    name: '',
+                    colorByPoint: true,
+                    data: [
+                        {
+                            name: 'Keuntungan 2x',
+                            sliced: true,
+                            selected: true,
+                            y: 40
+                        },
+                        {
+                            name: 'Keuntungan 0.5x',
+                            sliced: true,
+                            selected: true,
+                            y: 40
+                        },
+                        {
+                            name: 'Keuntungan 0x',
+                            sliced: true,
+                            selected: true,
+                            y: 20
+                        },
+                    ]
+                }
+            ]
+        });
+    </script>
+{{ endblock }}
