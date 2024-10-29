@@ -42,8 +42,7 @@ class Player(BasePlayer):
     endowment = models.IntegerField(initial=0)
     option_price = models.IntegerField(initial=0, label='Jumlah yang ingin di investasikan')
     option_allocation = models.IntegerField(initial=0, label='Jumlah yang ingin di alokasi')
-    buy_time = models.IntegerField(initial=0, label='Masukkan jumlah Endowment yang ingin Anda'
-                                                    'gunakan untuk membeli waktu')
+    buy_time = models.IntegerField(initial=0, label='Masukkan jumlah Endowment yang ingin Anda gunakan untuk membeli waktu')
     score = models.IntegerField(initial=0)
     board = models.LongStringField()
 
