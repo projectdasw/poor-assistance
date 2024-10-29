@@ -33,17 +33,17 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>1</td>
+                            <td>{{ player.round }}</td>
                             <td>
-                                100 x 1000 = 10000
+                                {{ player.potential_payoff }}
                             </td>
                             <td>10000</td>
-                            <td>20000</td>
+                            <td>{{ player.payoff }}</td>
                         </tr>
                     </tbody>
                 </table>
                 <span class="badge bg-primary fs-5">
-                    Pembayaran yang Anda dapatkan sebesar 20000
+                    Pembayaran yang Anda dapatkan sebesar {{ player.payoff }}
                 </span>
             </div>
         </div>
