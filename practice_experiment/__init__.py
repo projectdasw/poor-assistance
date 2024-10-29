@@ -35,14 +35,17 @@ class Subsession(BaseSubsession):
 
 
 class Group(BaseGroup):
-    board = models.LongStringField()
+    pass
 
 
 class Player(BasePlayer):
     endowment = models.IntegerField(initial=0)
     option_price = models.IntegerField(initial=0, label='Jumlah yang ingin di investasikan')
     option_allocation = models.IntegerField(initial=0, label='Jumlah yang ingin di alokasi')
+    buy_time = models.IntegerField(initial=0, label='Masukkan jumlah Endowment yang ingin Anda'
+                                                    'gunakan untuk membeli waktu')
     score = models.IntegerField(initial=0)
+    board = models.LongStringField()
 
 
 class FoundWord(ExtraModel):
@@ -89,7 +92,25 @@ class Confirmation_Cognitive_Task(Page):
 
 
 class Buytime(Page):
-    pass
+    form_model = 'player'
+    form_fields = ['buy_time']
+
+    @staticmethod
+    def error_message(player: Player, values):
+        if values['buy_time'] > player.endowment:
+            return 'Anda tidak memiliki cukup endowment untuk membeli waktu ini.'
+        if values['buy_time'] % 10 != 0:
+            return 'Jumlah endowment yang dibelanjakan harus dalam kelipatan 10.'
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        # Memastikan input adalah kelipatan 10 dan tidak melebihi endowment yang ada
+        if player.buy_time % 10 == 0 and player.buy_time <= player.endowment:
+            player.endowment -= player.buy_time
+        else:
+            # Jika endowment 0, maka waktu pembelian adalah 0
+            player.buy_time = 0
+
 
 
 # COGNITIVE TASK DEVOPS
@@ -124,8 +145,45 @@ def load_board(board_str):
 
 
 class WaitToStart(WaitPage):
+    pass
+
+
+def live_method(player: Player, data):
+    board = player.board
+
+    if 'word' in data:
+        word = data['word'].lower()
+        is_in_board = len(word) >= 3 and word_in_board(word, load_board(board))
+        is_in_lexicon = is_in_board and word.lower() in Constants.lexicon
+        is_valid = is_in_board and is_in_lexicon
+        success = is_valid
+        news = dict(
+            word=word,
+            success=success,
+            is_in_board=is_in_board,
+            is_in_lexicon=is_in_lexicon,
+            id_in_group=player.id_in_group,
+        )
+        if success:
+            FoundWord.create(player=player, word=word)
+            player.score += 2
+    else:
+        news = {}
+    scores = [[player.id_in_group, player.score]]
+    found_words = [fw.word for fw in FoundWord.filter(player=player)]
+    return {0: dict(news=news, scores=scores, found_words=found_words)}
+
+
+class Game3(Page):
+    live_method = live_method
+
+    # Menggunakan waktu yang dibeli oleh pemain
     @staticmethod
-    def after_all_players_arrive(group: Group):
+    def get_timeout_seconds(player: Player):
+        return (player.buy_time // 10) * 20  # Setiap 10 endowment = 20 detik
+
+    @staticmethod
+    def vars_for_template(player: Player):
         rows = []
         for _ in range(Constants.dim):
             # add extra vowels
@@ -133,46 +191,8 @@ class WaitToStart(WaitPage):
                 [random.choice('AAABCDEEEEEFGHIIKLMNNOOPRRSTTUUVWXYZ') for _ in range(Constants.dim)]
             )
             rows.append(row)
-        group.board = '\n'.join(rows)
-
-
-def live_method(player: Player, data):
-    group = player.group
-    board = group.board
-
-    if 'word' in data:
-        word = data['word'].lower()
-        is_in_board = len(word) >= 3 and word_in_board(word, load_board(board))
-        is_in_lexicon = is_in_board and word.lower() in Constants.lexicon
-        is_valid = is_in_board and is_in_lexicon
-        already_found = is_valid and bool(FoundWord.filter(group=group, word=word))
-        success = is_valid and not already_found
-        news = dict(
-            word=word,
-            success=success,
-            is_in_board=is_in_board,
-            is_in_lexicon=is_in_lexicon,
-            already_found=already_found,
-            id_in_group=player.id_in_group,
-        )
-        if success:
-            FoundWord.create(group=group, word=word)
-            player.score += 2
-    else:
-        news = {}
-    scores = [[p.id_in_group, p.score] for p in group.get_players()]
-    found_words = [fw.word for fw in FoundWord.filter(group=group)]
-    return {0: dict(news=news, scores=scores, found_words=found_words)}
-
-
-class Game3(Page):
-    live_method = live_method
-    timeout_seconds = 30
-
-    @staticmethod
-    def vars_for_template(player: Player):
-        group = player.group
-        return dict(board=group.board.upper().split('\n'))
+            player.board = '\n'.join(rows)
+        return dict(board=player.board.upper().split('\n'))
 
     @staticmethod
     def js_vars(player: Player):
@@ -194,6 +214,14 @@ class Results(Page):
     def before_next_page(player: Player, timeout_happened):
         previous_player = player.in_round(player.round_number)
         player.endowment = previous_player.endowment
+
+        participant = player.participant
+
+        if player.round_number == Constants.num_rounds:
+            random_round = random.randint(1, Constants.num_rounds)
+            participant.selected_round = random_round
+            player_in_selected_round = player.in_round(random_round)
+            participant.get_payment = player_in_selected_round.payoff
 
     @staticmethod
     def vars_for_template(player: Player):
