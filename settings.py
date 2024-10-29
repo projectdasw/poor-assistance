@@ -11,7 +11,7 @@ SESSION_CONFIGS = [
         display_name='Poor Assistance Experiment (Beta)',
         name='poor_assistance_experiment',
         app_sequence=['practice_experiment', 'pay_random'],
-        num_demo_participants=1
+        num_demo_participants=3
     ),
     # dict(
     #     name='survey',
