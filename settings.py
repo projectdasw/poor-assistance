@@ -1,22 +1,28 @@
 from os import environ
 
 SESSION_CONFIGS = [
+    # dict(
+    #     display_name='Poor Assistance Experiment - Main',
+    #     name='poor_assistance_experiment',
+    #     app_sequence=['welcome_instructions', 'practice_experiment', 'main_experiment', 'survey', 'pay_random'],
+    #     num_demo_participants=1
+    # ),
     dict(
-        display_name='Poor Assistance Experiment',
+        display_name='Poor Assistance Experiment (Beta)',
         name='poor_assistance_experiment',
-        app_sequence=['practice_experiment'],
+        app_sequence=['practice_experiment', 'pay_random'],
         num_demo_participants=1
     ),
-    dict(
-        name='survey',
-        app_sequence=['survey'],
-        num_demo_participants=1,
-    ),
-    dict(
-        name='pay_random',
-        app_sequence=['pay_random'],
-        num_demo_participants=1,
-    ),
+    # dict(
+    #     name='survey',
+    #     app_sequence=['survey'],
+    #     num_demo_participants=1,
+    # ),
+    # dict(
+    #     name='pay_random',
+    #     app_sequence=['pay_random'],
+    #     num_demo_participants=1,
+    # ),
     # dict(
     #     display_name='Risky Option Game',
     #     name='risky_option',
@@ -74,6 +80,7 @@ SESSION_FIELDS = [
 
 PARTICIPANT_FIELDS = [
     'get_endowment',
+    'get_payment',
     'app_payoffs',
     'app_row',
     'expiry',
@@ -100,8 +107,8 @@ PARTICIPANT_FIELDS = [
 LANGUAGE_CODE = 'en'
 
 # e.g. EUR, GBP, CNY, JPY
-REAL_WORLD_CURRENCY_CODE = 'USD'
-USE_POINTS = True
+REAL_WORLD_CURRENCY_CODE = ''
+USE_POINTS = False
 
 DEBUG=True
 ADMIN_USERNAME = 'admin'
