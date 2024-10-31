@@ -81,6 +81,7 @@ SESSION_FIELDS = [
 PARTICIPANT_FIELDS = [
     'get_endowment',
     'get_payment',
+    'board',
     'app_payoffs',
     'app_row',
     'expiry',
