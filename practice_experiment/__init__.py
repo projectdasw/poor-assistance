@@ -3,7 +3,7 @@ import random
 from pathlib import Path
 
 doc = """
-Multiplayer word search game
+Poor Assistance Experiment
 """
 
 
@@ -19,16 +19,9 @@ class Constants(BaseConstants):
     initial_endowment = 100
     additional_endowment = 30
     deduction = 50
-    dim = 5
-    num_squares = dim * dim
-    lexicon = load_word_list()
-
-    COORDS = []
-
-    for x in range(dim):
-        for y in range(dim):
-            COORDS.append((x, y))
-
+    board_rows = 3  # Jumlah baris papan
+    board_columns = 13  # Jumlah kolom papan
+    target_character = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')  # Huruf atau angka yang dicari
 
 class Subsession(BaseSubsession):
     pass
@@ -43,14 +36,10 @@ class Player(BasePlayer):
     option_price = models.IntegerField(initial=0, label='Jumlah yang ingin di investasikan')
     option_allocation = models.IntegerField(initial=0, label='Jumlah yang ingin di alokasi')
     buy_time = models.IntegerField(initial=0, label='Masukkan jumlah Endowment yang ingin Anda gunakan untuk membeli waktu')
+    count_guess = models.IntegerField(label="Berapa kali huruf/angka muncul:")
+    actual_count = models.IntegerField(initial=0)
     score = models.IntegerField(initial=0)
-    board = models.LongStringField()
-
-
-class FoundWord(ExtraModel):
-    word = models.StringField()
-    player = models.Link(Player)
-    group = models.Link(Group)
+    current_target = models.StringField()  # Target huruf/angka yang diacak setiap putaran
 
 
 class Intro(Page):
@@ -111,69 +100,34 @@ class Buytime(Page):
             player.buy_time = 0
 
 
-
-# COGNITIVE TASK DEVOPS
-def word_in_board(word, board):
-    lengths = list(range(1, len(word) + 1))
-    paths = {_: [] for _ in lengths}
-
-    for i in range(Constants.dim):
-        for j in range(Constants.dim):
-            coord = (i, j)
-            if board[coord] == word[0]:
-                paths[1].append([coord])
-
-    for length in lengths[1:]:
-        target_char = word[length - 1]
-        for path in paths[length - 1]:
-            cur_x, cur_y = path[-1]
-            for dx in [-1, 0, 1]:
-                for dy in [-1, 0, 1]:
-                    check_coord = (cur_x + dx, cur_y + dy)
-                    if (
-                        check_coord in Constants.COORDS
-                        and board[check_coord] == target_char
-                        and check_coord not in path
-                    ):
-                        paths[length].append(path + [check_coord])
-    return bool(paths[len(word)])
-
-
-def load_board(board_str):
-    return dict(zip(Constants.COORDS, board_str.replace('\n', '').lower()))
-
-
-class WaitToStart(WaitPage):
-    pass
-
-
 def live_method(player: Player, data):
-    board = player.board
-
-    if 'word' in data:
-        word = data['word'].lower()
-        is_in_board = len(word) >= 3 and word_in_board(word, load_board(board))
-        is_in_lexicon = is_in_board and word.lower() in Constants.lexicon
-        is_valid = is_in_board and is_in_lexicon
-        success = is_valid
-        news = dict(
-            word=word,
-            success=success,
-            is_in_board=is_in_board,
-            is_in_lexicon=is_in_lexicon,
-            id_in_group=player.id_in_group,
-        )
-        if success:
-            FoundWord.create(player=player, word=word)
+    if 'count_guess' in data:
+        guess = int(data['count_guess'])
+        # Tambah skor jika jawaban benar
+        if guess == player.actual_count:
             player.score += 2
-    else:
-        news = {}
-    scores = [[player.id_in_group, player.score]]
-    found_words = [fw.word for fw in FoundWord.filter(player=player)]
-    return {0: dict(news=news, scores=scores, found_words=found_words)}
+
+        # Randomize ulang papan dan target karakter
+        player.current_target = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
+        board = [
+            [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890') for _ in range(Constants.board_columns)]
+            for _ in range(Constants.board_rows)
+        ]
+        player.actual_count = sum(row.count(player.current_target) for row in board)
+
+        # Return data untuk diperbarui di sisi klien
+        return {
+            player.id_in_group: {
+                'new_board': board,
+                'new_target_character': player.current_target,
+                'new_score': player.score,
+            }
+        }
 
 
 class Game3(Page):
+    form_model = 'player'
+    form_fields = ['count_guess']
     live_method = live_method
 
     # Menggunakan waktu yang dibeli oleh pemain
@@ -183,22 +137,28 @@ class Game3(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        rows = []
-        for _ in range(Constants.dim):
-            # add extra vowels
-            row = ''.join(
-                [random.choice('AAABCDEEEEEFGHIIKLMNNOOPRRSTTUUVWXYZ') for _ in range(Constants.dim)]
-            )
-            rows.append(row)
-            player.board = '\n'.join(rows)
-        return dict(board=player.board.upper().split('\n'))
+        # Membuat papan dengan 3 baris dan 13 kolom
+        board = [
+            [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890') for _ in range(Constants.board_columns)]
+            for _ in range(Constants.board_rows)
+        ]
+        player.current_target = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
+        player.actual_count = sum(row.count(player.current_target) for row in board)
 
-    @staticmethod
-    def js_vars(player: Player):
-        return dict(my_id=player.id_in_group)
+        return {
+            'board': board,
+            'target_character': player.current_target,
+            'player_score': player.score,
+        }
 
 
 class Game3_Results(Page):
+    @staticmethod
+    def vars_for_template(player: Player):
+        return {
+            'final_score': player.score,
+        }
+
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         player.endowment = player.endowment + player.score
@@ -227,5 +187,5 @@ class Results(Page):
         player.payoff = player.endowment
 
 
-page_sequence = [Intro, Game1, Game2, Confirmation_Cognitive_Task, Buytime, WaitToStart, Game3, Game3_Results, Game4,
+page_sequence = [Intro, Game1, Game2, Confirmation_Cognitive_Task, Buytime, Game3, Game3_Results, Game4,
                  Results]
