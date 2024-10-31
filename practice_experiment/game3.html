@@ -2,6 +2,12 @@
     <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
     <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
     <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+    <style>
+        .otree-form-errors,
+        .otree-timer{
+            display: none;
+        }
+    </style>
 {% endblock %}
 
 {{ block title }}
@@ -28,96 +34,82 @@
             <div class="card-title">
                 <h1>Cognitive Task - Word Search</h1>
                 <div class="alert alert-success" role="alert">
-                    Petunjuk : Cari Kata dan Susun Kata
+                    Petunjuk : Hitung jumlah Huruf/Angka sesuai Target.
+                    Jika Target tidak ada dalam papan, maka masukkan 0 untuk jawaban
                 </div>
             </div>
             <div class="card-text">
-                <div class="d-flex flex-row justify-content-center">
-                    <table class="table table-bordered text-center w-25 me-3">
-                        {{ for row in board }}
-                        <tr>
-                            {{ for char in row }}
-                            <td>{{ char }}</td>
-                            {{ endfor }}
-                        </tr>
-                        {{ endfor }}
-                    </table>
+                <table id="boardContainer" class="table table-stripe border border-2 text-center">
+                    {% for row in board %}
+                        <tbody>
+                            {% for cell in row %}
+                                <td class="board-cell border border-3">
+                                    <strong>{{ cell }}</strong>
+                                </td>
+                            {% endfor %}
+                        </tbody>
+                    {% endfor %}
+                </table>
+                <div class="fs-4 mb-3 text-center">
+                    Berapa jumlah Huruf/Angka
+                        <span id="targetCharacter" class="badge bg-danger fs-5">{{ target_character }}</span>
+                    yang muncul diatas?
+                </div>
+                <div class="d-flex justify-content-center mb-3">
                     <div>
-                        <div class="input-group mb-1">
-                            <input type="text" class="form-control" id="word" minlength="3"
-                                   placeholder="Masukkan Kata" aria-label="Masukkan Kata" required>
-                            <button class="btn btn-outline-success" type="button" onclick="sendWord()">
-                                Kirim
-                            </button>
+                        <div class="input-group">
+                            <input id="countGuess" type="number" class="form-control" required>
+                            <button class="btn btn-primary" onclick="submitGuess()">Kirim</button>
                         </div>
-                        <div id="news"></div>
-                        <strong class="mt-1">Kata yang telah ditemukan</strong>
-                        <p id="found-words"></p>
-                        <strong>Nilai Anda</strong>
-                        <table class="table table-striped">
-                            <tbody id="scores-tbody">
-                            </tbody>
-                        </table>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div class="badge bg-success fs-5 me-1">
+                        <span>Skor Anda:</span>
+                        <span id="playerScore">{{ player_score }}</span>
+                    </div>
+                    <div class="badge bg-danger fs-5 ms-1">
+                        <span>Waktu Tersisa : </span>
+                        <span class="otree-timer__time-left"></span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        let input = document.getElementById('word');
-        let newsDiv = document.getElementById('news');
-        let scoresBody = document.getElementById('scores-tbody');
-        let foundWords = document.getElementById('found-words');
+<script>
+    function submitGuess() {
+        const guess = document.getElementById("countGuess").value;
+        liveSend({ count_guess: guess }); // Kirim jawaban
+    }
 
-        input.addEventListener("keydown", function (event) {
-            newsDiv.innerHTML = '';
-            if (event.key === "Enter") {
-                sendWord();
-            }
-        });
-
-        function sendWord() {
-            if (input.reportValidity()) {
-                liveSend({'word': input.value});
-                input.value = '';
-            }
+    liveRecv((data) => {
+        // Update skor dan target karakter baru
+        if (data.new_score !== undefined) {
+            document.getElementById("playerScore").textContent = data.new_score;
+        }
+        if (data.new_target_character) {
+            document.getElementById("targetCharacter").textContent = data.new_target_character;
         }
 
-        function showNews(word, msg, success) {
-            let color = success ? 'green' : 'red';
-            newsDiv.innerHTML = `<span style="color: ${color}">${word}: ${msg}</span>`;
+        // Update papan baru
+        if (data.new_board) {
+            const boardContainer = document.getElementById("boardContainer");
+            boardContainer.innerHTML = ""; // Bersihkan papan lama
+
+            // Generate papan baru
+            data.new_board.forEach(row => {
+                const rowDiv = document.createElement("div");
+                row.forEach(char => {
+                    const cell = document.createElement("span");
+                    cell.textContent = char;
+                    cell.className = "board-cell";
+                    rowDiv.appendChild(cell);
+                });
+                boardContainer.appendChild(rowDiv);
+            });
         }
 
-        function liveRecv(data) {
-            if ('news' in data) {
-                let {success, is_in_board, already_found, is_in_lexicon, word, id_in_group} = data.news;
-                if (id_in_group === js_vars.my_id) {
-                    let feedback;
-                    if (success) {
-                        feedback = '+1';
-                    } else if (already_found) {
-                        feedback = 'Already found';
-                    } else if (!is_in_board) {
-                        feedback = 'Not in board';
-                    } else {
-                        feedback = 'Not in lexicon';
-                    }
-                    showNews(word, feedback, success);
-                }
-            }
-            scoresBody.innerHTML = '';
-            for (let [id_in_group, score] of data.scores) {
-                let playerName = `Player ${id_in_group}`;
-                if (id_in_group === js_vars.my_id) {
-                    playerName += ' (you)';
-                }
-                scoresBody.insertAdjacentHTML('beforeend', `<td>${score}</td>`);
-            }
-            foundWords.innerHTML = data.found_words.join(', ');
-        }
-
-        document.addEventListener('DOMContentLoaded', (event) => {
-            liveSend({});
+        document.getElementById("countGuess").value = ""; // Reset input setelah submit
     });
 </script>
 {{ endblock }}
