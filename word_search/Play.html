@@ -48,13 +48,13 @@ Word search
         if (event.key === "Enter") {
             sendWord();
         }
-    });
-
-    function sendWord() {
-        if (input.reportValidity()) {
+    });if (input.reportValidity()) {
             liveSend({'word': input.value});
             input.value = '';
         }
+
+    function sendWord() {
+
     }
 
     function showNews(word, msg, success) {
