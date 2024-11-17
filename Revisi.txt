@@ -1,0 +1,10 @@
+Revisi
+
+1. Sebelum menuju halaman Risky Option ada halaman konfirmasi untuk ikut bermain ALL
+2. Tampilan PyCharts diganti Table di Risky Option ALL
+3. Halaman Hasil Risky Option ALL
+4. Cognitive Task diganti gamenya memakai Game Decoding
+5. ASIAN Handicap - Untuk table Alokasi semua diberikan textbox untuk subjek bisa edit isi investasinya
+
+Tambahan baru
+1. Perhitungan semua investasi

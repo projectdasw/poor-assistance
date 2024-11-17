@@ -34,27 +34,120 @@
                 <div class="mt-4">
                     <form method="post">
                         <div class="row row-cols-1 row-cols-md-2 g-4">
-                            {% for option in random_options %}
-                            <div class="col">
-                                <div class="card h-100">
-                                    <div class="card-header">
-                                        <div class="form-check fs-4">
-                                            <input class="form-check-input" type="radio" name="selected_optionprice"
-                                                   value="{{ option.name }}" required>
-                                            <label class="form-check-label" for="{{ option.name }}">
-                                                Opsi {{ forloop.counter }}
-                                            </label>
+                            {% for option1 in random_options1 %}
+                                <div class="col">
+                                    <div class="card h-100">
+                                        <div class="card-header">
+                                            <div class="form-check fs-4">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="selected_optionprice1"
+                                                       value="{{ option1.name }}">
+                                                <label class="form-check-label" for="{{ option1.name }}">
+                                                    Opsi 1
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                {% for outcome in option1.formatted_outcomes %}
+                                                    <li class="list-group-item">{{ outcome }}</li>
+                                                {% endfor %}
+                                            </ul>
                                         </div>
                                     </div>
-                                    <div class="card-body">
-                                        <ul class="list-group list-group-flush">
-                                            {% for outcome in option.formatted_outcomes %}
-                                                <li class="list-group-item">{{ outcome }}</li>
-                                            {% endfor %}
-                                        </ul>
+                                </div>
+                            {% endfor %}
+                            {% for option2 in random_options2 %}
+                                <div class="col">
+                                    <div class="card h-100">
+                                        <div class="card-header">
+                                            <div class="form-check fs-4">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="selected_optionprice2"
+                                                       value="{{ option2.name }}">
+                                                <label class="form-check-label" for="{{ option2.name }}">
+                                                    Opsi 2
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                {% for outcome in option2.formatted_outcomes %}
+                                                    <li class="list-group-item">{{ outcome }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            {% endfor %}
+                            {% for option3 in random_options3 %}
+                                <div class="col">
+                                    <div class="card h-100">
+                                        <div class="card-header">
+                                            <div class="form-check fs-4">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="selected_optionprice3"
+                                                       value="{{ option3.name }}">
+                                                <label class="form-check-label" for="{{ option3.name }}">
+                                                    Opsi 3
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                {% for outcome in option3.formatted_outcomes %}
+                                                    <li class="list-group-item">{{ outcome }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% for option4 in random_options4 %}
+                                <div class="col">
+                                    <div class="card h-100">
+                                        <div class="card-header">
+                                            <div class="form-check fs-4">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="selected_optionprice4"
+                                                       value="{{ option4.name }}">
+                                                <label class="form-check-label" for="{{ option4.name }}">
+                                                    Opsi 4
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                {% for outcome in option4.formatted_outcomes %}
+                                                    <li class="list-group-item">{{ outcome }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% for option5 in random_options5 %}
+                                <div class="col">
+                                    <div class="card h-100">
+                                        <div class="card-header">
+                                            <div class="form-check fs-4">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="selected_optionprice5"
+                                                       value="{{ option5.name }}">
+                                                <label class="form-check-label" for="{{ option5.name }}">
+                                                    Opsi 5
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                {% for outcome in option5.formatted_outcomes %}
+                                                    <li class="list-group-item">{{ outcome }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             {% endfor %}
                         </div>
                         <button type="submit" class="btn btn-outline-primary mt-3">

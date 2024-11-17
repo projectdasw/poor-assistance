@@ -35,34 +35,20 @@
             <div class="card-text">
                 <table class="table table-bordered">
                     <tbody>
-                        <tr>
-                            <td>Return</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Peluang</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
                             <tr>
-                            <td>Alokasi</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                                <td>Return</td>
+                                {% for option in options %}
+                                    <td>{{ option.0 }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <td>Peluang</td>
+                                {% for option in options %}
+                                    <td>{{ option.1 }}</td>
+                                {% endfor %}
+                            </tr>
+                        <tr>
+                            <td>Alokasi Anda</td>
                             <td></td>
                         </tr>
                     </tbody>
