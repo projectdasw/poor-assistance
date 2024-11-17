@@ -7,12 +7,6 @@ doc = """
 Poor Assistance Experiment
 """
 
-
-def load_word_list():
-    # words from https://github.com/dovenokan/oxford-words
-    return set(Path(__name__ + '/words.txt').read_text().split())
-
-
 class Constants(BaseConstants):
     name_in_url = 'practice_experiment'
     players_per_group = None
@@ -74,8 +68,9 @@ class Constants(BaseConstants):
     # COGINITIVE TASK
     board_rows = 3  # Jumlah baris papan
     board_columns = 13  # Jumlah kolom papan
-    target_character = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')  # Huruf atau angka yang dicari
+    target_character = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
     # COGINITIVE TASK
+
 
 class Subsession(BaseSubsession):
     pass
@@ -89,21 +84,49 @@ class Player(BasePlayer):
     endowment = models.FloatField()
 
     # RISKY OPTION - PRICE
-    selected_optionprice = models.StringField()
-    result_price = models.FloatField(initial=0)
+    selected_optionprice1 = models.StringField(blank=True, initial="")
+    result_price1 = models.FloatField(initial=0)
+    selected_optionprice2 = models.StringField(blank=True, initial="")
+    result_price2 = models.FloatField(initial=0)
+    selected_optionprice3 = models.StringField(blank=True, initial="")
+    result_price3 = models.FloatField(initial=0)
+    selected_optionprice4 = models.StringField(blank=True, initial="")
+    result_price4 = models.FloatField(initial=0)
+    selected_optionprice5 = models.StringField(blank=True, initial="")
+    result_price5 = models.FloatField(initial=0)
     # RISKY OPTION - PRICE
 
     # RISKY OPTION - ALLOCATION
-    selected_optionallocation = models.StringField()
-    allocation_invest = models.FloatField(initial=0)
-    result_allocation = models.FloatField(initial=0)
+    selected_optionallocation1 = models.StringField()
+    allocation_invest1 = models.FloatField(initial=0)
+    result_allocation1 = models.FloatField(initial=0)
+    selected_optionallocation2 = models.StringField()
+    allocation_invest2 = models.FloatField(initial=0)
+    result_allocation2 = models.FloatField(initial=0)
+    selected_optionallocation3 = models.StringField()
+    allocation_invest3 = models.FloatField(initial=0)
+    result_allocation3 = models.FloatField(initial=0)
+    selected_optionallocation4 = models.StringField()
+    allocation_invest4 = models.FloatField(initial=0)
+    result_allocation4 = models.FloatField(initial=0)
+    selected_optionallocation5 = models.StringField()
+    allocation_invest5 = models.FloatField(initial=0)
+    result_allocation5 = models.FloatField(initial=0)
     # RISKY OPTION - ALLOCATION
 
+    # COGNITIVE TASK
     buy_time = models.IntegerField(initial=0, label='Masukkan jumlah Endowment yang ingin Anda gunakan untuk membeli waktu')
     count_guess = models.IntegerField(label="Berapa kali huruf/angka muncul:")
     actual_count = models.IntegerField(initial=0)
     score = models.IntegerField(initial=0)
     current_target = models.StringField()  # Target huruf/angka yang diacak setiap putaran
+    # COGNITIVE TASK
+
+    # ASIAN HANDICAP
+    return_values = models.FloatField()
+    pr_of_winning_values = models.FloatField()
+    # ASIAN HANDICAP
+
     offer_accepted = models.BooleanField(
         choices=[
             (True, 'Iya'),
@@ -115,7 +138,6 @@ class Player(BasePlayer):
 class Intro(Page):
     @staticmethod
     def vars_for_template(player: Player):
-        # Menggunakan PARTICIPANT sebagai variabel menampilkan hasil pada tampilan halaman
         participant = player.participant
 
         # Dynamic Endowment
@@ -147,44 +169,174 @@ class BeforeGame2(Page):
 
 class RiskyOption_Price(Page):
     form_model = 'player'
-    form_fields = ['selected_optionprice']
+    form_fields = ['selected_optionprice1', 'selected_optionprice2', 'selected_optionprice3', 'selected_optionprice4',
+                   'selected_optionprice5']
 
     @staticmethod
     def vars_for_template(player: Player):
         # Mendapatkan pilihan acak (contoh daftar pilihan opsi)
-        random_options = random.sample(Constants.options_data_price, 5)
+        random_options1 = random.sample(Constants.options_data_price, 1)
+        random_options2 = random.sample(Constants.options_data_price, 1)
+        random_options3 = random.sample(Constants.options_data_price, 1)
+        random_options4 = random.sample(Constants.options_data_price, 1)
+        random_options5 = random.sample(Constants.options_data_price, 1)
 
         # Membuat teks yang terstruktur untuk setiap opsi dalam format list items
-        for i, option in enumerate(random_options):
-            option_outcomes = option['outcomes']
+        for i, option1 in enumerate(random_options1):
+            option_outcomes = option1['outcomes']
             formatted_outcomes = []
             for j, (value, probability) in enumerate(option_outcomes):
                 formatted_outcomes.append(f"Anda mendapatkan {value} dengan peluang {int(probability * 100)}%")
-            option['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
+            option1['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
+
+        for i, option2 in enumerate(random_options2):
+            option_outcomes = option2['outcomes']
+            formatted_outcomes = []
+            for j, (value, probability) in enumerate(option_outcomes):
+                formatted_outcomes.append(f"Anda mendapatkan {value} dengan peluang {int(probability * 100)}%")
+            option2['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
+
+        for i, option3 in enumerate(random_options3):
+            option_outcomes = option3['outcomes']
+            formatted_outcomes = []
+            for j, (value, probability) in enumerate(option_outcomes):
+                formatted_outcomes.append(f"Anda mendapatkan {value} dengan peluang {int(probability * 100)}%")
+            option3['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
+
+        for i, option4 in enumerate(random_options4):
+            option_outcomes = option4['outcomes']
+            formatted_outcomes = []
+            for j, (value, probability) in enumerate(option_outcomes):
+                formatted_outcomes.append(f"Anda mendapatkan {value} dengan peluang {int(probability * 100)}%")
+            option4['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
+
+        for i, option5 in enumerate(random_options5):
+            option_outcomes = option5['outcomes']
+            formatted_outcomes = []
+            for j, (value, probability) in enumerate(option_outcomes):
+                formatted_outcomes.append(f"Anda mendapatkan {value} dengan peluang {int(probability * 100)}%")
+            option5['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
 
         return {
-            'random_options': random_options,
+            'random_options1': random_options1,
+            'random_options2': random_options2,
+            'random_options3': random_options3,
+            'random_options4': random_options4,
+            'random_options5': random_options5,
         }
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         # Temukan opsi yang dipilih pemain berdasarkan nama
-        selected_option = next(
-            (option for option in Constants.options_data_price if option['name'] == player.selected_optionprice), None
+        selected_option1 = next(
+            (option1 for option1 in Constants.options_data_price if
+             option1['name'] == player.selected_optionprice1), None
+        )
+        selected_option2 = next(
+            (option2 for option2 in Constants.options_data_price if
+             option2['name'] == player.selected_optionprice2), None
+        )
+        selected_option3 = next(
+            (option3 for option3 in Constants.options_data_price if
+             option3['name'] == player.selected_optionprice3), None
+        )
+        selected_option4 = next(
+            (option4 for option4 in Constants.options_data_price if
+             option4['name'] == player.selected_optionprice4), None
+        )
+        selected_option5 = next(
+            (option5 for option5 in Constants.options_data_price if
+             option5['name'] == player.selected_optionprice5), None
         )
 
         # Lakukan drawing angka 1-100
-        if selected_option:
+        if selected_option1:
             draw = random.randint(1, 100)
 
             # Hitung hasil berdasarkan peluang
             cumulative_probability = 0
-            for outcome, probability in selected_option['outcomes']:
+            for outcome, probability in selected_option1['outcomes']:
                 cumulative_probability += probability * 100
                 if draw <= cumulative_probability:
-                    player.result_price = outcome
+                    player.result_price1 = outcome
                     player.endowment -= 25
                     break
+
+        if selected_option2:
+            draw = random.randint(1, 100)
+
+            # Hitung hasil berdasarkan peluang
+            cumulative_probability = 0
+            for outcome, probability in selected_option2['outcomes']:
+                cumulative_probability += probability * 100
+                if draw <= cumulative_probability:
+                    player.result_price2 = outcome
+                    player.endowment -= 25
+                    break
+
+        if selected_option3:
+            draw = random.randint(1, 100)
+
+            # Hitung hasil berdasarkan peluang
+            cumulative_probability = 0
+            for outcome, probability in selected_option3['outcomes']:
+                cumulative_probability += probability * 100
+                if draw <= cumulative_probability:
+                    player.result_price3 = outcome
+                    player.endowment -= 25
+                    break
+
+        if selected_option4:
+            draw = random.randint(1, 100)
+
+            # Hitung hasil berdasarkan peluang
+            cumulative_probability = 0
+            for outcome, probability in selected_option4['outcomes']:
+                cumulative_probability += probability * 100
+                if draw <= cumulative_probability:
+                    player.result_price4 = outcome
+                    player.endowment -= 25
+                    break
+
+        if selected_option5:
+            draw = random.randint(1, 100)
+
+            # Hitung hasil berdasarkan peluang
+            cumulative_probability = 0
+            for outcome, probability in selected_option5['outcomes']:
+                cumulative_probability += probability * 100
+                if draw <= cumulative_probability:
+                    player.result_price5 = outcome
+                    player.endowment -= 25
+                    break
+
+    @staticmethod
+    def error_message(player: Player, values):
+        selected_options = [
+            values['selected_optionprice1'],
+            values['selected_optionprice2'],
+            values['selected_optionprice3'],
+            values['selected_optionprice4'],
+            values['selected_optionprice5']
+        ]
+        selected_count = sum(1 for option in selected_options if option)
+        total_cost = selected_count * 25
+
+        # Pesan kesalahan untuk biaya lebih besar dari endowment
+        error_msgs = []
+        if total_cost > player.endowment:
+            error_msgs.append(
+                f"Endowment Anda tidak mencukupi untuk membeli {selected_count} opsi (Total biaya: {total_cost}).")
+
+        # Pesan kesalahan jika tidak ada opsi yang dipilih
+        if not (values['selected_optionprice1'] or values['selected_optionprice2'] or values['selected_optionprice3'] or
+                values['selected_optionprice4'] or values['selected_optionprice5']):
+            error_msgs.append('Anda harus memilih setidaknya satu opsi.')
+
+        # Jika ada pesan kesalahan, gabungkan dan kembalikan
+        if error_msgs:
+            return "<br>".join(error_msgs)
+        return ""
 
     @staticmethod
     def is_displayed(player: Player):
@@ -196,58 +348,174 @@ class PriceResults(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return {
-            'result': player.result_price
+            'result1': player.result_price1,
+            'result2': player.result_price2,
+            'result3': player.result_price3,
+            'result4': player.result_price4,
+            'result5': player.result_price5
         }
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        player.endowment += player.result_price
-
-        # player.endowment += player.result_price1 + player.result_price2 +\
-        #                     player.result_price3 + player.result_price4 +\
-        #                     player.result_price5
+        player.endowment += player.result_price1 + player.result_price2 +\
+                            player.result_price3 + player.result_price4 +\
+                            player.result_price5
 
 
 class RiskyOption_Allocation(Page):
     form_model = 'player'
-    form_fields = ['allocation_invest', 'selected_optionallocation']
+    form_fields = ['selected_optionallocation1', 'allocation_invest1', 'selected_optionallocation2',
+                   'allocation_invest2', 'selected_optionallocation2', 'selected_optionallocation3',
+                   'allocation_invest3', 'selected_optionallocation4', 'allocation_invest4',
+                   'selected_optionallocation5', 'allocation_invest5']
 
     @staticmethod
     def vars_for_template(player: Player):
         # Mendapatkan pilihan acak (contoh daftar pilihan opsi)
-        random_options = random.sample(Constants.options_data_allocation, 5)
+        random_options1 = random.sample(Constants.options_data_allocation, 1)
+        random_options2 = random.sample(Constants.options_data_allocation, 1)
+        random_options3 = random.sample(Constants.options_data_allocation, 1)
+        random_options4 = random.sample(Constants.options_data_allocation, 1)
+        random_options5 = random.sample(Constants.options_data_allocation, 1)
 
         # Membuat teks yang terstruktur untuk setiap opsi dalam format list items
-        for i, option in enumerate(random_options):
-            option_outcomes = option['outcomes']
+        for i, option1 in enumerate(random_options1):
+            option_outcomes = option1['outcomes']
             formatted_outcomes = []
             for j, (value, probability) in enumerate(option_outcomes):
                 formatted_outcomes.append(f"Anda mendapatkan x{value} dengan peluang {int(probability * 100)}%")
-            option['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
+            option1['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
+
+        for i, option2 in enumerate(random_options2):
+            option_outcomes = option2['outcomes']
+            formatted_outcomes = []
+            for j, (value, probability) in enumerate(option_outcomes):
+                formatted_outcomes.append(f"Anda mendapatkan x{value} dengan peluang {int(probability * 100)}%")
+            option2['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
+
+        for i, option3 in enumerate(random_options3):
+            option_outcomes = option3['outcomes']
+            formatted_outcomes = []
+            for j, (value, probability) in enumerate(option_outcomes):
+                formatted_outcomes.append(f"Anda mendapatkan x{value} dengan peluang {int(probability * 100)}%")
+            option3['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
+
+        for i, option4 in enumerate(random_options4):
+            option_outcomes = option4['outcomes']
+            formatted_outcomes = []
+            for j, (value, probability) in enumerate(option_outcomes):
+                formatted_outcomes.append(f"Anda mendapatkan x{value} dengan peluang {int(probability * 100)}%")
+            option4['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
+
+        for i, option5 in enumerate(random_options5):
+            option_outcomes = option5['outcomes']
+            formatted_outcomes = []
+            for j, (value, probability) in enumerate(option_outcomes):
+                formatted_outcomes.append(f"Anda mendapatkan x{value} dengan peluang {int(probability * 100)}%")
+            option5['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
 
         return {
-            'random_options': random_options,
+            'random_options1': random_options1,
+            'random_options2': random_options2,
+            'random_options3': random_options3,
+            'random_options4': random_options4,
+            'random_options5': random_options5,
         }
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         # Temukan opsi yang dipilih pemain berdasarkan nama
-        selected_option = next(
-            (option for option in Constants.options_data_allocation if option['name'] == player.selected_optionallocation), None
+        selected_option1 = next(
+            (option1 for option1 in Constants.options_data_allocation if
+             option1['name'] == player.selected_optionallocation1), None
+        )
+        selected_option2 = next(
+            (option2 for option2 in Constants.options_data_allocation if
+             option2['name'] == player.selected_optionallocation2), None
+        )
+        selected_option3 = next(
+            (option3 for option3 in Constants.options_data_allocation if
+             option3['name'] == player.selected_optionallocation3), None
+        )
+        selected_option4 = next(
+            (option4 for option4 in Constants.options_data_allocation if
+             option4['name'] == player.selected_optionallocation4), None
+        )
+        selected_option5 = next(
+            (option5 for option5 in Constants.options_data_allocation if
+             option5['name'] == player.selected_optionallocation5), None
         )
 
         # Lakukan drawing angka 1-100
-        if selected_option:
+        if selected_option1:
             draw = random.randint(1, 100)
 
             # Hitung hasil berdasarkan peluang
             cumulative_probability = 0
-            for outcome, probability in selected_option['outcomes']:
+            for outcome, probability in selected_option1['outcomes']:
                 cumulative_probability += probability * 100
                 if draw <= cumulative_probability:
-                    player.result_allocation = outcome
-                    player.endowment -= player.allocation_invest
+                    player.result_allocation1 = outcome
+                    player.endowment -= player.allocation_invest1
                     break
+
+        if selected_option2:
+            draw = random.randint(1, 100)
+
+            # Hitung hasil berdasarkan peluang
+            cumulative_probability = 0
+            for outcome, probability in selected_option2['outcomes']:
+                cumulative_probability += probability * 100
+                if draw <= cumulative_probability:
+                    player.result_allocation2 = outcome
+                    player.endowment -= player.allocation_invest2
+                    break
+
+        if selected_option3:
+            draw = random.randint(1, 100)
+
+            # Hitung hasil berdasarkan peluang
+            cumulative_probability = 0
+            for outcome, probability in selected_option3['outcomes']:
+                cumulative_probability += probability * 100
+                if draw <= cumulative_probability:
+                    player.result_allocation3 = outcome
+                    player.endowment -= player.allocation_invest3
+                    break
+
+        if selected_option4:
+            draw = random.randint(1, 100)
+
+            # Hitung hasil berdasarkan peluang
+            cumulative_probability = 0
+            for outcome, probability in selected_option4['outcomes']:
+                cumulative_probability += probability * 100
+                if draw <= cumulative_probability:
+                    player.result_allocation4 = outcome
+                    player.endowment -= player.allocation_invest4
+                    break
+
+        if selected_option5:
+            draw = random.randint(1, 100)
+
+            # Hitung hasil berdasarkan peluang
+            cumulative_probability = 0
+            for outcome, probability in selected_option5['outcomes']:
+                cumulative_probability += probability * 100
+                if draw <= cumulative_probability:
+                    player.result_allocation5 = outcome
+                    player.endowment -= player.allocation_invest5
+                    break
+
+    @staticmethod
+    def error_message(player: Player, values):
+        total_allocation = (values['allocation_invest1'] + values['allocation_invest2'] + values['allocation_invest3'] +
+                            values['allocation_invest4'] + values['allocation_invest5'])
+
+        if total_allocation > player.endowment:
+            return f"Endowment Anda tidak mencukupi untuk membeli opsi-opsi tersebut" \
+                   f" (Total alokasi: {total_allocation})."
+        return ""
 
     @staticmethod
     def is_displayed(player: Player):
@@ -259,17 +527,34 @@ class AllocationResults(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return {
-            'allocation': player.allocation_invest,
-            'result': player.result_allocation
+            'allocation1': player.allocation_invest1,
+            'result1': player.result_allocation1,
+            'profit1': player.allocation_invest1 * player.result_allocation1,
+            'allocation2': player.allocation_invest2,
+            'result2': player.result_allocation2,
+            'profit2': player.allocation_invest2 * player.result_allocation2,
+            'allocation3': player.allocation_invest3,
+            'result3': player.result_allocation3,
+            'profit3': player.allocation_invest3 * player.result_allocation3,
+            'allocation4': player.allocation_invest4,
+            'result4': player.result_allocation4,
+            'profit4': player.allocation_invest4 * player.result_allocation4,
+            'allocation5': player.allocation_invest5,
+            'result5': player.result_allocation5,
+            'profit5': player.allocation_invest5 * player.result_allocation5,
         }
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        player.endowment += player.allocation_invest * player.result_allocation
-
+        player.endowment += (player.allocation_invest1 * player.result_allocation1) + \
+                            (player.allocation_invest2 * player.result_allocation2) + \
+                            (player.allocation_invest3 * player.result_allocation3) + \
+                            (player.allocation_invest4 * player.result_allocation4) + \
+                            (player.allocation_invest5 * player.result_allocation5)
 
 class Confirmation_Cognitive_Task(Page):
-    pass
+    form_model = 'player'
+    form_fields = ['offer_accepted']
 
 
 class Buytime(Page):
@@ -291,6 +576,12 @@ class Buytime(Page):
         else:
             # Jika endowment 0, maka waktu pembelian adalah 0
             player.buy_time = 0
+
+
+    @staticmethod
+    def is_displayed(player: Player):
+        # Hanya tampilkan halaman ini jika pemain memilih "Iya"
+        return player.offer_accepted is not None and player.offer_accepted
 
 
 def live_method(player: Player, data):
@@ -318,7 +609,7 @@ def live_method(player: Player, data):
         }
 
 
-class Game3(Page):
+class CognitiveTask(Page):
     form_model = 'player'
     form_fields = ['count_guess']
     live_method = live_method
@@ -355,10 +646,22 @@ class Game3_Results(Page):
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         player.endowment = player.endowment + player.score
+
 # COGNITIVE TASK DEVOPS
 
 class Game4(Page):
-    pass
+    @staticmethod
+    def vars_for_template(player: Player):
+        # Data yang digunakan untuk tabel Return dan Pr of Winning
+        return_values = [1.15, 1.2, 1.25, 1.35, 1.45, 1.55, 1.67, 1.85, 2, 2.25, 2.5, 2.9, 3.4, 4, 5, 7, 10]
+        pr_of_winning_values = [0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2, 0.15, 0.1]
+
+        # Menggabungkan return_values dan pr_of_winning_values menjadi satu list pasangan
+        options = list(zip(return_values, pr_of_winning_values))
+
+        return {
+            'options': options,
+        }
 
 
 class Results(Page):
@@ -381,8 +684,4 @@ class Results(Page):
 
 
 page_sequence = [Intro, BeforeGame1, RiskyOption_Price, PriceResults, BeforeGame2, RiskyOption_Allocation,
-                 AllocationResults, Confirmation_Cognitive_Task, Buytime, Game3, Game3_Results, Game4, Results]
-
-# page_sequence = [Intro, BeforeGame1, RiskyOption_Price1, RiskyOption_Price2, RiskyOption_Price3, RiskyOption_Price4,
-#                  RiskyOption_Price5, PriceResults, BeforeGame2, Game2, Confirmation_Cognitive_Task, Buytime, Game3,
-#                  Game3_Results, Game4, Results]
+                 AllocationResults, Confirmation_Cognitive_Task, Buytime, CognitiveTask, Game3_Results, Game4, Results]
