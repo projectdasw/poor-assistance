@@ -65,6 +65,28 @@ class Constants(BaseConstants):
     ]
     # RISKY OPTION - ALLOCATION
 
+    # ASIAN HANDICAP
+    investment_scheme = [
+        {"investment_return": 1.15, "probability": 0.9},
+        {"investment_return": 1.2, "probability": 0.85},
+        {"investment_return": 1.25, "probability": 0.8},
+        {"investment_return": 1.35, "probability": 0.75},
+        {"investment_return": 1.45, "probability": 0.7},
+        {"investment_return": 1.55, "probability": 0.65},
+        {"investment_return": 1.67, "probability": 0.6},
+        {"investment_return": 1.85, "probability": 0.55},
+        {"investment_return": 2.0, "probability": 0.5},
+        {"investment_return": 2.25, "probability": 0.45},
+        {"investment_return": 2.5, "probability": 0.4},
+        {"investment_return": 2.9, "probability": 0.35},
+        {"investment_return": 3.4, "probability": 0.3},
+        {"investment_return": 4.0, "probability": 0.25},
+        {"investment_return": 5.0, "probability": 0.2},
+        {"investment_return": 7.0, "probability": 0.15},
+        {"investment_return": 10.0, "probability": 0.1},
+    ]
+    # ASIAN HANDICAP
+
     # COGINITIVE TASK
     board_rows = 3  # Jumlah baris papan
     board_columns = 13  # Jumlah kolom papan
@@ -81,7 +103,7 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    endowment = models.FloatField()
+    endowment = models.FloatField(decimal=1)
 
     # RISKY OPTION - PRICE
     selected_optionprice1 = models.StringField(blank=True, initial="")
@@ -99,19 +121,19 @@ class Player(BasePlayer):
     # RISKY OPTION - ALLOCATION
     selected_optionallocation1 = models.StringField()
     allocation_invest1 = models.FloatField(initial=0)
-    result_allocation1 = models.FloatField(initial=0)
+    result_allocation1 = models.FloatField(initial=0, decimal=1)
     selected_optionallocation2 = models.StringField()
     allocation_invest2 = models.FloatField(initial=0)
-    result_allocation2 = models.FloatField(initial=0)
+    result_allocation2 = models.FloatField(initial=0, decimal=1)
     selected_optionallocation3 = models.StringField()
     allocation_invest3 = models.FloatField(initial=0)
-    result_allocation3 = models.FloatField(initial=0)
+    result_allocation3 = models.FloatField(initial=0, decimal=1)
     selected_optionallocation4 = models.StringField()
     allocation_invest4 = models.FloatField(initial=0)
-    result_allocation4 = models.FloatField(initial=0)
+    result_allocation4 = models.FloatField(initial=0, decimal=1)
     selected_optionallocation5 = models.StringField()
     allocation_invest5 = models.FloatField(initial=0)
-    result_allocation5 = models.FloatField(initial=0)
+    result_allocation5 = models.FloatField(initial=0, decimal=1)
     # RISKY OPTION - ALLOCATION
 
     # COGNITIVE TASK
@@ -123,8 +145,44 @@ class Player(BasePlayer):
     # COGNITIVE TASK
 
     # ASIAN HANDICAP
-    return_values = models.FloatField()
-    pr_of_winning_values = models.FloatField()
+    # Alokasi untuk setiap investasi
+    asian_ev_1 = models.FloatField(initial=0)
+    result_asian_1 = models.FloatField(initial=0, decimal=1)
+    asian_ev_2 = models.FloatField(initial=0)
+    result_asian_2 = models.FloatField(initial=0, decimal=1)
+    asian_ev_3 = models.FloatField(initial=0)
+    result_asian_3 = models.FloatField(initial=0, decimal=1)
+    asian_ev_4 = models.FloatField(initial=0)
+    result_asian_4 = models.FloatField(initial=0, decimal=1)
+    asian_ev_5 = models.FloatField(initial=0)
+    result_asian_5 = models.FloatField(initial=0, decimal=1)
+    asian_ev_6 = models.FloatField(initial=0)
+    result_asian_6 = models.FloatField(initial=0, decimal=1)
+    asian_ev_7 = models.FloatField(initial=0)
+    result_asian_7 = models.FloatField(initial=0, decimal=1)
+    asian_ev_8 = models.FloatField(initial=0)
+    result_asian_8 = models.FloatField(initial=0, decimal=1)
+    asian_ev_9 = models.FloatField(initial=0)
+    result_asian_9 = models.FloatField(initial=0, decimal=1)
+    asian_ev_10 = models.FloatField(initial=0)
+    result_asian_10 = models.FloatField(initial=0, decimal=1)
+    asian_ev_11 = models.FloatField(initial=0)
+    result_asian_11 = models.FloatField(initial=0, decimal=1)
+    asian_ev_12 = models.FloatField(initial=0)
+    result_asian_12 = models.FloatField(initial=0, decimal=1)
+    asian_ev_13 = models.FloatField(initial=0)
+    result_asian_13 = models.FloatField(initial=0, decimal=1)
+    asian_ev_14 = models.FloatField(initial=0)
+    result_asian_14 = models.FloatField(initial=0, decimal=1)
+    asian_ev_15 = models.FloatField(initial=0)
+    result_asian_15 = models.FloatField(initial=0, decimal=1)
+    asian_ev_16 = models.FloatField(initial=0)
+    result_asian_16 = models.FloatField(initial=0, decimal=1)
+    asian_ev_17 = models.FloatField(initial=0)
+    result_asian_17 = models.FloatField(initial=0, decimal=1)
+
+    # Menyimpan total hasil
+    total_return = models.FloatField(initial=0, decimal=1)
     # ASIAN HANDICAP
 
     offer_accepted = models.BooleanField(
@@ -650,18 +708,52 @@ class Game3_Results(Page):
 # COGNITIVE TASK DEVOPS
 
 class Game4(Page):
+    form_model = "player"
+    form_fields = [
+        'asian_ev_1', 'asian_ev_2', 'asian_ev_3', 'asian_ev_4', 'asian_ev_5', 'asian_ev_6', 'asian_ev_7', 'asian_ev_8',
+        'asian_ev_9', 'asian_ev_10', 'asian_ev_11', 'asian_ev_12', 'asian_ev_13', 'asian_ev_14', 'asian_ev_15',
+        'asian_ev_16', 'asian_ev_17'
+    ]
+
     @staticmethod
     def vars_for_template(player: Player):
-        # Data yang digunakan untuk tabel Return dan Pr of Winning
-        return_values = [1.15, 1.2, 1.25, 1.35, 1.45, 1.55, 1.67, 1.85, 2, 2.25, 2.5, 2.9, 3.4, 4, 5, 7, 10]
-        pr_of_winning_values = [0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2, 0.15, 0.1]
-
-        # Menggabungkan return_values dan pr_of_winning_values menjadi satu list pasangan
-        options = list(zip(return_values, pr_of_winning_values))
-
+        # Menyediakan investment_scheme untuk template
         return {
-            'options': options,
+            'investment_scheme': Constants.investment_scheme,
         }
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        # Random drawing untuk setiap opsi
+        for i, investment_scheme in enumerate(Constants.investment_scheme, start=1):
+            draw = random.randint(1, 100)  # Angka random 1-100
+            probability = investment_scheme["probability"] * 100
+            if draw <= probability:
+                # Subjek mendapatkan return
+                setattr(player, f"result_asian_{i}", investment_scheme["investment_return"])
+            else:
+                # Subjek tidak mendapatkan return
+                setattr(player, f"result_asian_{i}", 0)
+
+        player.total_return += (player.result_asian_1 * player.asian_ev_1) + \
+                               (player.result_asian_2 * player.asian_ev_2) + \
+                               (player.result_asian_3 * player.asian_ev_3) + \
+                               (player.result_asian_4 * player.asian_ev_4) + \
+                               (player.result_asian_5 * player.asian_ev_5) + \
+                               (player.result_asian_6 * player.asian_ev_6) + \
+                               (player.result_asian_7 * player.asian_ev_7) + \
+                               (player.result_asian_8 * player.asian_ev_8) + \
+                               (player.result_asian_9 * player.asian_ev_9) + \
+                               (player.result_asian_10 * player.asian_ev_10) + \
+                               (player.result_asian_11 * player.asian_ev_11) + \
+                               (player.result_asian_12 * player.asian_ev_12) + \
+                               (player.result_asian_13 * player.asian_ev_13) + \
+                               (player.result_asian_14 * player.asian_ev_14) + \
+                               (player.result_asian_15 * player.asian_ev_15) + \
+                               (player.result_asian_16 * player.asian_ev_16) + \
+                               (player.result_asian_17 * player.asian_ev_17)
+
+        player.endowment += player.total_return
 
 
 class Results(Page):
@@ -681,6 +773,18 @@ class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
         player.payoff = player.endowment
+        return {
+            'result_price': player.result_price1 + player.result_price2 +\
+                            player.result_price3 + player.result_price4 +\
+                            player.result_price5,
+            'result_allocation': (player.allocation_invest1 * player.result_allocation1) +
+                                 (player.allocation_invest2 * player.result_allocation2) +
+                                 (player.allocation_invest3 * player.result_allocation3) +
+                                 (player.allocation_invest4 * player.result_allocation4) +
+                                 (player.allocation_invest5 * player.result_allocation5),
+            'result_cognitive': player.score,
+            'result_asian': player.total_return
+        }
 
 
 page_sequence = [Intro, BeforeGame1, RiskyOption_Price, PriceResults, BeforeGame2, RiskyOption_Allocation,
