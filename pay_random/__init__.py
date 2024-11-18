@@ -33,7 +33,7 @@ class Pay_info(Page):
         participant = player.participant
         player.potential_payoff = float(participant.get_payment)
         player.round = int(participant.selected_round)
-        player.payoff = (player.potential_payoff * 1000) + 10000
+        player.payoff = (player.potential_payoff * 100) + 10000
 
 
 class Payment(Page):
