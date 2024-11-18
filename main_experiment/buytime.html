@@ -5,13 +5,10 @@
 {% endblock %}
 
 {{ block title }}
-    <span hidden>Sesi Latihan</span>
+    <span hidden>Buy Time - Cognitive Task</span>
 {{ endblock }}
 
 {{ block content }}
-    <div class="badge bg-warning text-dark mb-2">
-        <h5 class="m-0">Latihan</h5>
-    </div>
     <div class="card mb-3">
         <div class="card-header">
             <span class="badge bg-success fs-6 me-2">
@@ -24,9 +21,44 @@
         <div class="card-body">
             <h1 class="card-title">Cognitive Task</h1>
             <div class="card-text">
-                <div>
-                    <span>Berapa lama waktu permainan yang ingin Anda beli?</span>
-                    <span>*Kelipatan per 10 Endowment</span>
+                {{ formfields }}
+                <div class="alert alert-info" role="alert">
+                    Jika Anda memasukkan 10 Endowment, maka Anda mendapatkan waktu selama 20 detik.
+                </div>
+                <p class="badge bg-danger fs-6">
+                    Kelipatan per 10 Endowment
+                </p>
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h2 class="card-title">20 Detik</h2>
+                                <p class="card-text">
+                                    Harga: <strong>10</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h2 class="card-title">40 Detik</h2>
+                                <p class="card-text">
+                                    Harga: <strong>20</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h2 class="card-title">60 Detik</h2>
+                                <p class="card-text">
+                                    Harga: <strong>30</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

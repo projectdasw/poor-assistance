@@ -1,0 +1,136 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Results Risky Option Allocation - Periode {{ player.round_number }}</span>
+{{ endblock }}
+
+{{ block content }}
+    <div class="card mb-3">
+        <div class="card-header">
+            <span class="badge bg-success fs-6 me-2">
+                Periode : {{ player.round_number }}
+            </span>
+            <span class="badge bg-primary fs-6 me-2">
+                Ronde : 2
+            </span>
+            <span class="badge bg-danger fs-6">
+                Endowment Anda: {{ player.endowment }}
+            </span>
+        </div>
+        <div class="card-body">
+            <h1 class="card-title">Hasil Risky Option for Allocation</h1>
+            <div class="card-text">
+                {{ if player.offer_accepted == True }}
+                    <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Invest List</th>
+                            <th scope="col">Alokasi Anda</th>
+                            <th scope="col">Keuntungan Opsi</th>
+                            <th scope="col">Profit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ if player.allocation_invest1 != 0 }}
+                            <tr>
+                                <td>Risky Option Allocation - 1</td>
+                                <td>{{ allocation1 }}</td>
+                                <td>x{{ result1 }}</td>
+                                <td>{{ profit1 }}</td>
+                            </tr>
+                        {{ endif }}
+                        {{ if player.allocation_invest2 != 0 }}
+                            <tr>
+                                <td>Risky Option Allocation - 2</td>
+                                <td>{{ allocation2 }}</td>
+                                <td>x{{ result2 }}</td>
+                                <td>{{ profit2 }}</td>
+                            </tr>
+                        {{ endif }}
+                        {{ if player.allocation_invest3 != 0 }}
+                            <tr>
+                                <td>Risky Option Allocation - 3</td>
+                                <td>{{ allocation3 }}</td>
+                                <td>x{{ result3 }}</td>
+                                <td>{{ profit3 }}</td>
+                            </tr>
+                        {{ endif }}
+                        {{ if player.allocation_invest4 != 0 }}
+                            <tr>
+                                <td>Risky Option Allocation - 4</td>
+                                <td>{{ allocation4 }}</td>
+                                <td>x{{ result4 }}</td>
+                                <td>{{ profit4 }}</td>
+                            </tr>
+                        {{ endif }}
+                        {{ if player.allocation_invest5 != 0 }}
+                            <tr>
+                                <td>Risky Option Allocation - 5</td>
+                                <td>{{ allocation5 }}</td>
+                                <td>x{{ result5 }}</td>
+                                <td>{{ profit5 }}</td>
+                            </tr>
+                        {{ endif }}
+                    </tbody>
+                </table>
+                {{ else }}
+                    <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Invest List</th>
+                            <th scope="col">Alokasi Anda</th>
+                            <th scope="col">Keuntungan Opsi</th>
+                            <th scope="col">Profit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Risky Option Allocation - 1</td>
+                            <td>{{ allocation1 }}</td>
+                            <td>x{{ result1 }}</td>
+                            <td>{{ profit1 }}</td>
+                        </tr>
+                        <tr>
+                            <td>Risky Option Allocation - 2</td>
+                            <td>{{ allocation2 }}</td>
+                            <td>x{{ result2 }}</td>
+                            <td>{{ profit2 }}</td>
+                        </tr>
+                        <tr>
+                            <td>Risky Option Allocation - 3</td>
+                            <td>{{ allocation3 }}</td>
+                            <td>x{{ result3 }}</td>
+                            <td>{{ profit3 }}</td>
+                        </tr>
+                        <tr>
+                            <td>Risky Option Allocation - 4</td>
+                            <td>{{ allocation4 }}</td>
+                            <td>x{{ result4 }}</td>
+                            <td>{{ profit4 }}</td>
+                        </tr>
+                        <tr>
+                            <td>Risky Option Allocation - 5</td>
+                            <td>{{ allocation5 }}</td>
+                            <td>x{{ result5 }}</td>
+                            <td>{{ profit5 }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                {{ endif }}
+                <div class="alert alert-success" role="alert">
+                    <strong>
+                        Hasil Profit yang didapatkan akan ditambahkan secara otomatis pada Endowment Anda
+                    </strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="otree-btn-next btn btn-outline-primary">
+        <span>Lanjut</span>
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+{{ endblock }}

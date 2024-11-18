@@ -5,13 +5,10 @@
 {% endblock %}
 
 {{ block title }}
-    <span hidden>Sesi Latihan</span>
+    <span hidden>Periode {{ player.round_number }} - Results</span>
 {{ endblock }}
 
 {{ block content }}
-    <div class="badge bg-warning text-dark mb-2">
-        <h5 class="m-0">Latihan</h5>
-    </div>
     <div class="card mb-3">
         <div class="card-header">
             <span class="badge bg-success fs-6 me-2">
@@ -37,25 +34,25 @@
                         <tr>
                             <td>Risky Option - Price</td>
                             <td>
-                                <strong>{{ player.option_price }}</strong>
+                                <strong>{{ result_price }}</strong>
                             </td>
                         </tr>
                         <tr>
                             <td>Risky Option - Allocation</td>
                             <td>
-                                <strong>{{ player.option_allocation }}</strong>
+                                <strong>{{ result_allocation }}</strong>
                             </td>
                         </tr>
                         <tr>
                             <td>Cognitive Task - Word Search</td>
                             <td>
-                                <strong>{{ player.score }}</strong>
+                                <strong>{{ result_cognitive }}</strong>
                             </td>
                         </tr>
                         <tr>
                             <td>ASIAN Handicap - Allocation</td>
                             <td>
-                                <strong>0</strong>
+                                <strong>{{ result_asian }}</strong>
                             </td>
                         </tr>
                         <tr>
@@ -68,11 +65,19 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="alert alert-success" role="alert">
-                    <strong>
-                        Endowment Akhir akan dipakai pada periode berikutnya sampai periode berakhir
-                    </strong>
-                </div>
+                {{ if player.round_number == Constants.num_rounds }}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Selamat! Periode telah berakhir.
+                        </strong>
+                    </div>
+                {{ else }}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Endowment Akhir akan dipakai pada periode berikutnya sampai periode berakhir
+                        </strong>
+                    </div>
+                {{ endif }}
             </div>
         </div>
     </div>

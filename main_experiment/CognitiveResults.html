@@ -5,13 +5,10 @@
 {% endblock %}
 
 {{ block title }}
-    <span hidden>Sesi Latihan</span>
+    <span hidden>Results Cognitive Task - Periode {{ player.round_number }}</span>
 {{ endblock }}
 
 {{ block content }}
-    <div class="badge bg-warning text-dark mb-2">
-        <h5 class="m-0">Latihan</h5>
-    </div>
     <div class="card mb-3">
         <div class="card-header">
             <span class="badge bg-success fs-6 me-2">
@@ -25,15 +22,13 @@
             </span>
         </div>
         <div class="card-body">
-            <div class="card-title">
+            <div class="card-title border-bottom border-1 mb-3">
                 <h3>Hasil Cognitive Task</h3>
             </div>
             <div class="card-text">
-                <p>
-                    Endowment yang Anda dapatkan pada Cognitive Task adalah <strong>{{ player.score }}</strong>
-                </p>
-                <div class="alert alert-success" role="alert">
-                    Endowment yang Anda dapatkan pada ronde ini akan ditambahkan secara otomatis
+                Skor yang Anda dapatkan adalah <strong>{{ final_score }}</strong>.
+                <div class="alert alert-success m-0 mt-4" role="alert">
+                    <strong>Skor ini akan ditambahkan pada Endowment Anda.</strong>
                 </div>
             </div>
         </div>

@@ -1,0 +1,112 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Results Risky Option Price - Periode {{ player.round_number }}</span>
+{{ endblock }}
+
+{{ block content }}
+    <div class="card mb-3">
+        <div class="card-header">
+            <span class="badge bg-success fs-6 me-2">
+                Periode : {{ player.round_number }}
+            </span>
+            <span class="badge bg-primary fs-6 me-2">
+                Ronde : 1
+            </span>
+            <span class="badge bg-danger fs-6">
+                Endowment Anda: {{ player.endowment }}
+            </span>
+        </div>
+        <div class="card-body">
+            <h1 class="card-title">Hasil Risky Option for Price</h1>
+            <div class="card-text">
+                {{ if player.offer_accepted == True }}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Invest List</th>
+                                <th scope="col">Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{ if player.selected_optionprice1 != "" }}
+                                <tr>
+                                    <td>Risky Option Price - Opsi 1</td>
+                                    <td>{{ result1 }}</td>
+                                </tr>
+                            {{ endif }}
+                            {{ if player.selected_optionprice2 != "" }}
+                                <tr>
+                                    <td>Risky Option Price - Opsi 2</td>
+                                    <td>{{ result2 }}</td>
+                                </tr>
+                            {{ endif }}
+                            {{ if player.selected_optionprice3 != "" }}
+                                <tr>
+                                    <td>Risky Option Price - Opsi 3</td>
+                                    <td>{{ result3 }}</td>
+                                </tr>
+                            {{ endif }}
+                            {{ if player.selected_optionprice4 != "" }}
+                                <tr>
+                                    <td>Risky Option Price - Opsi 4</td>
+                                    <td>{{ result4 }}</td>
+                                </tr>
+                            {{ endif }}
+                            {{ if player.selected_optionprice5 != "" }}
+                                <tr>
+                                    <td>Risky Option Price - Opsi 5</td>
+                                    <td>{{ result5 }}</td>
+                                </tr>
+                            {{ endif }}
+                        </tbody>
+                    </table>
+                {{ else }}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Invest List</th>
+                                <th scope="col">Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Risky Option Price - Opsi 1</td>
+                                <td>{{ result1 }}</td>
+                            </tr>
+                            <tr>
+                                <td>Risky Option Price - Opsi 2</td>
+                                <td>{{ result2 }}</td>
+                            </tr>
+                            <tr>
+                                <td>Risky Option Price - Opsi 3</td>
+                                <td>{{ result3 }}</td>
+                            </tr>
+                            <tr>
+                                <td>Risky Option Price - Opsi 4</td>
+                                <td>{{ result4 }}</td>
+                            </tr>
+                            <tr>
+                                <td>Risky Option Price - Opsi 5</td>
+                                <td>{{ result5 }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {{ endif }}
+                <div class="alert alert-success" role="alert">
+                    <strong>
+                        Hasil Profit yang didapatkan akan ditambahkan secara otomatis pada Endowment Anda
+                    </strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="otree-btn-next btn btn-outline-primary">
+        <span>Lanjut</span>
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+{{ endblock }}

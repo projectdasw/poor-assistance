@@ -5,14 +5,11 @@
 {% endblock %}
 
 {{ block title }}
-    <span hidden>Sesi Latihan</span>
+    <span hidden>Informasi Endowment - Periode {{ player.round_number }}</span>
 {{ endblock }}
 
 {{ block content }}
     <div class="d-flex flex-column align-items-start mb-2">
-        <div class="badge bg-warning text-dark mb-2">
-            <h5 class="m-0">Latihan</h5>
-        </div>
         <span class="badge bg-success fs-6">
             Periode : {{ player.round_number }}
         </span>
@@ -32,10 +29,6 @@
                         <td>Beban</td>
                         <td>{{ Constants.deduction }}</td>
                     </tr>
-                    <tr>
-                        <td>Endowment yang Anda terima</td>
-                        <td>{{ endowment }}</td>
-                    </tr>
                 </tbody>
             </table>
         {{ else }}
@@ -52,10 +45,6 @@
                     <tr>
                         <td>Beban</td>
                         <td>{{ Constants.deduction }}</td>
-                    </tr>
-                    <tr>
-                        <td>Endowment yang Anda terima</td>
-                        <td>{{ endowment }}</td>
                     </tr>
                 </tbody>
             </table>

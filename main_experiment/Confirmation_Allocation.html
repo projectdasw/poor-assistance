@@ -5,7 +5,7 @@
 {% endblock %}
 
 {{ block title }}
-    <span hidden>Confirmation - Cognitive Task</span>
+    <span hidden>Confirmation - Risky Option Allocation</span>
 {{ endblock }}
 
 {{ block content }}
@@ -14,19 +14,12 @@
             <span class="badge bg-success fs-6 me-2">
                 Periode : {{ player.round_number }}
             </span>
-            <span class="badge bg-danger fs-6">
-                Endowment Anda: {{ player.endowment }}
-            </span>
         </div>
         <div class="card-body">
-            <h1 class="card-title">Cognitive Task</h1>
+            <h1 class="card-title">Risky Option - Allocation</h1>
             <div class="card-text">
                 <p>
-                    Pada ronde 3 ini, Anda akan bermain permainan menghitung jumlah angka/huruf tertentu yang muncul
-                    dari sebaron angka/huruf. Anda akan mendapatkan lama waktu bermain tergantung alokasi yang anda
-                    lakukan. <strong>Biaya waktu per 20 detik permainan adalah 10</strong>
-                    <br>
-                    Apakah Anda bersedia mengikuti Cognitive Task?
+                    Apakah Anda ingin berinvestasi di <strong>Risky Option - Allocation</strong> ini?
                 </p>
                 <div class="btn-group" role="group">
                     <button class="btn btn-success" name="offer_accepted" value="True">Iya</button>
