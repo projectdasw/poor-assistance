@@ -31,28 +31,6 @@
                     Pada ronde ini, Anda memiliki kembali kesempatan untuk meningkatkan Endowment yang Anda miliki
                     sekarang dari skema investasi sebagai berikut
                 </p>
-            </div>
-            <div class="card-text">
-                <table class="table table-bordered">
-                    <tbody>
-                            <tr>
-                                <td>Return</td>
-                                {% for option in options %}
-                                    <td>{{ option.0 }}</td>
-                                {% endfor %}
-                            </tr>
-                            <tr>
-                                <td>Peluang</td>
-                                {% for option in options %}
-                                    <td>{{ option.1 }}</td>
-                                {% endfor %}
-                            </tr>
-                        <tr>
-                            <td>Alokasi Anda</td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
                 <div class="alert alert-success" role="alert">
                     <h4 class="alert-heading">
                         Isikan Alokasi sesuai kalkulasi Anda sendiri
@@ -70,10 +48,36 @@
                     </p>
                 </div>
             </div>
+            <div class="card-text">
+                <form method="post">
+                    <!-- Tabel untuk menampilkan semua opsi investasi -->
+                    <table class="table table-bordered">
+                        <thead>
+                            <th class="col">No.</th>
+                            <th class="col">Return</th>
+                            <th class="col">Probabilitas</th>
+                            <th class="col">Masukkan Alokasi Dana</th>
+                        </thead>
+                        <tbody>
+                            {{ for scheme in investment_scheme }}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ scheme.investment_return }}</td>
+                                    <td>{{ scheme.probability }}</td>
+                                    <td>
+                                        <input type="number" class="form-control" name="asian_ev_{{ forloop.counter }}"
+                                               value="0">
+                                    </td>
+                                </tr>
+                            {{ endfor }}
+                        </tbody>
+                    </table>
+                    <button type="submit" class="btn btn-outline-primary">
+                        <span>Submit</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
-    <button class="otree-btn-next btn btn-outline-primary">
-        <span>Lanjut</span>
-        <i class="fa-solid fa-chevron-right"></i>
-    </button>
 {{ endblock }}
