@@ -10,7 +10,7 @@ Poor Assistance Experiment
 class Constants(BaseConstants):
     name_in_url = 'practice_experiment'
     players_per_group = None
-    num_rounds = 3  # 5 periods
+    num_rounds = 1  # 5 periods
     initial_endowment = 100
     additional_endowment = 30
     deduction = 50
@@ -215,12 +215,12 @@ class Intro(Page):
         }
 
 
-class BeforeGame1(Page):
+class Confirmation_Price(Page):
     form_model = 'player'
     form_fields = ['offer_accepted']
 
 
-class BeforeGame2(Page):
+class Confirmation_Allocation(Page):
     form_model = 'player'
     form_fields = ['offer_accepted']
 
@@ -694,7 +694,7 @@ class CognitiveTask(Page):
         }
 
 
-class Game3_Results(Page):
+class CognitiveResults(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return {
@@ -707,7 +707,7 @@ class Game3_Results(Page):
 
 # COGNITIVE TASK DEVOPS
 
-class Game4(Page):
+class Asian_Handicap(Page):
     form_model = "player"
     form_fields = [
         'asian_ev_1', 'asian_ev_2', 'asian_ev_3', 'asian_ev_4', 'asian_ev_5', 'asian_ev_6', 'asian_ev_7', 'asian_ev_8',
@@ -771,20 +771,7 @@ class Game4(Page):
         return ""
 
 
-class Results(Page):
-    @staticmethod
-    def before_next_page(player: Player, timeout_happened):
-        previous_player = player.in_round(player.round_number)
-        player.endowment = previous_player.endowment
-
-        participant = player.participant
-
-        if player.round_number == Constants.num_rounds:
-            random_round = random.randint(1, Constants.num_rounds)
-            participant.selected_round = random_round
-            player_in_selected_round = player.in_round(random_round)
-            participant.get_payment = player_in_selected_round.payoff
-
+class AllResults(Page):
     @staticmethod
     def vars_for_template(player: Player):
         player.payoff = player.endowment
@@ -802,5 +789,6 @@ class Results(Page):
         }
 
 
-page_sequence = [Intro, BeforeGame1, RiskyOption_Price, PriceResults, BeforeGame2, RiskyOption_Allocation,
-                 AllocationResults, Confirmation_Cognitive_Task, Buytime, CognitiveTask, Game3_Results, Game4, Results]
+page_sequence = [Intro, Confirmation_Price, RiskyOption_Price, PriceResults, Confirmation_Allocation,
+                 RiskyOption_Allocation, AllocationResults, Confirmation_Cognitive_Task, Buytime, CognitiveTask,
+                 CognitiveResults, Asian_Handicap, AllResults]
