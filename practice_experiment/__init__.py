@@ -755,6 +755,21 @@ class Game4(Page):
 
         player.endowment += player.total_return
 
+    @staticmethod
+    def error_message(player: Player, values):
+        # Hitung total investasi
+        total_investasi = (values['asian_ev_1'] + values['asian_ev_2'] + values['asian_ev_3'] +
+                           values['asian_ev_4'] + values['asian_ev_5'] + values['asian_ev_6'] +
+                           values['asian_ev_7'] + values['asian_ev_8'] + values['asian_ev_9'] +
+                           values['asian_ev_10'] + values['asian_ev_11'] + values['asian_ev_12'] +
+                           values['asian_ev_13'] + values['asian_ev_14'] + values['asian_ev_15'] +
+                           values['asian_ev_16'] + values['asian_ev_17'])
+
+        # Periksa apakah total investasi melebihi endowment
+        if total_investasi > player.endowment:
+            return f"Endowment Anda tidak mencukupi untuk dialokasikan (Total biaya: {total_investasi})."
+        return ""
+
 
 class Results(Page):
     @staticmethod
