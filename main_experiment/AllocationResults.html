@@ -121,11 +121,17 @@
                     </tbody>
                 </table>
                 {{ endif }}
-                <div class="alert alert-success" role="alert">
-                    <strong>
-                        Hasil Profit yang didapatkan akan ditambahkan secara otomatis pada Endowment Anda
-                    </strong>
-                </div>
+                {{ if player.endowment < 0 or player.endowment == 0 }}
+                    <div class="alert alert-success" role="alert">
+                        Tidak ada alokasi dana
+                    </div>
+                {{ else }}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Hasil Profit yang didapatkan akan ditambahkan secara otomatis pada Endowment Anda
+                        </strong>
+                    </div>
+                {{ endif }}
             </div>
         </div>
     </div>
