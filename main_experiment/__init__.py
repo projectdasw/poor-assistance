@@ -10,7 +10,7 @@ Poor Assistance Experiment
 class Constants(BaseConstants):
     name_in_url = 'main_experiment'
     players_per_group = None
-    num_rounds = 1  # 5 periods
+    num_rounds = 5  # 5 periods
     initial_endowment = 100
     additional_endowment = 30
     deduction = 50
@@ -185,7 +185,7 @@ class Player(BasePlayer):
     total_return = models.FloatField(initial=0, decimal=1)
     # ASIAN HANDICAP
 
-    consumption = models.FloatField(initial=0, decimal=1)
+    consumption = models.CurrencyField()
     offer_accepted = models.BooleanField(
         choices=[
             (True, 'Iya'),
@@ -767,7 +767,6 @@ class Asian_Handicap(Page):
             player.result_asian_16 = 0
             player.result_asian_17 = 0
 
-
         player.total_return += (player.result_asian_1 * player.asian_ev_1) + \
                                (player.result_asian_2 * player.asian_ev_2) + \
                                (player.result_asian_3 * player.asian_ev_3) + \
@@ -785,15 +784,22 @@ class Asian_Handicap(Page):
                                (player.result_asian_15 * player.asian_ev_15) + \
                                (player.result_asian_16 * player.asian_ev_16) + \
                                (player.result_asian_17 * player.asian_ev_17)
-
         player.endowment += player.total_return
+
+        total_asian = (player.asian_ev_1 + player.asian_ev_2 + player.asian_ev_3 +
+                       player.asian_ev_4 + player.asian_ev_5 + player.asian_ev_6 +
+                       player.asian_ev_7 + player.asian_ev_8 + player.asian_ev_9 +
+                       player.asian_ev_10 + player.asian_ev_11 + player.asian_ev_12 +
+                       player.asian_ev_13 + player.asian_ev_14 + player.asian_ev_15 +
+                       player.asian_ev_16 + player.asian_ev_17)
+        player.endowment -= total_asian
 
         # Logika Kondisi untuk Beban Konsumsi
         if player.endowment < Constants.deduction:
             player.consumption = player.endowment
-            player.endowment = 0
+            player.payoff = player.endowment - player.consumption
         else:
-            player.consumption = Constants.deduction
+            player.payoff = player.endowment - Constants.deduction
 
     @staticmethod
     def error_message(player: Player, values):
@@ -838,12 +844,7 @@ class AllResults(Page):
                        player.asian_ev_10 + player.asian_ev_11 + player.asian_ev_12 +
                        player.asian_ev_13 + player.asian_ev_14 + player.asian_ev_15 +
                        player.asian_ev_16 + player.asian_ev_17)
-
-        # Hitung Cost Alokasi Dana
-        player.endowment -= total_asian
         # ASIAN HANDICAP
-
-        player.payoff = player.endowment - Constants.deduction
 
         return {
             'result_price': player.result_price1 + player.result_price2 + \
