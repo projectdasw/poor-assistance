@@ -101,9 +101,13 @@
                     </table>
                 {{ endif }}
                 <div class="alert alert-success" role="alert">
-                    <strong>
-                        Hasil Profit yang didapatkan akan ditambahkan secara otomatis pada Endowment Anda
-                    </strong>
+                    {{ if player.endowment < 0 or player.endowment == 0 or player.endowment <= 25 }}
+                        Tidak ada Opsi yang dipilih
+                    {{ else }}
+                        <strong>
+                            Hasil Profit yang didapatkan akan ditambahkan secara otomatis pada Endowment Anda
+                        </strong>
+                    {{ endif }}
                 </div>
             </div>
         </div>
