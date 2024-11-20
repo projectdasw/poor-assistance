@@ -1,18 +1,18 @@
 from os import environ
 
 SESSION_CONFIGS = [
-    # dict(
-        # display_name='Poor Assistance Experiment - Main',
-        # name='poor_assistance_experiment',
-        # app_sequence=['welcome_instructions', 'practice_experiment', 'main_experiment', 'survey', 'pay_random'],
-        # num_demo_participants=3
-    # ),
     dict(
-        display_name='Poor Assistance Experiment (Beta)',
+        display_name='Poor Assistance Experiment',
         name='poor_assistance_experiment',
-        app_sequence=['main_experiment', 'pay_random'],
+        app_sequence=['welcome_instructions', 'practice_experiment', 'main_experiment', 'survey', 'pay_random'],
         num_demo_participants=3
     ),
+    # dict(
+    #     display_name='Poor Assistance Experiment (Beta)',
+    #     name='poor_assistance_experiment',
+    #     app_sequence=['main_experiment', 'pay_random'],
+    #     num_demo_participants=3
+    # ),
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
