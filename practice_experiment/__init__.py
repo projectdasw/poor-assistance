@@ -876,6 +876,10 @@ class AllResults(Page):
             participant.get_payment = player_in_selected_round.payoff
 
 
+class BeforeExperiment(Page):
+    pass
+
+
 page_sequence = [Intro, Confirmation_Price, RiskyOption_Price, PriceResults, Confirmation_Allocation,
                  RiskyOption_Allocation, AllocationResults, Confirmation_Cognitive_Task, Buytime, CognitiveTask,
-                 CognitiveResults, Asian_Handicap, AllResults]
+                 CognitiveResults, Asian_Handicap, AllResults, BeforeExperiment]
