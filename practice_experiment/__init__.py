@@ -10,7 +10,7 @@ Poor Assistance Experiment
 class Constants(BaseConstants):
     name_in_url = 'practice_experiment'
     players_per_group = None
-    num_rounds = 1  # periods
+    num_rounds = 1  # Practice Periods
     initial_endowment = 100
     additional_endowment = 30
     deduction = 50
@@ -88,8 +88,8 @@ class Constants(BaseConstants):
     # ASIAN HANDICAP
 
     # COGINITIVE TASK
-    board_rows = 3  # Jumlah baris papan
-    board_columns = 13  # Jumlah kolom papan
+    board_rows = 5  # Jumlah baris papan
+    board_columns = 10 # Jumlah kolom papan
     target_character = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
     # COGINITIVE TASK
 
@@ -103,7 +103,7 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    endowment = models.FloatField(decimal=1)
+    endowment = models.CurrencyField()
 
     # RISKY OPTION - PRICE
     selected_optionprice1 = models.StringField(blank=True, initial="")
@@ -119,25 +119,25 @@ class Player(BasePlayer):
     # RISKY OPTION - PRICE
 
     # RISKY OPTION - ALLOCATION
-    selected_optionallocation1 = models.StringField()
+    selected_optionallocation1 = models.StringField(blank=True, initial="")
     allocation_invest1 = models.FloatField(initial=0)
     result_allocation1 = models.FloatField(initial=0, decimal=1)
-    selected_optionallocation2 = models.StringField()
+    selected_optionallocation2 = models.StringField(blank=True, initial="")
     allocation_invest2 = models.FloatField(initial=0)
     result_allocation2 = models.FloatField(initial=0, decimal=1)
-    selected_optionallocation3 = models.StringField()
+    selected_optionallocation3 = models.StringField(blank=True, initial="")
     allocation_invest3 = models.FloatField(initial=0)
     result_allocation3 = models.FloatField(initial=0, decimal=1)
-    selected_optionallocation4 = models.StringField()
+    selected_optionallocation4 = models.StringField(blank=True, initial="")
     allocation_invest4 = models.FloatField(initial=0)
     result_allocation4 = models.FloatField(initial=0, decimal=1)
-    selected_optionallocation5 = models.StringField()
+    selected_optionallocation5 = models.StringField(blank=True, initial="")
     allocation_invest5 = models.FloatField(initial=0)
     result_allocation5 = models.FloatField(initial=0, decimal=1)
     # RISKY OPTION - ALLOCATION
 
     # COGNITIVE TASK
-    buy_time = models.IntegerField(initial=0, label='Masukkan jumlah Endowment yang ingin Anda gunakan untuk membeli waktu')
+    buy_time = models.IntegerField(initial=0)
     count_guess = models.IntegerField(label="Berapa kali huruf/angka muncul:")
     actual_count = models.IntegerField(initial=0)
     score = models.IntegerField(initial=0)
@@ -185,6 +185,7 @@ class Player(BasePlayer):
     total_return = models.FloatField(initial=0, decimal=1)
     # ASIAN HANDICAP
 
+    consumption = models.CurrencyField()
     offer_accepted = models.BooleanField(
         choices=[
             (True, 'Iya'),
@@ -201,14 +202,13 @@ class Intro(Page):
         # Dynamic Endowment
         if player.round_number == 1:
             # Inisialisasi Endowment Awal Periode
-            player.endowment = Constants.initial_endowment
-            player.endowment += Constants.additional_endowment - Constants.deduction
+            player.endowment = Constants.initial_endowment + Constants.additional_endowment
         else:
             # Endowment dari periode sebelumnya digunakan kembali pada periode berikutnya
             previous_player = player.in_round(player.round_number - 1)
-            participant.get_endowment = previous_player.endowment  # Menampilkan endowment periode sebelumnya
-            player.endowment = previous_player.endowment  # Ambil endowment dari periode sebelumnya
-            player.endowment += Constants.additional_endowment - Constants.deduction
+            participant.get_endowment = previous_player.payoff  # Menampilkan endowment periode sebelumnya
+            player.endowment = previous_player.payoff  # Ambil endowment dari periode sebelumnya
+            player.endowment += Constants.additional_endowment
 
         return {
             'endowment': player.endowment,
@@ -382,19 +382,19 @@ class RiskyOption_Price(Page):
 
         # Pesan kesalahan untuk biaya lebih besar dari endowment
         error_msgs = []
-        if total_cost > player.endowment:
-            error_msgs.append(
-                f"Endowment Anda tidak mencukupi untuk membeli {selected_count} opsi (Total biaya: {total_cost}).")
+        if player.endowment >= 25:
+            if total_cost > player.endowment:
+                error_msgs.append(
+                    f"Endowment Anda tidak mencukupi untuk membeli {selected_count} opsi (Total biaya: {total_cost}).")
 
-        # Pesan kesalahan jika tidak ada opsi yang dipilih
-        if not (values['selected_optionprice1'] or values['selected_optionprice2'] or values['selected_optionprice3'] or
-                values['selected_optionprice4'] or values['selected_optionprice5']):
-            error_msgs.append('Anda harus memilih setidaknya satu opsi.')
+            # Pesan kesalahan jika tidak ada opsi yang dipilih
+            if not any(selected_options):
+                error_msgs.append('Anda harus memilih setidaknya satu opsi.')
 
-        # Jika ada pesan kesalahan, gabungkan dan kembalikan
-        if error_msgs:
-            return "<br>".join(error_msgs)
-        return ""
+            # Jika ada pesan kesalahan, gabungkan dan kembalikan
+            if error_msgs:
+                return "<br>".join(error_msgs)
+            return ""
 
     @staticmethod
     def is_displayed(player: Player):
@@ -504,76 +504,89 @@ class RiskyOption_Allocation(Page):
              option5['name'] == player.selected_optionallocation5), None
         )
 
-        # Lakukan drawing angka 1-100
-        if selected_option1:
-            draw = random.randint(1, 100)
+        if player.endowment < 0 or player.endowment == 0:
+            player.selected_optionallocation1 = ""
+            player.result_allocation1 = 0
+            player.selected_optionallocation2 = ""
+            player.result_allocation2 = 0
+            player.selected_optionallocation3 = ""
+            player.result_allocation3 = 0
+            player.selected_optionallocation4 = ""
+            player.result_allocation4 = 0
+            player.selected_optionallocation5 = ""
+            player.result_allocation5 = 0
+        else:
+            # Lakukan drawing angka 1-100
+            if selected_option1:
+                draw = random.randint(1, 100)
 
-            # Hitung hasil berdasarkan peluang
-            cumulative_probability = 0
-            for outcome, probability in selected_option1['outcomes']:
-                cumulative_probability += probability * 100
-                if draw <= cumulative_probability:
-                    player.result_allocation1 = outcome
-                    player.endowment -= player.allocation_invest1
-                    break
+                # Hitung hasil berdasarkan peluang
+                cumulative_probability = 0
+                for outcome, probability in selected_option1['outcomes']:
+                    cumulative_probability += probability * 100
+                    if draw <= cumulative_probability:
+                        player.result_allocation1 = outcome
+                        player.endowment -= player.allocation_invest1
+                        break
 
-        if selected_option2:
-            draw = random.randint(1, 100)
+            if selected_option2:
+                draw = random.randint(1, 100)
 
-            # Hitung hasil berdasarkan peluang
-            cumulative_probability = 0
-            for outcome, probability in selected_option2['outcomes']:
-                cumulative_probability += probability * 100
-                if draw <= cumulative_probability:
-                    player.result_allocation2 = outcome
-                    player.endowment -= player.allocation_invest2
-                    break
+                # Hitung hasil berdasarkan peluang
+                cumulative_probability = 0
+                for outcome, probability in selected_option2['outcomes']:
+                    cumulative_probability += probability * 100
+                    if draw <= cumulative_probability:
+                        player.result_allocation2 = outcome
+                        player.endowment -= player.allocation_invest2
+                        break
 
-        if selected_option3:
-            draw = random.randint(1, 100)
+            if selected_option3:
+                draw = random.randint(1, 100)
 
-            # Hitung hasil berdasarkan peluang
-            cumulative_probability = 0
-            for outcome, probability in selected_option3['outcomes']:
-                cumulative_probability += probability * 100
-                if draw <= cumulative_probability:
-                    player.result_allocation3 = outcome
-                    player.endowment -= player.allocation_invest3
-                    break
+                # Hitung hasil berdasarkan peluang
+                cumulative_probability = 0
+                for outcome, probability in selected_option3['outcomes']:
+                    cumulative_probability += probability * 100
+                    if draw <= cumulative_probability:
+                        player.result_allocation3 = outcome
+                        player.endowment -= player.allocation_invest3
+                        break
 
-        if selected_option4:
-            draw = random.randint(1, 100)
+            if selected_option4:
+                draw = random.randint(1, 100)
 
-            # Hitung hasil berdasarkan peluang
-            cumulative_probability = 0
-            for outcome, probability in selected_option4['outcomes']:
-                cumulative_probability += probability * 100
-                if draw <= cumulative_probability:
-                    player.result_allocation4 = outcome
-                    player.endowment -= player.allocation_invest4
-                    break
+                # Hitung hasil berdasarkan peluang
+                cumulative_probability = 0
+                for outcome, probability in selected_option4['outcomes']:
+                    cumulative_probability += probability * 100
+                    if draw <= cumulative_probability:
+                        player.result_allocation4 = outcome
+                        player.endowment -= player.allocation_invest4
+                        break
 
-        if selected_option5:
-            draw = random.randint(1, 100)
+            if selected_option5:
+                draw = random.randint(1, 100)
 
-            # Hitung hasil berdasarkan peluang
-            cumulative_probability = 0
-            for outcome, probability in selected_option5['outcomes']:
-                cumulative_probability += probability * 100
-                if draw <= cumulative_probability:
-                    player.result_allocation5 = outcome
-                    player.endowment -= player.allocation_invest5
-                    break
+                # Hitung hasil berdasarkan peluang
+                cumulative_probability = 0
+                for outcome, probability in selected_option5['outcomes']:
+                    cumulative_probability += probability * 100
+                    if draw <= cumulative_probability:
+                        player.result_allocation5 = outcome
+                        player.endowment -= player.allocation_invest5
+                        break
 
     @staticmethod
     def error_message(player: Player, values):
         total_allocation = (values['allocation_invest1'] + values['allocation_invest2'] + values['allocation_invest3'] +
                             values['allocation_invest4'] + values['allocation_invest5'])
 
-        if total_allocation > player.endowment:
-            return f"Endowment Anda tidak mencukupi untuk membeli opsi-opsi tersebut" \
-                   f" (Total alokasi: {total_allocation})."
-        return ""
+        if player.endowment < 0 or player.endowment == 0:
+            if total_allocation > player.endowment:
+                return f"Endowment Anda tidak mencukupi untuk membeli opsi-opsi tersebut" \
+                       f" (Total alokasi: {total_allocation})."
+            return ""
 
     @staticmethod
     def is_displayed(player: Player):
@@ -735,6 +748,25 @@ class Asian_Handicap(Page):
                 # Subjek tidak mendapatkan return
                 setattr(player, f"result_asian_{i}", 0)
 
+        if player.endowment < 0 or player.endowment == 0:
+            player.result_asian_1 = 0
+            player.result_asian_2 = 0
+            player.result_asian_3 = 0
+            player.result_asian_4 = 0
+            player.result_asian_5 = 0
+            player.result_asian_6 = 0
+            player.result_asian_7 = 0
+            player.result_asian_8 = 0
+            player.result_asian_9 = 0
+            player.result_asian_10 = 0
+            player.result_asian_11 = 0
+            player.result_asian_12 = 0
+            player.result_asian_13 = 0
+            player.result_asian_14 = 0
+            player.result_asian_15 = 0
+            player.result_asian_16 = 0
+            player.result_asian_17 = 0
+
         player.total_return += (player.result_asian_1 * player.asian_ev_1) + \
                                (player.result_asian_2 * player.asian_ev_2) + \
                                (player.result_asian_3 * player.asian_ev_3) + \
@@ -752,8 +784,22 @@ class Asian_Handicap(Page):
                                (player.result_asian_15 * player.asian_ev_15) + \
                                (player.result_asian_16 * player.asian_ev_16) + \
                                (player.result_asian_17 * player.asian_ev_17)
-
         player.endowment += player.total_return
+
+        total_asian = (player.asian_ev_1 + player.asian_ev_2 + player.asian_ev_3 +
+                       player.asian_ev_4 + player.asian_ev_5 + player.asian_ev_6 +
+                       player.asian_ev_7 + player.asian_ev_8 + player.asian_ev_9 +
+                       player.asian_ev_10 + player.asian_ev_11 + player.asian_ev_12 +
+                       player.asian_ev_13 + player.asian_ev_14 + player.asian_ev_15 +
+                       player.asian_ev_16 + player.asian_ev_17)
+        player.endowment -= total_asian
+
+        # Logika Kondisi untuk Beban Konsumsi
+        if player.endowment < Constants.deduction:
+            player.consumption = player.endowment
+            player.payoff = player.endowment - player.consumption
+        else:
+            player.payoff = player.endowment - Constants.deduction
 
     @staticmethod
     def error_message(player: Player, values):
@@ -774,19 +820,60 @@ class Asian_Handicap(Page):
 class AllResults(Page):
     @staticmethod
     def vars_for_template(player: Player):
-        player.payoff = player.endowment
+        # RISKY OPTION - PRICE
+        selected_options = [
+            player.selected_optionprice1,
+            player.selected_optionprice2,
+            player.selected_optionprice3,
+            player.selected_optionprice4,
+            player.selected_optionprice5
+        ]
+        selected_count = sum(1 for option in selected_options if option)
+        total_cost = selected_count * 25
+        # RISKY OPTION - PRICE
+
+        # RISKY OPTION - ALLOCATION
+        total_allocation = (player.allocation_invest1 + player.allocation_invest2 + player.allocation_invest3 +
+                            player.allocation_invest4 + player.allocation_invest5)
+        # RISKY OPTION - ALLOCATION
+
+        # ASIAN HANDICAP
+        total_asian = (player.asian_ev_1 + player.asian_ev_2 + player.asian_ev_3 +
+                       player.asian_ev_4 + player.asian_ev_5 + player.asian_ev_6 +
+                       player.asian_ev_7 + player.asian_ev_8 + player.asian_ev_9 +
+                       player.asian_ev_10 + player.asian_ev_11 + player.asian_ev_12 +
+                       player.asian_ev_13 + player.asian_ev_14 + player.asian_ev_15 +
+                       player.asian_ev_16 + player.asian_ev_17)
+        # ASIAN HANDICAP
+
         return {
-            'result_price': player.result_price1 + player.result_price2 +\
-                            player.result_price3 + player.result_price4 +\
+            'result_price': player.result_price1 + player.result_price2 + \
+                            player.result_price3 + player.result_price4 + \
                             player.result_price5,
+            'total_cost_price': total_cost,
             'result_allocation': (player.allocation_invest1 * player.result_allocation1) +
                                  (player.allocation_invest2 * player.result_allocation2) +
                                  (player.allocation_invest3 * player.result_allocation3) +
                                  (player.allocation_invest4 * player.result_allocation4) +
                                  (player.allocation_invest5 * player.result_allocation5),
+            'total_cost_allocation': total_allocation,
             'result_cognitive': player.score,
-            'result_asian': player.total_return
+            'result_asian': player.total_return,
+            'total_cost_asian': total_asian
         }
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        previous_player = player.in_round(player.round_number)
+        player.payoff = previous_player.payoff
+
+        participant = player.participant
+
+        if player.round_number == Constants.num_rounds:
+            random_round = random.randint(1, Constants.num_rounds)
+            participant.selected_round = random_round
+            player_in_selected_round = player.in_round(random_round)
+            participant.get_payment = player_in_selected_round.payoff
 
 
 page_sequence = [Intro, Confirmation_Price, RiskyOption_Price, PriceResults, Confirmation_Allocation,
