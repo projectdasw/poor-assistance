@@ -1,0 +1,73 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Final Results Risky Option Allocation</span>
+{{ endblock }}
+
+{{ block content }}
+    <div class="card mb-3">
+        <div class="card-header">
+            <span class="badge bg-success fs-6 me-2">
+                Risky Option Allocation
+            </span>
+            <span class="badge bg-danger fs-6">
+                Endowment Anda: {{ player.endowment }}
+            </span>
+        </div>
+        <div class="card-body">
+            <h1 class="card-title">Final Results</h1>
+            <div class="card-text">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Ronde Investasi</th>
+                            <th scope="col">Total Profit</th>
+                            <th scope="col">Dana yang dialokasi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in results_by_round %}
+                        <tr>
+                            <td>Risky Option Allocation - Ronde {{ item.round_number }}</td>
+                            <td>
+                                {{ if item.payoff == 0 }}
+                                    <strong>{{ item.payoff }}</strong>
+                                {{ else }}
+                                    <strong class="text-success">+{{ item.payoff }}</strong>
+                                {{ endif }}
+                            </td>
+                            <td>
+                                {{ if item.cost == 0 }}
+                                    <strong>{{ item.cost }}</strong>
+                                {{ else }}
+                                    <strong class="text-danger">-{{ item.cost }}</strong>
+                                {{ endif }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total</th>
+                            <th>{{ total_payoff }}</th>
+                            <th>{{ total_cost }}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div class="alert alert-success" role="alert">
+                    <strong>
+                        Selamat! Anda telah selesai melakukan investasi pada Risky Option Allocation.
+                    </strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="otree-btn-next btn btn-outline-primary">
+        <span>Lanjut</span>
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+{{ endblock }}

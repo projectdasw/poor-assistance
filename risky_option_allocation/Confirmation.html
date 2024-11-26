@@ -1,0 +1,44 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <title>Confirmation - Risky Option Allocation</title>
+{{ endblock }}
+
+{{ block content }}
+    <div class="card">
+        <div class="card-header">
+            <div class="badge bg-primary fs-6">
+                Risky Option Allocation
+            </div>
+            <div class="badge bg-danger fs-6">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>KONFIRMASI</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="card-text">
+                <div class="alert alert-success mb-0" role="alert">
+                    <p class="fs-5 m-0">
+                        Apakah Anda ingin berinvestasi di <strong>Risky Option - Allocation</strong>?
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="btn-group" role="group">
+                <button class="btn btn-success" name="offer_accepted" value="True">
+                    <i class="fa-regular fa-circle-check"></i>
+                    <span>Ya</span>
+                </button>
+                <button class="btn btn-danger" name="offer_accepted" value="False">
+                    <i class="fa-regular fa-circle-xmark"></i>
+                    <span>Tidak</span>
+                </button>
+            </div>
+        </div>
+    </div>
+{{ endblock }}
