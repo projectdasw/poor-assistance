@@ -1,0 +1,109 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+    <style>
+        .otree-form-errors,
+        .otree-timer{
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Cognitive Task - Ronde {{ player.round_number }}</span>
+{{ endblock }}
+
+{{ block content }}
+    <div class="card mb-3">
+        <div class="card-header">
+            <span class="badge bg-success fs-6 me-2">
+                Ronde : {{ player.round_number }}
+            </span>
+            <span class="badge bg-danger fs-6">
+                Endowment Anda: {{ player.endowment }}
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="card-title">
+                <h1>Cognitive Task - Word Search</h1>
+                <div class="alert alert-success" role="alert">
+                    Petunjuk : Hitung jumlah Huruf/Angka sesuai Target.
+                    Jika Target tidak ada dalam papan, maka masukkan 0 untuk jawaban
+                </div>
+            </div>
+            <div class="card-text">
+                <table id="boardContainer" class="table table-stripe border border-2 text-center">
+                    {% for row in board %}
+                        <tbody>
+                            {% for cell in row %}
+                                <td class="board-cell border border-3">
+                                    <strong>{{ cell }}</strong>
+                                </td>
+                            {% endfor %}
+                        </tbody>
+                    {% endfor %}
+                </table>
+                <div class="fs-4 mb-3 text-center">
+                    Berapa jumlah Huruf/Angka
+                        <span id="targetCharacter" class="badge bg-danger fs-5">{{ target_character }}</span>
+                    yang muncul diatas?
+                </div>
+                <div class="d-flex justify-content-center mb-3">
+                    <div>
+                        <div class="input-group">
+                            <input id="countGuess" type="number" class="form-control" required>
+                            <button class="btn btn-primary" onclick="submitGuess()">Kirim</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div class="badge bg-success fs-5 me-1">
+                        <span>Skor Anda:</span>
+                        <span id="playerScore">{{ player_score }}</span>
+                    </div>
+                    <div class="badge bg-danger fs-5 ms-1">
+                        <span>Waktu Tersisa : </span>
+                        <span class="otree-timer__time-left"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    function submitGuess() {
+        const guess = document.getElementById("countGuess").value;
+        liveSend({ count_guess: guess }); // Kirim jawaban
+    }
+
+    liveRecv((data) => {
+        // Update skor dan target karakter baru
+        if (data.new_score !== undefined) {
+            document.getElementById("playerScore").textContent = data.new_score;
+        }
+        if (data.new_target_character) {
+            document.getElementById("targetCharacter").textContent = data.new_target_character;
+        }
+
+        // Update papan baru
+        if (data.new_board) {
+            const boardContainer = document.getElementById("boardContainer");
+            boardContainer.innerHTML = ""; // Bersihkan papan lama
+
+            // Generate papan baru
+            data.new_board.forEach(row => {
+                const rowDiv = document.createElement("div");
+                row.forEach(char => {
+                    const cell = document.createElement("span");
+                    cell.textContent = char;
+                    cell.className = "board-cell";
+                    rowDiv.appendChild(cell);
+                });
+                boardContainer.appendChild(rowDiv);
+            });
+        }
+
+        document.getElementById("countGuess").value = ""; // Reset input setelah submit
+    });
+</script>
+{{ endblock }}

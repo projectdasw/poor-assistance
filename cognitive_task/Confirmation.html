@@ -1,0 +1,35 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Confirmation - Cognitive Task</span>
+{{ endblock }}
+
+{{ block content }}
+    <div class="card mb-3">
+        <div class="card-header">
+            <span class="badge bg-primary fs-6">
+                Cognitive Task
+            </span>
+        </div>
+        <div class="card-body">
+            <h1 class="card-title">Cognitive Task</h1>
+            <div class="card-text">
+                <p>
+                    Anda akan bermain permainan menghitung jumlah angka/huruf tertentu yang muncul dari sebaron angka/
+                    huruf. Anda akan mendapatkan lama waktu bermain tergantung alokasi yang Anda lakukan.
+                    <strong>Biaya waktu per 20 detik permainan adalah 10</strong>
+                    <br>
+                    Apakah Anda bersedia mengikuti Cognitive Task?
+                </p>
+                <div class="btn-group" role="group">
+                    <button class="btn btn-success" name="offer_accepted" value="True">Iya</button>
+                    <button class="btn btn-danger" name="offer_accepted" value="False">Tidak</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{{ endblock }}
