@@ -1,0 +1,31 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Confirmation - ASIAN Handicap</span>
+{{ endblock }}
+
+{{ block content }}
+    <div class="card mb-3">
+        <div class="card-header">
+            <span class="badge bg-primary fs-6">
+                ASIAN Handicap
+            </span>
+        </div>
+        <div class="card-body">
+            <h1 class="card-title">ASIAN Handicap - Investment Scheme</h1>
+            <div class="card-text">
+                <p>
+                    Apakah Anda ingin berinvestasi di <strong>ASIAN Handicap - Investment Scheme</strong>?
+                </p>
+                <div class="btn-group" role="group">
+                    <button class="btn btn-success" name="offer_accepted" value="True">Iya</button>
+                    <button class="btn btn-danger" name="offer_accepted" value="False">Tidak</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{{ endblock }}
