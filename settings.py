@@ -19,12 +19,12 @@ SESSION_CONFIGS = [
         app_sequence=['risky_option_allocation'],
         num_demo_participants=3
     ),
-    # dict(
-    #     display_name='Cognitive Task',
-    #     name='cognitive_task',
-    #     app_sequence=['cognitive_task'],
-    #     num_demo_participants=3
-    # ),
+    dict(
+        display_name='Cognitive Task',
+        name='cognitive_task',
+        app_sequence=['cognitive_task'],
+        num_demo_participants=3
+    ),
     # dict(
     #     display_name='ASIAN Handicap',
     #     name='asian_handicap',
