@@ -9,26 +9,46 @@
 {{ endblock }}
 
 {{ block content }}
-    <div class="card mb-3">
+    <div class="card">
         <div class="card-header">
-            <span class="badge bg-primary fs-6">
+            <div class="badge bg-primary fs-6">
                 Cognitive Task
-            </span>
+            </div>
+            <div class="badge bg-danger fs-6">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>KONFIRMASI</span>
+            </div>
         </div>
         <div class="card-body">
-            <h1 class="card-title">Cognitive Task</h1>
             <div class="card-text">
-                <p>
-                    Anda akan bermain permainan menghitung jumlah angka/huruf tertentu yang muncul dari sebaron angka/
-                    huruf. Anda akan mendapatkan lama waktu bermain tergantung alokasi yang Anda lakukan.
-                    <strong>Biaya waktu per 20 detik permainan adalah 10</strong>
-                    <br>
-                    Apakah Anda bersedia mengikuti Cognitive Task?
-                </p>
-                <div class="btn-group" role="group">
-                    <button class="btn btn-success" name="offer_accepted" value="True">Iya</button>
-                    <button class="btn btn-danger" name="offer_accepted" value="False">Tidak</button>
+                <div class="p-0">
+                    <h2>Cognitive Task</h2>
+                    <p>
+                        Anda akan bermain permainan menghitung jumlah angka/huruf yang muncul dari sebaron angka/huruf.
+                        Anda akan mendapatkan lama waktu bermain tergantung alokasi yang Anda lakukan.
+                        <strong>Biaya waktu per 20 detik permainan adalah 10</strong>
+                    </p>
+                    <hr>
+                    <p class="m-0">
+                        <div class="alert alert-success m-0" role="alert">
+                            <p class="fs-5 m-0">
+                                Apakah Anda bersedia mengikuti <strong>Cognitive Task</strong>?
+                            </p>
+                        </div>
+                    </p>
                 </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="btn-group" role="group">
+                <button class="btn btn-success" name="offer_accepted" value="True">
+                    <i class="fa-regular fa-circle-check"></i>
+                    <span>Ya</span>
+                </button>
+                <button class="btn btn-danger" name="offer_accepted" value="False">
+                    <i class="fa-regular fa-circle-xmark"></i>
+                    <span>Tidak</span>
+                </button>
             </div>
         </div>
     </div>

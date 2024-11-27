@@ -17,84 +17,96 @@
             <span class="badge bg-danger fs-6">
                 Endowment Anda: {{ player.endowment }}
             </span>
-            {{ if player.endowment < 10 or player.endowment == 0 }}
-                <button class="otree-btn-next badge btn btn-primary fs-6 ms-2">
+            {{ if player.endowment < 10 }}
+                <button type="submit" class="badge btn btn-primary fs-6 ms-2"
+                    name="subject_action" value="endowment_limit">
                     Lanjut
                 </button>
             {{ endif }}
         </div>
         <div class="card-body">
-            {{ if player.endowment < 10 or player.endowment == 0 }}
+            {{ if player.endowment < 10 }}
                 <div class="alert alert-danger" role="alert">
                     <i class="fa-solid fa-circle-exclamation me-1"></i>
                     <span>
-                        <strong>Anda tidak memiliki Endowment yang cukup untuk membeli waktu</strong>.
+                        <strong>Endowment Anda tidak mencukupi untuk membeli waktu</strong>.
                         Silahkan klik <strong>"Lanjut"</strong>.
                     </span>
                 </div>
             {{ endif }}
-            <h1 class="card-title">Cognitive Task - Buy Time</h1>
             <div class="card-text">
-                <div class="mb-3">
-                    <label for="buy_time" class="form-label">
-                        Masukkan jumlah Endowment yang ingin Anda gunakan untuk membeli waktu
-                    </label>
-                    {{ if player.endowment < 10 or player.endowment == 0 }}
-                        <input type="text" class="form-control" name="buy_time" value="0" readonly>
-                    {{ else }}
-                        <input type="text" class="form-control" name="buy_time" value="0">
-                    {{ endif }}
-                </div>
-                <div class="alert alert-info" role="alert">
-                    Jika Anda memasukkan 10 Endowment, maka Anda mendapatkan waktu selama 20 detik.
-                </div>
-                <p class="badge bg-danger fs-6">
-                    Kelipatan per 10 Endowment
-                </p>
-                <div class="row row-cols-1 row-cols-md-3 g-4">
-                    <div class="col">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h2 class="card-title">20 Detik</h2>
-                                <p class="card-text">
-                                    Harga: <strong>10</strong>
-                                </p>
-                            </div>
-                        </div>
+                <div class="p-0">
+                    <h2>Cognitive Task - Buy Time</h2>
+                    <div class="mb-3">
+                        <label for="buy_time" class="form-label">
+                            Masukkan jumlah Endowment yang ingin Anda gunakan untuk membeli waktu
+                        </label>
+                        <input type="text" class="form-control" name="buy_time" value="0"
+                            {{ if not player.endowment >= 10 }}readonly{{ endif }}>
                     </div>
-                    <div class="col">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h2 class="card-title">40 Detik</h2>
-                                <p class="card-text">
-                                    Harga: <strong>20</strong>
-                                </p>
-                            </div>
+                    <hr>
+                    <p class="m-0">
+                        <div class="alert alert-success m-0" role="alert">
+                            <h5 class="alert-heading">
+                                Informasi Ketentuan:
+                            </h5>
+                            <ul class="list-group">
+                                <li class="list-group-item list-group-item-success border-0 p-0">
+                                    <i class="fa-solid fa-check"></i>
+                                    <span>
+                                        Harga per 20 Detik adalah 10 Endowment.
+                                    </span>
+                                </li>
+                                <li class="list-group-item list-group-item-success border-0 p-0">
+                                    <i class="fa-solid fa-check"></i>
+                                    <span>
+                                        Belaku kelipatan per 10 Endowment. Anda tidak dapat mengalokasi dana selain
+                                        kelipatan yang telah ditentukan.
+                                    </span>
+                                </li>
+                                <li class="list-group-item list-group-item-success border-0 p-0">
+                                    <i class="fa-solid fa-check"></i>
+                                    <span>
+                                        Jika Anda mengalokasi dana 20 Endowment, maka waktu yang Anda dapatkan adalah
+                                        40 Detik dan seterusnya.
+                                    </span>
+                                </li>
+                                <li class="list-group-item list-group-item-success border-0 p-0">
+                                    <i class="fa-solid fa-check"></i>
+                                    <span>
+                                        Input Form tidak boleh kosong.
+                                    </span>
+                                </li>
+                                {{ if checkpoint }}
+                                    <li class="list-group-item list-group-item-success border-0 p-0">
+                                        <i class="fa-solid fa-check"></i>
+                                        <span>
+                                            Jika Anda tidak tertarik untuk kembali mengikuti Cognitive Task, Anda dapat
+                                            mengakhiri Cognitive Task dengan memilih "Akhiri Cognitive Task".
+                                        </span>
+                                    </li>
+                                {{ endif }}
+                            </ul>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h2 class="card-title">60 Detik</h2>
-                                <p class="card-text">
-                                    Harga: <strong>30</strong>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    </p>
                 </div>
             </div>
         </div>
+        <div class="card-footer">
+            <button type="submit" name="subject_action" value="start"
+                class="btn {{ if player.endowment < 10 }}btn-secondary{{ else }}btn-outline-success{{ endif }}"
+                {{ if not player.endowment >= 10 }}disabled{{ endif }}>
+                <i class="fa-regular fa-hourglass-half"></i>
+                <span>Mulai</span>
+            </button>
+            {{ if checkpoint }}
+                <button type="submit" name="subject_action" value="end"
+                    class="btn {{ if player.endowment < 10 }}btn-secondary{{ else }}btn-outline-danger{{ endif }}"
+                    {{ if not player.endowment >= 10 }}disabled{{ endif }}>
+                    <i class="fa-solid fa-forward-fast"></i>
+                    <span>Akhiri Cognitive Task</span>
+                </button>
+            {{ endif }}
+        </div>
     </div>
-    {{ if player.endowment < 10 or player.endowment == 0 }}
-        <button class="otree-btn-next btn btn-outline-success" disabled>
-            <i class="fa-solid fa-check"></i>
-            <span>Mulai</span>
-        </button>
-    {{ else }}
-        <button class="otree-btn-next btn btn-outline-success">
-            <i class="fa-solid fa-check"></i>
-            <span>Mulai</span>
-        </button>
-    {{ endif }}
 {{ endblock }}

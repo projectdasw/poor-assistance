@@ -15,7 +15,7 @@
                 Cognitive Task
             </span>
             <span class="badge bg-danger fs-6">
-                Endowment Anda: {{ player.endowment }}
+                Endowment Anda: {{ final_endowment }}
             </span>
         </div>
         <div class="card-body">
@@ -34,7 +34,11 @@
                             <tr>
                                 <td>Cognitive Task - Ronde {{ result.round_number }}</td>
                                 <td>
-                                    <strong class="text-success">+{{ result.score }}</strong>
+                                    {{ if result.score == 0 }}
+                                        <strong>{{ result.score }}</strong>
+                                    {{ else }}
+                                        <strong class="text-success">+{{ result.score }}</strong>
+                                    {{ endif }}
                                 </td>
                                 <td>
                                     <strong class="text-danger">-{{ result.time_cost }}</strong>

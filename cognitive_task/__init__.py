@@ -10,8 +10,9 @@ Cognitive Task
 class Constants(BaseConstants):
     name_in_url = 'cognitive_task'
     players_per_group = None
-    num_rounds = 2
-    initial_endowment = 100
+    num_rounds = 30
+    initial_endowment = 60
+    subject_interest = 5 # Atur tingkat ketertarikan Subjek dalam mengikuti permainan
     board_rows = 5  # Jumlah baris papan
     board_columns = 10 # Jumlah kolom papan
     target_character = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
@@ -26,18 +27,23 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    endowment = models.CurrencyField()
+    endowment = models.CurrencyField(initial=0)
     buy_time = models.IntegerField(initial=0)
     count_guess = models.IntegerField(label="Berapa kali huruf/angka muncul:")
     actual_count = models.IntegerField(initial=0)
     score = models.IntegerField(initial=0)
     current_target = models.StringField()  # Target huruf/angka yang diacak setiap putaran
-    offer_accepted = models.BooleanField(
-        choices=[
-            (True, 'Iya'),
-            (False, 'Tidak')
-        ]
+    offer_accepted = models.BooleanField(choices=[(True), (False)], initial=None)
+    subject_action = models.StringField(
+        choices=['start', 'end', 'endowment_limit'],  # Tombol yang dipilih
+        initial="", blank=True
     )
+
+
+class Welcome(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
 
 
 class Confirmation(Page):
@@ -57,40 +63,76 @@ class Confirmation(Page):
 
 class BuyTime(Page):
     form_model = 'player'
-    form_fields = ['buy_time']
+    form_fields = ['buy_time', 'subject_action']
 
     @staticmethod
     def is_displayed(player: Player):
-        # Hanya tampilkan halaman ini jika pemain memilih "Ya" di ronde pertama
-        return player.participant.offer_accepted is True
+        # Hanya tampilkan halaman ini jika pemain memilih "Ya"
+        return player.participant.offer_accepted is True and not player.participant.vars.get('end_game', False)
 
     @staticmethod
     def vars_for_template(player: Player):
-        participant = player.participant
+        # Hitung total skip akumulatif
+        skips = sum(1 for p in player.in_all_rounds() if p.subject_action == 'start')
 
-        # Dynamic Endowment
-        if player.round_number > 1:
-            # Endowment dari periode sebelumnya digunakan kembali pada periode berikutnya
-            previous_player = player.in_round(player.round_number - 1)
-            participant.get_endowment = previous_player.endowment  # Menampilkan endowment periode sebelumnya
-            player.endowment = previous_player.endowment  # Ambil endowment dari periode sebelumnya
+        # Ambil checkpoint konfirmasi terakhir dari participant vars
+        last_check = player.participant.vars.get('last_skip_checkpoint', 0)
+
+        # Simpan endowment terakhir
+        previous_round_endowment = player.in_round(
+            player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
+        player.endowment = previous_round_endowment
+
+        return {
+            'checkpoint': skips >= last_check + Constants.subject_interest
+        }
+
+        # Tampilkan jika skips mencapai kelipatan 5 sejak checkpoint terakhir
+        return (
+            # Atur Checkpoint
+            skips >= last_check + Constants.subject_interest
+            and not player.participant.vars.get('end_game', False)
+        )
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        # Memastikan input adalah kelipatan 10 dan tidak melebihi endowment yang ada
-        if player.buy_time % 10 == 0 and player.buy_time <= player.endowment:
+        action = player.subject_action
+        if action == "start":
             player.endowment -= player.buy_time
-        else:
-            # Jika endowment 0, maka waktu pembelian adalah 0
-            player.buy_time = 0
+            # Catat ronde terakhir tempat pemain bermain
+            player.participant.vars['last_round_played'] = player.round_number
+        elif action == "end" or action == "endowment_limit":
+            # Permainan selesai
+            player.participant.vars['end_game'] = True
+            # Tetapkan ronde terakhir bermain
+            player.participant.vars['last_round_played'] = player.round_number
+
+        # Simpan `endowment` terakhir sebagai final payoff
+        if action in ["end", "endowment_limit"]:
+            player.payoff = player.endowment
+
 
     @staticmethod
     def error_message(player: Player, values):
-        if values['buy_time'] > player.endowment:
-            return 'Anda tidak memiliki cukup endowment untuk membeli waktu ini.'
-        if values['buy_time'] % 10 != 0:
-            return 'Jumlah endowment yang dibelanjakan harus dalam kelipatan 10.'
+        if values['subject_action'] == "start":
+            error_msgs = []
+            if values['buy_time'] > player.endowment:
+                error_msgs.append(
+                    f"Anda tidak memiliki cukup endowment untuk membeli waktu."
+                )
+            elif values['buy_time'] % 10 != 0:
+                error_msgs.append(
+                    f"Jumlah endowment yang dibelanjakan harus dalam kelipatan 10."
+                )
+            elif values['buy_time'] == 0:
+                error_msgs.append(
+                    f"Anda tidak melakukan alokasi untuk membeli waktu."
+                )
 
+            # Jika ada pesan kesalahan, gabungkan dan kembalikan
+            if error_msgs:
+                return "<br>".join(error_msgs)
+            return ""
 
 def live_method(player: Player, data):
     if 'count_guess' in data:
@@ -122,6 +164,11 @@ class Game(Page):
     form_fields = ['count_guess']
     live_method = live_method
 
+    @staticmethod
+    def is_displayed(player: Player):
+        # Hanya tampilkan permainan jika subjek memilih "Mulai"
+        return not player.participant.vars.get('end_game', False)
+
     # Menggunakan waktu yang dibeli oleh pemain
     @staticmethod
     def get_timeout_seconds(player: Player):
@@ -129,7 +176,6 @@ class Game(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        # Membuat papan dengan 3 baris dan 13 kolom
         board = [
             [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890') for _ in range(Constants.board_columns)]
             for _ in range(Constants.board_rows)
@@ -146,9 +192,14 @@ class Game(Page):
 
 class Results(Page):
     @staticmethod
+    def is_displayed(player: Player):
+        return not player.participant.vars.get('end_game', False)
+
+    @staticmethod
     def vars_for_template(player: Player):
         return {
             'final_score': player.score,
+            'get_time': (player.buy_time // 10) * 20
         }
 
     @staticmethod
@@ -167,12 +218,6 @@ class Results(Page):
             'time_cost': player.buy_time
         })
 
-    @staticmethod
-    def app_after_this_page(player: Player, upcoming_apps):
-        # Jika pemain memilih "Tidak" di ronde pertama, langsung ke aplikasi berikutnya
-        if player.participant.offer_accepted is False:
-            return 'asian_handicap'  # Ganti dengan nama aplikasi berikutnya
-
 
 class AllResults(Page):
     @staticmethod
@@ -181,16 +226,21 @@ class AllResults(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
+        # Ambil ronde terakhir bermain
+        last_round = player.participant.vars.get('last_round_played', player.round_number)
+        final_endowment = player.in_round(last_round).endowment
+
         # Ambil hasil dari semua ronde
         all_rounds_results = player.participant.vars.get('cognitive_task_results', [])
         total_score = sum(result['score'] for result in all_rounds_results)
         total_cost = sum(result['time_cost'] for result in all_rounds_results)
 
         return {
+            'final_endowment': final_endowment,
             'all_rounds_results': all_rounds_results,
             'total_score': total_score,
-            'total_cost': total_cost,
+            'total_cost': total_cost
         }
 
 
-page_sequence = [Confirmation, BuyTime, Game, Results, AllResults]
+page_sequence = [Welcome, Confirmation, BuyTime, Game, Results, AllResults]
