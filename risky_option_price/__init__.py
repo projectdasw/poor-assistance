@@ -217,13 +217,7 @@ class Game(Page):
         if (player.endowment) < 25:
             player.participant.vars['end_game'] = True
             return False
-        # return (
-        #     player.participant.offer_accepted is True
-        #     and not player.participant.vars.get('end_game', False)
-        # )
-
-
-        if player.subject_action == 'skip':
+        elif player.subject_action == 'skip':
             # Jika tombol "Lewati" dipilih, set hasil kosong dan lanjut ke Results
             player.result_price1 = 0
             player.result_price2 = 0
@@ -331,7 +325,8 @@ class Game(Page):
         if player.endowment >= 25:
             if total_cost > player.endowment:
                 error_msgs.append(
-                    f"Endowment Anda tidak mencukupi untuk membeli {selected_count} opsi (Total biaya: {total_cost}).")
+                    f"Endowment Anda tidak mencukupi untuk membeli {selected_count} opsi (Total biaya: {total_cost})."
+                )
 
             # Pesan kesalahan jika tidak ada opsi yang dipilih
             if values['subject_action'] == 'invested':
