@@ -15,7 +15,7 @@
                 ASIAN Handicap
             </span>
             <span class="badge bg-danger fs-6">
-                Endowment Anda: {{ player.endowment }}
+                Endowment Anda: {{ final_endowment }} Ronde {{ last_round }}
             </span>
         </div>
         <div class="card-body">
@@ -41,7 +41,11 @@
                                     {{ endif }}
                                 </td>
                                 <td>
-                                    <strong class="text-danger">-{{ round.cost }}</strong>
+                                    {{ if round.cost == 0 }}
+                                        <strong>{{ round.cost }}</strong>
+                                    {{ else }}
+                                        <strong class="text-danger">-{{ round.cost }}</strong>
+                                    {{ endif }}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -49,8 +53,20 @@
                     <tfoot>
                         <tr>
                             <th>Total</th>
-                            <th>{{ final_return }}</th>
-                            <th>{{ final_cost }}</th>
+                            <td>
+                                {{ if final_return == 0}}
+                                    <strong>{{ final_return }}</strong>
+                                {{ else }}
+                                    <strong class="text-success">+{{ final_return }}</strong>
+                                {{ endif }}
+                            </td>
+                            <td>
+                                {{ if final_cost == 0}}
+                                <strong>0.0</strong>
+                                {{ else }}
+                                    <strong class="text-danger">{{ final_cost }}</strong>
+                                {{ endif }}
+                            </td>
                         </tr>
                     </tfoot>
                 </table>

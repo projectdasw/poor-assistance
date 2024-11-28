@@ -1,0 +1,49 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Check Interest - ASIAN Handicap Investment Scheme</span>
+{{ endblock }}
+
+{{ block content }}
+    <div class="card mb-3">
+        <div class="card-header">
+            <div class="badge bg-primary bg-gradient fs-6">
+                <span>ASIAN Handicap - Investment Scheme</span>
+            </div>
+            <div class="badge bg-danger bg-gradient fs-6">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>PERINGATAN</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="card-text">
+                <div class="alert alert-danger mb-0" role="alert">
+                    <h1 class="alert-heading">Oppsss!</h1>
+                    <p class="fs-5 m-0">
+                        <strong>Anda terdeteksi tidak melakukan investasi sebanyak {{ skips }} Ronde</strong>
+                    </p>
+                </div>
+                <div class="alert alert-success mb-0" role="alert">
+                    <p class="fs-5 m-0">
+                        Apakah Anda masih tertarik melakukan investasi di
+                        <strong>ASIAN Handicap - Investment Scheme</strong>?
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="btn-group" role="group">
+                <button class="btn btn-success" name="still_interested" value="yes">
+                    Iya, Saya masih tertarik
+                </button>
+                <button class="btn btn-danger" name="still_interested" value="no">
+                    Tidak, Saya hanya ingin bergantung pada Bantuan
+                </button>
+            </div>
+        </div>
+    </div>
+{{ endblock }}
