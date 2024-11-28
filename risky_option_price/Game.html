@@ -17,14 +17,15 @@
             <span class="badge bg-danger fs-6">
                 Endowment Anda: {{ player.endowment }}
             </span>
-            {{ if player.endowment <= 25 }}
-                <button type="submit" class="badge btn btn-primary fs-6 ms-2">
+            {{ if player.endowment < 25 }}
+                <button type="submit" class="badge btn btn-primary fs-6 ms-2"
+                    name="subject_action" value="endowment_limit">
                     Lanjut
                 </button>
             {{ endif }}
         </div>
         <div class="card-body">
-            {{ if player.endowment <= 25 }}
+            {{ if player.endowment < 25 }}
                 <div class="alert alert-danger" role="alert">
                     <i class="fa-solid fa-circle-exclamation me-1"></i>
                     <span>
@@ -55,7 +56,7 @@
                 <div class="mt-4">
                     <form method="post">
                         <div class="row row-cols-1 row-cols-md-3 g-2">
-                            {{ if player.endowment <= 25 }}
+                            {{ if player.endowment < 25 }}
                                 {% for option1 in random_options1 %}
                                     <div class="col">
                                         <div class="card h-100">
@@ -295,13 +296,13 @@
         </div>
         <div class="card-footer">
             <button type="submit" name="subject_action" value="invested"
-                class="btn {{ if player.endowment <= 25 }}btn-secondary{{ else }}btn-outline-success{{ endif }}"
+                class="btn {{ if player.endowment < 25 }}btn-secondary{{ else }}btn-outline-success{{ endif }}"
                 {{ if not player.endowment >= 25 }}disabled{{ endif }}>
                 <i class="fa-solid fa-money-bill-trend-up"></i>
                 <span>Submit</span>
             </button>
             <button type="submit" name="subject_action" value="skip"
-                class="btn {{ if player.endowment <= 25 }}btn-secondary{{ else }}btn-outline-danger{{ endif }}
+                class="btn {{ if player.endowment < 25 }}btn-secondary{{ else }}btn-outline-danger{{ endif }}
                     fs-6 ms-2" {{ if not player.endowment >= 25 }}disabled{{ endif }}>
                 <i class="fa-solid fa-forward"></i>
                 <span>Lewati Ronde {{ player.round_number }}</span>

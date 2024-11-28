@@ -25,12 +25,12 @@ SESSION_CONFIGS = [
         app_sequence=['cognitive_task'],
         num_demo_participants=3
     ),
-    # dict(
-    #     display_name='ASIAN Handicap',
-    #     name='asian_handicap',
-    #     app_sequence=['asian_handicap'],
-    #     num_demo_participants=3
-    # ),
+    dict(
+        display_name='ASIAN Handicap',
+        name='asian_handicap',
+        app_sequence=['asian_handicap'],
+        num_demo_participants=3
+    ),
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs

@@ -10,8 +10,8 @@ Poor Assistance Experiment
 class Constants(BaseConstants):
     name_in_url = 'risky_option_allocation'
     players_per_group = None
-    num_rounds = 30
-    initial_endowment = 0
+    num_rounds = 10
+    initial_endowment = 100
     options_data_allocation = [
         {'name': 'Opsi 1', 'outcomes': [(1.5, 0.65), (0.25, 0.1), (0, 0.25)]},
         {'name': 'Opsi 2', 'outcomes': [(1.5, 0.6), (0.5, 0.2), (0, 0.2)]},
@@ -64,9 +64,12 @@ class Player(BasePlayer):
     total_profit = models.FloatField(initial=0)
     offer_accepted = models.BooleanField(choices=[(True), (False)], initial=None)
     subject_action = models.StringField(
-        choices=['skip', 'invested'], initial="", blank=True  # Untuk mencatat tombol yang dipilih
-    )
-    still_interested = models.BooleanField(choices=[(True), (False)], blank=True)
+        choices=['skip', 'invested', 'endowment_limit'], initial="", blank=True
+    )  # Untuk mencatat tombol yang dipilih
+
+    still_interested = models.StringField(
+        choices=['yes', 'no'], initial="", blank=True
+    )  # Untuk mencatat tombol yang dipilih
 
 class Welcome(Page):
     @staticmethod
@@ -87,6 +90,16 @@ class Confirmation(Page):
         player.participant.offer_accepted = player.offer_accepted
         player.endowment = Constants.initial_endowment
 
+        if player.participant.offer_accepted:
+            # Jika pemain memilih 'Yes', lanjutkan ke Game
+            pass
+        else:
+            # Jika pemain memilih 'No', tandai end_game dan arahkan ke AllResults
+            player.participant.vars['end_game'] = True
+            # Tetapkan ronde terakhir bermain
+            player.participant.vars['last_round_played'] = player.round_number
+            player.payoff = player.endowment
+
 
 class CheckInterest(Page):
     form_model = 'player'
@@ -99,11 +112,6 @@ class CheckInterest(Page):
 
         # Ambil checkpoint konfirmasi terakhir dari participant vars
         last_check = player.participant.vars.get('last_skip_checkpoint', 0)
-
-        # Simpan endowment terakhir
-        previous_round_endowment = player.in_round(
-            player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
-        player.endowment = previous_round_endowment
 
         # Tampilkan halaman jika skips mencapai kelipatan 5 sejak checkpoint terakhir
         return (
@@ -123,18 +131,24 @@ class CheckInterest(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        if not player.still_interested:
+        if player.still_interested == "no":
             player.participant.vars['end_game'] = True
-            player.participant.vars['skip_to_end'] = True
+            # Tetapkan ronde terakhir bermain
+            player.participant.vars['last_round_played'] = player.round_number
+            # Simpan endowment terakhir
+            previous_round_endowment = player.in_round(
+                player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
+            player.endowment = previous_round_endowment
+            player.payoff = player.endowment
         else:
+            player.still_interested == "yes"
+            # Simpan endowment terakhir
+            previous_round_endowment = player.in_round(
+                player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
+            player.endowment = previous_round_endowment
             # Update checkpoint ke jumlah skips saat ini
             skips = sum(1 for p in player.in_all_rounds() if p.subject_action == 'skip')
             player.participant.vars['last_skip_checkpoint'] = skips
-
-        # Tetapkan endowment untuk ronde berikutnya jika diperlukan
-        if player.round_number > 1:
-            previous_player = player.in_round(player.round_number - 1)
-            player.endowment = previous_player.endowment
 
 
 class Game(Page):
@@ -147,23 +161,14 @@ class Game(Page):
     @staticmethod
     def is_displayed(player: Player):
         # Hanya tampilkan halaman jika pemain masih tertarik
-        return (
-            player.participant.offer_accepted is True
-            and not player.participant.vars.get('end_game', False)
-        )
+        return not player.participant.vars.get('end_game', False)
 
     @staticmethod
     def vars_for_template(player: Player):
-        participant = player.participant
-
-        # Tetapkan endowment berdasarkan ronde sebelumnya
-        if player.round_number == 1:
-            player.endowment = Constants.initial_endowment
-        elif not player.participant.vars.get('end_game', False):
-            previous_player = player.in_round(player.round_number - 1)
-            player.endowment = previous_player.endowment
-
-        participant.get_endowment = player.endowment
+        # Simpan endowment terakhir
+        previous_round_endowment = player.in_round(
+            player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
+        player.endowment = previous_round_endowment
 
         # Mendapatkan pilihan acak (contoh daftar pilihan opsi)
         random_options1 = random.sample(Constants.options_data_allocation, 1)
@@ -219,16 +224,12 @@ class Game(Page):
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         # Jika endowment sama dengan 0, langsung akhiri permainan
-        if (player.endowment) == 0:
+        if player.subject_action == 'endowment_limit':
             player.participant.vars['end_game'] = True
-            return False
-        # return (
-        #     player.participant.offer_accepted is True
-        #     and not player.participant.vars.get('end_game', False)
-        # )
-
-
-        if player.subject_action == 'skip':
+            # Tetapkan ronde terakhir bermain
+            player.participant.vars['last_round_played'] = player.round_number
+            player.payoff = player.endowment
+        elif player.subject_action == 'skip':
             # Jika tombol "Lewati" dipilih, set hasil kosong dan lanjut ke Results
             player.selected_optionallocation1 = ""
             player.result_allocation1 = 0
@@ -422,6 +423,10 @@ class AllResults(Page):
         # Ambil daftar hasil dari participant.vars
         results_by_round = player.participant.vars.get('results_by_round', [])
 
+        # Ambil ronde terakhir bermain
+        last_round = player.participant.vars.get('last_round_played', player.round_number)
+        final_endowment = player.in_round(last_round).endowment
+
         # Hitung total payoff dan total cost
         total_payoff = sum(item['payoff'] for item in results_by_round)
         total_cost = sum(item['cost'] for item in results_by_round)
@@ -429,7 +434,9 @@ class AllResults(Page):
         return {
             'results_by_round': results_by_round,
             'total_payoff': total_payoff,
-            'total_cost': total_cost
+            'total_cost': total_cost,
+            'last_round': last_round,
+            'final_endowment': final_endowment
         }
 
 

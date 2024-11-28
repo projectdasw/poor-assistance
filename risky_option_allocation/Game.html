@@ -18,7 +18,8 @@
                 Endowment Anda: {{ player.endowment }}
             </span>
             {{ if player.endowment == 0 }}
-                <button type="submit" class="badge btn btn-primary fs-6 ms-2">
+                <button type="submit" class="badge btn btn-primary fs-6 ms-2"
+                    name="subject_action" value="endowment_limit">
                     Lanjut
                 </button>
             {{ endif }}
