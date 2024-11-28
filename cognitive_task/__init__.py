@@ -10,8 +10,8 @@ Cognitive Task
 class Constants(BaseConstants):
     name_in_url = 'cognitive_task'
     players_per_group = None
-    num_rounds = 30
-    initial_endowment = 120
+    num_rounds = 20
+    initial_endowment = 100
     subject_interest = 5 # Atur tingkat ketertarikan Subjek dalam mengikuti permainan
     board_rows = 5  # Jumlah baris papan
     board_columns = 10 # Jumlah kolom papan

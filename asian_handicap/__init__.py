@@ -10,8 +10,8 @@ ASIAN Handicap
 class Constants(BaseConstants):
     name_in_url = 'asian_handicap'
     players_per_group = None
-    num_rounds = 10
-    initial_endowment = 0
+    num_rounds = 20
+    initial_endowment = 100
     investment_scheme = [
         {"investment_return": 1.15, "probability": 0.9},
         {"investment_return": 1.2, "probability": 0.85},
