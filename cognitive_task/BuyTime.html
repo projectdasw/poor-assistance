@@ -99,7 +99,7 @@
                 <i class="fa-regular fa-hourglass-half"></i>
                 <span>Mulai</span>
             </button>
-            {{ if checkpoint }}
+            {{ if checkpoint >= Constants.subject_interest }}
                 <button type="submit" name="subject_action" value="end"
                     class="btn {{ if player.endowment < 10 }}btn-secondary{{ else }}btn-outline-danger{{ endif }}"
                     {{ if not player.endowment >= 10 }}disabled{{ endif }}>

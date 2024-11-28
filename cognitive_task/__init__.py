@@ -11,7 +11,7 @@ class Constants(BaseConstants):
     name_in_url = 'cognitive_task'
     players_per_group = None
     num_rounds = 30
-    initial_endowment = 60
+    initial_endowment = 120
     subject_interest = 5 # Atur tingkat ketertarikan Subjek dalam mengikuti permainan
     board_rows = 5  # Jumlah baris papan
     board_columns = 10 # Jumlah kolom papan
@@ -60,6 +60,16 @@ class Confirmation(Page):
         player.participant.offer_accepted = player.offer_accepted
         player.endowment = Constants.initial_endowment
 
+        if player.participant.offer_accepted:
+            # Jika pemain memilih 'Yes', lanjutkan ke Game
+            pass
+        else:
+            # Jika pemain memilih 'No', tandai end_game dan arahkan ke AllResults
+            player.participant.vars['end_game'] = True
+            # Tetapkan ronde terakhir bermain
+            player.participant.vars['last_round_played'] = player.round_number
+            player.payoff = player.endowment
+
 
 class BuyTime(Page):
     form_model = 'player'
@@ -73,43 +83,31 @@ class BuyTime(Page):
     @staticmethod
     def vars_for_template(player: Player):
         # Hitung total skip akumulatif
-        skips = sum(1 for p in player.in_all_rounds() if p.subject_action == 'start')
-
-        # Ambil checkpoint konfirmasi terakhir dari participant vars
-        last_check = player.participant.vars.get('last_skip_checkpoint', 0)
+        still_interested = sum(1 for p in player.in_all_rounds() if p.subject_action == 'start')
 
         # Simpan endowment terakhir
         previous_round_endowment = player.in_round(
             player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
         player.endowment = previous_round_endowment
 
-        return {
-            'checkpoint': skips >= last_check + Constants.subject_interest
-        }
-
-        # Tampilkan jika skips mencapai kelipatan 5 sejak checkpoint terakhir
-        return (
-            # Atur Checkpoint
-            skips >= last_check + Constants.subject_interest
-            and not player.participant.vars.get('end_game', False)
-        )
+        return {'checkpoint': still_interested}
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         action = player.subject_action
         if action == "start":
             player.endowment -= player.buy_time
-            # Catat ronde terakhir tempat pemain bermain
-            player.participant.vars['last_round_played'] = player.round_number
         elif action == "end" or action == "endowment_limit":
             # Permainan selesai
             player.participant.vars['end_game'] = True
             # Tetapkan ronde terakhir bermain
             player.participant.vars['last_round_played'] = player.round_number
-
-        # Simpan `endowment` terakhir sebagai final payoff
-        if action in ["end", "endowment_limit"]:
+            # Simpan endowment terakhir
+            previous_round_endowment = player.in_round(
+                player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
+            player.endowment = previous_round_endowment
             player.payoff = player.endowment
+
 
 
     @staticmethod
@@ -236,6 +234,7 @@ class AllResults(Page):
         total_cost = sum(result['time_cost'] for result in all_rounds_results)
 
         return {
+            'last_round': last_round,
             'final_endowment': final_endowment,
             'all_rounds_results': all_rounds_results,
             'total_score': total_score,
