@@ -1,12 +1,12 @@
 from os import environ
 
 SESSION_CONFIGS = [
-    # dict(
-    #     display_name='Poor Assistance Experiment',
-    #     name='poor_assistance_experiment',
-    #     app_sequence=['risky_option_price', 'risky_option_allocation'],
-    #     num_demo_participants=3
-    # ),
+    dict(
+        display_name='Poor Assistance Experiment (Beta)',
+        name='poor_assistance_experiment',
+        app_sequence=['risky_option_price', 'risky_option_allocation', 'cognitive_task', 'asian_handicap'],
+        num_demo_participants=3
+    ),
     dict(
         display_name='Risky Option Price',
         name='risky_option_price',
