@@ -15,7 +15,7 @@
                 Risky Option Allocation
             </span>
             <span class="badge bg-danger fs-6">
-                Endowment Anda: {{ final_endowment }}
+                Endowment Anda: {{ final_endowment2 }}
             </span>
         </div>
         <div class="card-body">
@@ -30,21 +30,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for item in results_by_round %}
+                        {% for item in results_by_round2 %}
                         <tr>
-                            <td>Risky Option Allocation - Ronde {{ item.round_number }}</td>
+                            <td>Risky Option Allocation - Ronde {{ item.round_number2 }}</td>
                             <td>
-                                {{ if item.payoff == 0 }}
-                                    <strong>{{ item.payoff }}</strong>
+                                {{ if item.payoff2 == 0 }}
+                                    <strong>{{ item.payoff2 }}</strong>
                                 {{ else }}
-                                    <strong class="text-success">+{{ item.payoff }}</strong>
+                                    <strong class="text-success">+{{ item.payoff2 }}</strong>
                                 {{ endif }}
                             </td>
                             <td>
-                                {{ if item.cost == 0 }}
-                                    <strong>{{ item.cost }}</strong>
+                                {{ if item.cost2 == 0 }}
+                                    <strong>{{ item.cost2 }}</strong>
                                 {{ else }}
-                                    <strong class="text-danger">-{{ item.cost }}</strong>
+                                    <strong class="text-danger">-{{ item.cost2 }}</strong>
                                 {{ endif }}
                             </td>
                         </tr>
@@ -53,8 +53,8 @@
                     <tfoot>
                         <tr>
                             <th>Total</th>
-                            <th>{{ total_payoff }}</th>
-                            <th>{{ total_cost }}</th>
+                            <th>{{ total_payoff2 }}</th>
+                            <th>{{ total_cost2 }}</th>
                         </tr>
                     </tfoot>
                 </table>
