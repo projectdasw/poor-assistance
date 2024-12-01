@@ -4,32 +4,40 @@ SESSION_CONFIGS = [
     dict(
         display_name='Poor Assistance Experiment (Beta)',
         name='poor_assistance_experiment',
-        app_sequence=['risky_option_price', 'risky_option_allocation', 'cognitive_task', 'asian_handicap'],
-        num_demo_participants=3
+        app_sequence=[
+            'welcome_instructions',
+            'risky_option_price',
+            'risky_option_allocation',
+            'cognitive_task',
+            'asian_handicap',
+            'survey',
+            'pay_random'
+        ],
+        num_demo_participants=1
     ),
     dict(
         display_name='Risky Option Price',
         name='risky_option_price',
         app_sequence=['risky_option_price'],
-        num_demo_participants=3
+        num_demo_participants=1
     ),
     dict(
         display_name='Risky Option Allocation',
         name='risky_option_allocation',
         app_sequence=['risky_option_allocation'],
-        num_demo_participants=3
+        num_demo_participants=1
     ),
     dict(
         display_name='Cognitive Task',
         name='cognitive_task',
         app_sequence=['cognitive_task'],
-        num_demo_participants=3
+        num_demo_participants=1
     ),
     dict(
         display_name='ASIAN Handicap',
         name='asian_handicap',
         app_sequence=['asian_handicap'],
-        num_demo_participants=3
+        num_demo_participants=1
     ),
 ]
 
@@ -56,6 +64,7 @@ PARTICIPANT_FIELDS = [
     'offer_accepted',
     'still_interested',
     'board',
+    'dynamic_endowment',
     'app_payoffs',
     'app_row',
     'expiry',
