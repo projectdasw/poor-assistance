@@ -426,5 +426,10 @@ class AllResults(Page):
             'final_endowment': final_endowment
         }
 
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        participant = player.participant
+        participant.dynamic_endowment = player.endowment
+
 
 page_sequence = [Welcome, Confirmation, CheckInterest, Game, Results, AllResults]

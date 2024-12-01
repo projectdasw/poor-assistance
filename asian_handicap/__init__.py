@@ -10,8 +10,7 @@ ASIAN Handicap
 class Constants(BaseConstants):
     name_in_url = 'asian_handicap'
     players_per_group = None
-    num_rounds = 20
-    initial_endowment = 100
+    num_rounds = 10
     investment_scheme = [
         {"investment_return": 1.15, "probability": 0.9},
         {"investment_return": 1.2, "probability": 0.85},
@@ -106,7 +105,7 @@ class Confirmation(Page):
     def before_next_page(player: Player, timeout_happened):
         # Simpan keputusan pemain di level participant
         player.participant.offer_accepted = player.offer_accepted
-        player.endowment = Constants.initial_endowment
+        player.endowment = player.participant.dynamic_endowment
 
         if player.participant.offer_accepted:
             # Jika pemain memilih 'Yes', lanjutkan ke Game
@@ -155,14 +154,14 @@ class CheckInterest(Page):
             player.participant.vars['last_round_played'] = player.round_number
             # Simpan endowment terakhir
             previous_round_endowment = player.in_round(
-                player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
+                player.round_number - 1).endowment if player.round_number > 1 else player.participant.dynamic_endowment
             player.endowment = previous_round_endowment
             player.payoff = player.endowment
         else:
             player.still_interested == "yes"
             # Simpan endowment terakhir
             previous_round_endowment = player.in_round(
-                player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
+                player.round_number - 1).endowment if player.round_number > 1 else player.participant.dynamic_endowment
             player.endowment = previous_round_endowment
             # Update checkpoint ke jumlah skips saat ini
             skips = sum(1 for p in player.in_all_rounds() if p.subject_action == 'skip')
@@ -186,7 +185,7 @@ class Game(Page):
     def vars_for_template(player: Player):
         # Simpan endowment terakhir
         previous_round_endowment = player.in_round(
-            player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
+            player.round_number - 1).endowment if player.round_number > 1 else player.participant.dynamic_endowment
         player.endowment = previous_round_endowment
 
         # Menyediakan investment_scheme untuk template
@@ -382,6 +381,11 @@ class AllResults(Page):
             'final_cost': final_cost,
             'final_payoff': final_payoff
         }
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        participant = player.participant
+        participant.dynamic_endowment = player.endowment
 
 
 page_sequence = [Welcome, Confirmation, CheckInterest, Game, Results, AllResults]

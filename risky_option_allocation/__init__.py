@@ -11,7 +11,6 @@ class Constants(BaseConstants):
     name_in_url = 'risky_option_allocation'
     players_per_group = None
     num_rounds = 10
-    initial_endowment = 100
     options_data_allocation = [
         {'name': 'Opsi 1', 'outcomes': [(1.5, 0.65), (0.25, 0.1), (0, 0.25)]},
         {'name': 'Opsi 2', 'outcomes': [(1.5, 0.6), (0.5, 0.2), (0, 0.2)]},
@@ -88,7 +87,7 @@ class Confirmation(Page):
     def before_next_page(player: Player, timeout_happened):
         # Simpan keputusan pemain di level participant
         player.participant.offer_accepted = player.offer_accepted
-        player.endowment = Constants.initial_endowment
+        player.endowment = player.participant.dynamic_endowment
 
         if player.participant.offer_accepted:
             # Jika pemain memilih 'Yes', lanjutkan ke Game
@@ -97,7 +96,7 @@ class Confirmation(Page):
             # Jika pemain memilih 'No', tandai end_game dan arahkan ke AllResults
             player.participant.vars['end_game'] = True
             # Tetapkan ronde terakhir bermain
-            player.participant.vars['last_round_played'] = player.round_number
+            player.participant.vars['last_round_played2'] = player.round_number
             player.payoff = player.endowment
 
 
@@ -134,17 +133,17 @@ class CheckInterest(Page):
         if player.still_interested == "no":
             player.participant.vars['end_game'] = True
             # Tetapkan ronde terakhir bermain
-            player.participant.vars['last_round_played'] = player.round_number
+            player.participant.vars['last_round_played2'] = player.round_number
             # Simpan endowment terakhir
             previous_round_endowment = player.in_round(
-                player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
+                player.round_number - 1).endowment if player.round_number > 1 else player.participant.dynamic_endowment
             player.endowment = previous_round_endowment
             player.payoff = player.endowment
         else:
             player.still_interested == "yes"
             # Simpan endowment terakhir
             previous_round_endowment = player.in_round(
-                player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
+                player.round_number - 1).endowment if player.round_number > 1 else player.participant.dynamic_endowment
             player.endowment = previous_round_endowment
             # Update checkpoint ke jumlah skips saat ini
             skips = sum(1 for p in player.in_all_rounds() if p.subject_action == 'skip')
@@ -167,7 +166,7 @@ class Game(Page):
     def vars_for_template(player: Player):
         # Simpan endowment terakhir
         previous_round_endowment = player.in_round(
-            player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
+            player.round_number - 1).endowment if player.round_number > 1 else player.participant.dynamic_endowment
         player.endowment = previous_round_endowment
 
         # Mendapatkan pilihan acak (contoh daftar pilihan opsi)
@@ -227,7 +226,7 @@ class Game(Page):
         if player.subject_action == 'endowment_limit':
             player.participant.vars['end_game'] = True
             # Tetapkan ronde terakhir bermain
-            player.participant.vars['last_round_played'] = player.round_number
+            player.participant.vars['last_round_played2'] = player.round_number
             player.payoff = player.endowment
         elif player.subject_action == 'skip':
             # Jika tombol "Lewati" dipilih, set hasil kosong dan lanjut ke Results
@@ -403,13 +402,13 @@ class Results(Page):
         ])
 
         # Tambahkan payoff dan cost ke list di participant.vars
-        if 'results_by_round' not in player.participant.vars:
-            player.participant.vars['results_by_round'] = []
+        if 'results_by_round2' not in player.participant.vars:
+            player.participant.vars['results_by_round2'] = []
 
-        player.participant.vars['results_by_round'].append({
-            'round_number': player.round_number,
-            'payoff': player.total_profit,
-            'cost': total_cost
+        player.participant.vars['results_by_round2'].append({
+            'round_number2': player.round_number,
+            'payoff2': player.total_profit,
+            'cost2': total_cost
         })
 
 
@@ -421,23 +420,28 @@ class AllResults(Page):
     @staticmethod
     def vars_for_template(player: Player):
         # Ambil daftar hasil dari participant.vars
-        results_by_round = player.participant.vars.get('results_by_round', [])
+        results_by_round2 = player.participant.vars.get('results_by_round2', [])
 
         # Ambil ronde terakhir bermain
-        last_round = player.participant.vars.get('last_round_played', player.round_number)
-        final_endowment = player.in_round(last_round).endowment
+        last_round2 = player.participant.vars.get('last_round_played2', player.round_number)
+        final_endowment2 = player.in_round(last_round2).endowment
 
         # Hitung total payoff dan total cost
-        total_payoff = sum(item['payoff'] for item in results_by_round)
-        total_cost = sum(item['cost'] for item in results_by_round)
+        total_payoff2 = sum(item['payoff2'] for item in results_by_round2)
+        total_cost2 = sum(item['cost2'] for item in results_by_round2)
 
         return {
-            'results_by_round': results_by_round,
-            'total_payoff': total_payoff,
-            'total_cost': total_cost,
-            'last_round': last_round,
-            'final_endowment': final_endowment
+            'results_by_round2': results_by_round2,
+            'total_payoff2': total_payoff2,
+            'total_cost2': total_cost2,
+            'last_round2': last_round2,
+            'final_endowment2': final_endowment2
         }
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        participant = player.participant
+        participant.dynamic_endowment = player.endowment
 
 
 page_sequence = [Welcome, Confirmation, CheckInterest, Game, Results, AllResults]

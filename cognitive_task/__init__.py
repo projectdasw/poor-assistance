@@ -10,8 +10,7 @@ Cognitive Task
 class Constants(BaseConstants):
     name_in_url = 'cognitive_task'
     players_per_group = None
-    num_rounds = 20
-    initial_endowment = 100
+    num_rounds = 10
     subject_interest = 5 # Atur tingkat ketertarikan Subjek dalam mengikuti permainan
     board_rows = 5  # Jumlah baris papan
     board_columns = 10 # Jumlah kolom papan
@@ -58,7 +57,7 @@ class Confirmation(Page):
     def before_next_page(player: Player, timeout_happened):
         # Simpan keputusan pemain di level participant
         player.participant.offer_accepted = player.offer_accepted
-        player.endowment = Constants.initial_endowment
+        player.endowment = player.participant.dynamic_endowment
 
         if player.participant.offer_accepted:
             # Jika pemain memilih 'Yes', lanjutkan ke Game
@@ -87,7 +86,7 @@ class BuyTime(Page):
 
         # Simpan endowment terakhir
         previous_round_endowment = player.in_round(
-            player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
+            player.round_number - 1).endowment if player.round_number > 1 else player.participant.dynamic_endowment
         player.endowment = previous_round_endowment
 
         return {'checkpoint': still_interested}
@@ -104,7 +103,7 @@ class BuyTime(Page):
             player.participant.vars['last_round_played'] = player.round_number
             # Simpan endowment terakhir
             previous_round_endowment = player.in_round(
-                player.round_number - 1).endowment if player.round_number > 1 else Constants.initial_endowment
+                player.round_number - 1).endowment if player.round_number > 1 else player.participant.dynamic_endowment
             player.endowment = previous_round_endowment
             player.payoff = player.endowment
 
@@ -240,6 +239,11 @@ class AllResults(Page):
             'total_score': total_score,
             'total_cost': total_cost
         }
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        participant = player.participant
+        participant.dynamic_endowment = player.endowment
 
 
 page_sequence = [Welcome, Confirmation, BuyTime, Game, Results, AllResults]

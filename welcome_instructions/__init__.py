@@ -41,4 +41,4 @@ class Confirmation(Page):
     pass
 
 
-page_sequence = [Instruction1, Instruction2, Confirmation]
+page_sequence = [Instruction1, Instruction2]
