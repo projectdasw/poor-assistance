@@ -61,289 +61,35 @@
                 <div class="mt-4">
                     <form method="post">
                         <div class="row row-cols-1 row-cols-md-2 g-2">
-                            {{ if player.endowment == 0 }}
-                                {% for option1 in random_options1 %}
-                                    <div class="col">
-                                        <div class="card h-100">
-                                            <div class="card-header">
-                                                <h3>
-                                                    Opsi 1
-                                                </h3>
-                                                <input class="form-check-input" type="checkbox"
-                                                   name="selected_optionallocation1"
-                                                   value="{{ option1.name }}" checked hidden>
-                                            </div>
-                                            <div class="card-body">
-                                                <ul class="list-group list-group-flush">
-                                                    {% for outcome in option1.formatted_outcomes %}
-                                                        <li class="list-group-item">{{ outcome }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                                <div class="mt-3">
-                                                    <label for="allocation_invest1" class="form-label">
-                                                        Berapa Alokasi yang ingin dipertaruhkan pada opsi ini?
-                                                    </label>
-                                                    <input type="number" class="form-control" name="allocation_invest1"
-                                                           step="0.01" value="0" readonly>
-                                                </div>
+                            {% for option in random_options %}
+                                <div class="col">
+                                    <div class="card h-100">
+                                        <div class="card-header">
+                                            <h3>
+                                                Opsi {{ forloop.counter }}
+                                            </h3>
+                                            <input class="form-check-input" type="checkbox"
+                                               name="selected_optionallocation{{ forloop.counter }}"
+                                               value="{{ option.name }}" checked hidden>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                {% for outcome in option.formatted_outcomes %}
+                                                    <li class="list-group-item">{{ outcome }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                            <div class="mt-3">
+                                                <label for="allocation_invest{{ forloop.counter}}" class="form-label">
+                                                    Berapa Alokasi yang ingin dipertaruhkan pada opsi ini?
+                                                </label>
+                                                <input type="number" class="form-control"
+                                                   name="allocation_invest{{ forloop.counter }}" step="0.01" value="0"
+                                                   {{ if player.endowment == 0 }}readonly{{ endif }}>
                                             </div>
                                         </div>
                                     </div>
-                                {% endfor %}
-                                {% for option2 in random_options2 %}
-                                    <div class="col">
-                                        <div class="card h-100">
-                                            <div class="card-header">
-                                                <h3>
-                                                    Opsi 2
-                                                </h3>
-                                                <input class="form-check-input" type="checkbox"
-                                                   name="selected_optionallocation2"
-                                                   value="{{ option2.name }}" checked hidden>
-                                            </div>
-                                            <div class="card-body">
-                                                <ul class="list-group list-group-flush">
-                                                    {% for outcome in option2.formatted_outcomes %}
-                                                        <li class="list-group-item">{{ outcome }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                                <div class="mt-3">
-                                                    <label for="allocation_invest2" class="form-label">
-                                                        Berapa Alokasi yang ingin dipertaruhkan pada opsi ini?
-                                                    </label>
-                                                    <input type="number" class="form-control" name="allocation_invest2"
-                                                           step="0.01" value="0" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                                {% for option3 in random_options3 %}
-                                    <div class="col">
-                                        <div class="card h-100">
-                                            <div class="card-header">
-                                                <h3>
-                                                    Opsi 3
-                                                </h3>
-                                                <input class="form-check-input" type="checkbox"
-                                                   name="selected_optionallocation3"
-                                                   value="{{ option3.name }}" checked hidden>
-                                            </div>
-                                            <div class="card-body">
-                                                <ul class="list-group list-group-flush">
-                                                    {% for outcome in option3.formatted_outcomes %}
-                                                        <li class="list-group-item">{{ outcome }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                                <div class="mt-3">
-                                                    <label for="allocation_invest3" class="form-label">
-                                                        Berapa Alokasi yang ingin dipertaruhkan pada opsi ini?
-                                                    </label>
-                                                    <input type="number" class="form-control" name="allocation_invest3"
-                                                           step="0.01" value="0" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                                {% for option4 in random_options4 %}
-                                    <div class="col">
-                                        <div class="card h-100">
-                                            <div class="card-header">
-                                                <h3>
-                                                    Opsi 4
-                                                </h3>
-                                                <input class="form-check-input" type="checkbox"
-                                                   name="selected_optionallocation4"
-                                                   value="{{ option4.name }}" checked hidden>
-                                            </div>
-                                            <div class="card-body">
-                                                <ul class="list-group list-group-flush">
-                                                    {% for outcome in option4.formatted_outcomes %}
-                                                        <li class="list-group-item">{{ outcome }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                                <div class="mt-3">
-                                                    <label for="allocation_invest4" class="form-label">
-                                                        Berapa Alokasi yang ingin dipertaruhkan pada opsi ini?
-                                                    </label>
-                                                    <input type="number" class="form-control" name="allocation_invest4"
-                                                           step="0.01" value="0" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                                {% for option5 in random_options5 %}
-                                    <div class="col">
-                                        <div class="card h-100">
-                                            <div class="card-header">
-                                                <h3>
-                                                    Opsi 5
-                                                </h3>
-                                                <input class="form-check-input" type="checkbox"
-                                                   name="selected_optionallocation5"
-                                                   value="{{ option5.name }}" checked hidden>
-                                            </div>
-                                            <div class="card-body">
-                                                <ul class="list-group list-group-flush">
-                                                    {% for outcome in option5.formatted_outcomes %}
-                                                        <li class="list-group-item">{{ outcome }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                                <div class="mt-3">
-                                                    <label for="allocation_invest5" class="form-label">
-                                                        Berapa Alokasi yang ingin dipertaruhkan pada opsi ini?
-                                                    </label>
-                                                    <input type="number" class="form-control" name="allocation_invest5"
-                                                           step="0.01" value="0" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            {{ else }}
-                                {% for option1 in random_options1 %}
-                                    <div class="col">
-                                        <div class="card h-100">
-                                            <div class="card-header">
-                                                <h3>
-                                                    Opsi 1
-                                                </h3>
-                                                <input class="form-check-input" type="checkbox"
-                                                   name="selected_optionallocation1"
-                                                   value="{{ option1.name }}" checked hidden>
-                                            </div>
-                                            <div class="card-body">
-                                                <ul class="list-group list-group-flush">
-                                                    {% for outcome in option1.formatted_outcomes %}
-                                                        <li class="list-group-item">{{ outcome }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                                <div class="mt-3">
-                                                    <label for="allocation_invest1" class="form-label">
-                                                        Berapa Alokasi yang ingin dipertaruhkan pada opsi ini?
-                                                    </label>
-                                                    <input type="number" class="form-control" name="allocation_invest1"
-                                                           step="0.01" value="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                                {% for option2 in random_options2 %}
-                                    <div class="col">
-                                        <div class="card h-100">
-                                            <div class="card-header">
-                                                <h3>
-                                                    Opsi 2
-                                                </h3>
-                                                <input class="form-check-input" type="checkbox"
-                                                   name="selected_optionallocation2"
-                                                   value="{{ option2.name }}" checked hidden>
-                                            </div>
-                                            <div class="card-body">
-                                                <ul class="list-group list-group-flush">
-                                                    {% for outcome in option2.formatted_outcomes %}
-                                                        <li class="list-group-item">{{ outcome }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                                <div class="mt-3">
-                                                    <label for="allocation_invest2" class="form-label">
-                                                        Berapa Alokasi yang ingin dipertaruhkan pada opsi ini?
-                                                    </label>
-                                                    <input type="number" class="form-control" name="allocation_invest2"
-                                                           step="0.01" value="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                                {% for option3 in random_options3 %}
-                                    <div class="col">
-                                        <div class="card h-100">
-                                            <div class="card-header">
-                                                <h3>
-                                                    Opsi 3
-                                                </h3>
-                                                <input class="form-check-input" type="checkbox"
-                                                   name="selected_optionallocation3"
-                                                   value="{{ option3.name }}" checked hidden>
-                                            </div>
-                                            <div class="card-body">
-                                                <ul class="list-group list-group-flush">
-                                                    {% for outcome in option3.formatted_outcomes %}
-                                                        <li class="list-group-item">{{ outcome }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                                <div class="mt-3">
-                                                    <label for="allocation_invest3" class="form-label">
-                                                        Berapa Alokasi yang ingin dipertaruhkan pada opsi ini?
-                                                    </label>
-                                                    <input type="number" class="form-control" name="allocation_invest3"
-                                                           step="0.01" value="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                                {% for option4 in random_options4 %}
-                                    <div class="col">
-                                        <div class="card h-100">
-                                            <div class="card-header">
-                                                <h3>
-                                                    Opsi 4
-                                                </h3>
-                                                <input class="form-check-input" type="checkbox"
-                                                   name="selected_optionallocation4"
-                                                   value="{{ option4.name }}" checked hidden>
-                                            </div>
-                                            <div class="card-body">
-                                                <ul class="list-group list-group-flush">
-                                                    {% for outcome in option4.formatted_outcomes %}
-                                                        <li class="list-group-item">{{ outcome }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                                <div class="mt-3">
-                                                    <label for="allocation_invest4" class="form-label">
-                                                        Berapa Alokasi yang ingin dipertaruhkan pada opsi ini?
-                                                    </label>
-                                                    <input type="number" class="form-control" name="allocation_invest4"
-                                                           step="0.01" value="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                                {% for option5 in random_options5 %}
-                                    <div class="col">
-                                        <div class="card h-100">
-                                            <div class="card-header">
-                                                <h3>
-                                                    Opsi 5
-                                                </h3>
-                                                <input class="form-check-input" type="checkbox"
-                                                   name="selected_optionallocation5"
-                                                   value="{{ option5.name }}" checked hidden>
-                                            </div>
-                                            <div class="card-body">
-                                                <ul class="list-group list-group-flush">
-                                                    {% for outcome in option5.formatted_outcomes %}
-                                                        <li class="list-group-item">{{ outcome }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                                <div class="mt-3">
-                                                    <label for="allocation_invest5" class="form-label">
-                                                        Berapa Alokasi yang ingin dipertaruhkan pada opsi ini?
-                                                    </label>
-                                                    <input type="number" class="form-control" name="allocation_invest5"
-                                                           step="0.01" value="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            {{ endif }}
+                                </div>
+                            {% endfor %}
                         </div>
                     </form>
                 </div>
