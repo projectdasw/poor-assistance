@@ -5,7 +5,7 @@
 {% endblock %}
 
 {{ block title }}
-    <title>Risky Option Price - Ronde {{ player.round_number }}</title>
+    <title>Investment Game 1 - Ronde {{ player.round_number }}</title>
 {{ endblock }}
 
 {{ block content }}
@@ -25,18 +25,9 @@
             {{ endif }}
         </div>
         <div class="card-body">
-            {{ if player.endowment < 25 }}
-                <div class="alert alert-danger" role="alert">
-                    <i class="fa-solid fa-circle-exclamation me-1"></i>
-                    <span>
-                        <strong>Endowment Anda tidak mencukupi untuk membeli opsi</strong>.
-                        Silahkan klik <strong>"Lanjut"</strong>.
-                    </span>
-                </div>
-            {{ endif }}
             <div class="card-text">
                 <div class="p-0">
-                    <h2>Risky Option Price</h2>
+                    <h2>Investment Game 1</h2>
                     <p>
                         Anda memiliki kesempatan untuk meningkatkan Endowment Anda melalui investasi ini dengan harga 25
                         per opsi. Anda bisa memilih lebih dari 1 opsi untuk mendapatkan keuntungan yang lebih banyak

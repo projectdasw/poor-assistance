@@ -1,0 +1,98 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <title>Instruksi - Investment Game 1</title>
+{{ endblock }}
+
+{{ block content }}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title m-0">Penjelasan mengenai Investment Game 1</h3>
+        </div>
+        <div class="card-body">
+            <div class="card-text">
+                <ol class="list-group list-group-numbered">
+                    <li class="list-group-item d-flex justify-content-between align-items-start fs-4 border-0">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Konsep Dasar</div>
+                            <p class="m-0 fs-6">
+                                Investment Game 1 merupakan opsi investasi berbasis pilihan dengan biaya per opsi
+                                sebesar 25 Endowment. Dalam Investment Game 1, Anda akan diberikan 5 pilihan opsi
+                                dengan per opsi memiliki 3 keuntungan. Dari opsi tersebut, Anda hanya akan mendapatkan
+                                keuntungan salah satu dari 3 keuntungan tersebut.
+                            </p>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start fs-4 border-0">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Bare Maximum Pembelian Opsi</div>
+                            <p class="m-0 fs-6">
+                                Anda dapat membeli opsi investasi tergantung Endowment yang Anda miliki. Jika Endowment
+                                Anda tidak mencukupi untuk membeli opsi, maka Anda harus memilih sesuai dengan Endowment
+                                yang Anda miliki.
+                            </p>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start fs-4 border-0">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Bantuan & Beban Konsumsi</div>
+                            <p class="fs-6">
+                                Setiap ronde Anda akan mendapatkan Bantuan sebesar 30 Endowment dan juga Anda akan
+                                dikenakan Beban Konsumsi sebesar 50 Endowment setelah Anda menyelesaikan ronde. Bantuan
+                                & Beban Konsumsi memiliki ketentuan sebagai berikut:
+                            </p>
+                            <ul class="list-group list-group-flush fs-6">
+                                <li class="list-group-item p-0 border-0">
+                                    <i class="fa-solid fa-check text-success"></i>
+                                    Bantuan akan diberikan setiap ronde.
+                                </li>
+                                <li class="list-group-item p-0 border-0">
+                                    <i class="fa-solid fa-check text-success"></i>
+                                    Beban Konsumsi akan dikenakan setelah Anda menyelesaikan setiap ronde.
+                                </li>
+                                <li class="list-group-item p-0 border-0">
+                                    <i class="fa-solid fa-circle-exclamation text-danger"></i>
+                                    Jika <strong>Endowment Anda tidak mencukupi untuk Beban Konsumsi</strong>, maka
+                                    sistem akan mendeteksi bahwa Anda terkena <strong class="text-danger">Konsumsi
+                                    di bawah Standar</strong>, dengan kata lain <strong class="text-danger">keseluruhan
+                                    Endowment Anda akan digunakan sebagai Beban Konsumsi pada ronde tersebut</strong>.
+                                </li>
+                                <li class="list-group-item p-0 border-0">
+                                    <i class="fa-solid fa-circle-exclamation text-danger"></i>
+                                    Setiap aplikasi pada eksperimen ini memiliki sistem yang kompleks. Jika <strong>
+                                    Anda terdeteksi tidak melakukan investasi pada ronde tertentu</strong>,
+                                    <strong>Bantuan & Beban Konsumsi akan tetap <span class="text-danger">BERLAKU
+                                    </span></strong>. Harap lebih teliti pada saat melakukan investasi.
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start fs-4 border-0">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Hasil Ronde & Hasil Akhir Investment Game 1</div>
+                            <p class="m-0 fs-6">
+                                Setiap ronde akan merekap hasil investasi yang Anda lakukan. <i>Hasil Ronde</i>
+                                menyajikan informasi rekapan hasil investasi Anda meliputi profit/keuntungan, biaya
+                                opsi, Bantuan & Beban Konsumsi serta Endowment Akhir yang akan digunakan pada ronde
+                                selanjutnya. <i>Hasil Akhir</i> menyajikan informasi rekapan keseluruhan ronde yang
+                                telah Anda lakukan terlepas dari Anda melakukan investasi maupun tidak melakukan
+                                investasi serta total keseluruhan profit/keuntungan setiap ronde. Final Endowment yang
+                                akan digunakan pada Investment Game selanjutnya diambil dari ronde paling akhir.
+                            </p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Lanjut</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+{{ endblock }}

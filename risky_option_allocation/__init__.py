@@ -1,11 +1,10 @@
 from otree.api import *
 import random
-import json
-from pathlib import Path
 
 doc = """
-Poor Assistance Experiment
+Investment Game 2
 """
+
 
 class Constants(BaseConstants):
     name_in_url = 'risky_option_allocation'
@@ -44,7 +43,10 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    endowment = models.CurrencyField()
+    endowment = models.CurrencyField(initial=0)
+    additional_endowment = models.CurrencyField(initial=0)
+    consumption_cost = models.CurrencyField(initial=0)
+    total_profit = models.FloatField(initial=0)
     selected_optionallocation1 = models.StringField(blank=True, initial="")
     allocation_invest1 = models.FloatField(initial=0)
     result_allocation1 = models.FloatField(initial=0, decimal=1)
@@ -60,20 +62,27 @@ class Player(BasePlayer):
     selected_optionallocation5 = models.StringField(blank=True, initial="")
     allocation_invest5 = models.FloatField(initial=0)
     result_allocation5 = models.FloatField(initial=0, decimal=1)
-    total_profit = models.FloatField(initial=0)
-    offer_accepted = models.BooleanField(choices=[(True), (False)], initial=None)
+    offer_accepted = models.BooleanField(choices=[True, False], initial=None)
     subject_action = models.StringField(
-        choices=['skip', 'invested', 'endowment_limit'], initial="", blank=True
+        choices=['skip', 'invested'], initial="", blank=True
     )  # Untuk mencatat tombol yang dipilih
 
     still_interested = models.StringField(
         choices=['yes', 'no'], initial="", blank=True
     )  # Untuk mencatat tombol yang dipilih
 
+
 class Welcome(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == 1
+
+
+class Instruction(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
+
 
 class Confirmation(Page):
     form_model = 'player'
@@ -86,17 +95,17 @@ class Confirmation(Page):
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         # Simpan keputusan pemain di level participant
+        participant = player.participant
         player.participant.offer_accepted = player.offer_accepted
-        player.endowment = player.participant.dynamic_endowment
 
         if player.participant.offer_accepted:
             # Jika pemain memilih 'Yes', lanjutkan ke Game
-            pass
+            player.endowment = participant.dynamic_endowment
         else:
             # Jika pemain memilih 'No', tandai end_game dan arahkan ke AllResults
             player.participant.vars['end_game'] = True
             # Tetapkan ronde terakhir bermain
-            player.participant.vars['last_round_played2'] = player.round_number
+            player.endowment = participant.dynamic_endowment
             player.payoff = player.endowment
 
 
@@ -130,22 +139,25 @@ class CheckInterest(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
+        participant = player.participant
         if player.still_interested == "no":
+            # Hentikan permainan dan ambil endowment dari ronde sebelumnya
             player.participant.vars['end_game'] = True
-            # Tetapkan ronde terakhir bermain
-            player.participant.vars['last_round_played2'] = player.round_number
-            # Simpan endowment terakhir
-            previous_round_endowment = player.in_round(
-                player.round_number - 1).endowment if player.round_number > 1 else player.participant.dynamic_endowment
-            player.endowment = previous_round_endowment
+            last_round = player.round_number - 1 if player.round_number > 1 else 1
+            player.participant.vars['last_round_played_investment2'] = last_round
+
+            # Tetapkan endowment ke nilai payoff ronde sebelumnya
+            previous_round = player.in_round(last_round)
+            player.endowment = previous_round.payoff + participant.dynamic_additional_endowment
             player.payoff = player.endowment
-        else:
-            player.still_interested == "yes"
-            # Simpan endowment terakhir
-            previous_round_endowment = player.in_round(
-                player.round_number - 1).endowment if player.round_number > 1 else player.participant.dynamic_endowment
-            player.endowment = previous_round_endowment
-            # Update checkpoint ke jumlah skips saat ini
+        elif player.still_interested == "yes":
+            # Lanjutkan permainan
+            player.participant.vars['end_game'] = False
+            last_round = player.round_number - 1 if player.round_number > 1 else 1
+            previous_round = player.in_round(last_round)
+            player.endowment = previous_round.payoff + participant.dynamic_additional_endowment
+
+            # Perbarui checkpoint skip
             skips = sum(1 for p in player.in_all_rounds() if p.subject_action == 'skip')
             player.participant.vars['last_skip_checkpoint'] = skips
 
@@ -164,10 +176,13 @@ class Game(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        # Simpan endowment terakhir
+        participant = player.participant
+
         previous_round_endowment = player.in_round(
-            player.round_number - 1).endowment if player.round_number > 1 else player.participant.dynamic_endowment
+            player.round_number - 1).payoff + participant.dynamic_additional_endowment \
+            if player.round_number > 1 else participant.dynamic_endowment + participant.dynamic_additional_endowment
         player.endowment = previous_round_endowment
+        player.additional_endowment = participant.dynamic_additional_endowment
 
         # Mendapatkan 5 pilihan acak unik dari daftar opsi
         random_options = random.sample(Constants.options_data_allocation, 5)
@@ -186,13 +201,9 @@ class Game(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        # Jika endowment sama dengan 0, langsung akhiri permainan
-        if player.subject_action == 'endowment_limit':
-            player.participant.vars['end_game'] = True
-            # Tetapkan ronde terakhir bermain
-            player.participant.vars['last_round_played2'] = player.round_number
-            player.payoff = player.endowment
-        elif player.subject_action == 'skip':
+        participant = player.participant
+
+        if player.subject_action == 'skip':
             # Jika tombol "Lewati" dipilih, set hasil kosong dan lanjut ke Results
             player.selected_optionallocation1 = ""
             player.result_allocation1 = 0
@@ -230,8 +241,24 @@ class Game(Page):
                         cumulative_probability += probability * 100
                         if draw <= cumulative_probability:
                             setattr(player, result_field, outcome)  # Set hasil ke field yang sesuai
+                            total_profit = (player.allocation_invest1 * player.result_allocation1) + \
+                                           (player.allocation_invest2 * player.result_allocation2) + \
+                                           (player.allocation_invest3 * player.result_allocation3) + \
+                                           (player.allocation_invest4 * player.result_allocation4) + \
+                                           (player.allocation_invest5 * player.result_allocation5)
+                            player.total_profit = total_profit
                             player.endowment -= allocation  # Kurangi endowment berdasarkan alokasi
                             break
+
+        # Penentuan Beban Konsumsi
+        sum_profit = player.endowment + player.total_profit
+        consumption_fix = sum_profit - participant.dynamic_consumption_cost
+        if sum_profit < participant.dynamic_consumption_cost:
+            player.consumption_cost = sum_profit
+            player.payoff = 0
+        else:
+            player.consumption_cost = participant.dynamic_consumption_cost
+            player.payoff = consumption_fix
 
     @staticmethod
     def error_message(player: Player, values):
@@ -242,7 +269,7 @@ class Game(Page):
         if values['subject_action'] == 'invested':
             if total_allocation > player.endowment:
                 error_msgs.append(
-                    f"Endowment Anda tidak mencukupi untuk membeli opsi-opsi tersebut" \
+                    f"Endowment Anda tidak mencukupi untuk membeli opsi-opsi tersebut"
                     f" (Total alokasi: {total_allocation})."
                 )
             elif total_allocation == 0:
@@ -292,15 +319,6 @@ class Results(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        total_profit = (player.allocation_invest1 * player.result_allocation1) +\
-                       (player.allocation_invest2 * player.result_allocation2) +\
-                       (player.allocation_invest3 * player.result_allocation3) +\
-                       (player.allocation_invest4 * player.result_allocation4) +\
-                       (player.allocation_invest5 * player.result_allocation5)
-        player.endowment += total_profit
-        player.total_profit = total_profit
-        player.payoff = player.endowment
-
         # Hitung total cost berdasarkan selected_optionprice
         total_cost = sum([
             player.allocation_invest1,
@@ -311,13 +329,16 @@ class Results(Page):
         ])
 
         # Tambahkan payoff dan cost ke list di participant.vars
-        if 'results_by_round2' not in player.participant.vars:
-            player.participant.vars['results_by_round2'] = []
+        if 'results_by_round_investment2' not in player.participant.vars:
+            player.participant.vars['results_by_round_investment2'] = []
 
-        player.participant.vars['results_by_round2'].append({
-            'round_number2': player.round_number,
-            'payoff2': player.total_profit,
-            'cost2': total_cost
+        player.participant.vars['results_by_round_investment2'].append({
+            'round_number_investment2': player.round_number,
+            'payoff_investment2': player.total_profit,
+            'cost_investment2': total_cost,
+            'endowment_investment2': player.payoff,
+            'additional_investment2': player.additional_endowment,
+            'consumption_investment2': player.consumption_cost
         })
 
 
@@ -328,29 +349,44 @@ class AllResults(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
+        participant = player.participant
         # Ambil daftar hasil dari participant.vars
-        results_by_round2 = player.participant.vars.get('results_by_round2', [])
+        results_by_round_investment2 = player.participant.vars.get('results_by_round_investment2', [])
 
-        # Ambil ronde terakhir bermain
-        last_round2 = player.participant.vars.get('last_round_played2', player.round_number)
-        final_endowment2 = player.in_round(last_round2).endowment
+        # Tentukan ronde terakhir yang dimainkan
+        end_game = participant.vars.get('end_game', False)
+        if end_game:
+            last_round_investment2 = participant.vars.get('last_round_played_investment2', 1)
+        else:
+            last_round_investment2 = player.round_number
+
+        # Ambil nilai payoff dari ronde terakhir yang dimainkan
+        final_endowment_investment2 = player.in_round(last_round_investment2).payoff
 
         # Hitung total payoff dan total cost
-        total_payoff2 = sum(item['payoff2'] for item in results_by_round2)
-        total_cost2 = sum(item['cost2'] for item in results_by_round2)
+        total_payoff_investment2 = sum(item['payoff_investment2'] for item in results_by_round_investment2)
+        total_cost_investment2 = sum(item['cost_investment2'] for item in results_by_round_investment2)
 
         return {
-            'results_by_round2': results_by_round2,
-            'total_payoff2': total_payoff2,
-            'total_cost2': total_cost2,
-            'last_round2': last_round2,
-            'final_endowment2': final_endowment2
+            'results_by_round_investment2': results_by_round_investment2,
+            'total_payoff_investment2': total_payoff_investment2,
+            'total_cost_investment2': total_cost_investment2,
+            'last_round_investment2': last_round_investment2,
+            'final_endowment_investment2': final_endowment_investment2
         }
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         participant = player.participant
-        participant.dynamic_endowment = player.endowment
+        results_by_round_investment2 = player.participant.vars.get('results_by_round_investment2', [])
+
+        if participant.vars.get('end_game', False):
+            last_round = participant.vars.get('last_round_played_investment2', 1)
+            participant.dynamic_endowment = player.in_round(last_round).payoff
+        else:
+            participant.dynamic_endowment = player.payoff
+
+        participant.app_investment2 = sum(item['payoff_investment2'] for item in results_by_round_investment2)
 
 
-page_sequence = [Welcome, Confirmation, CheckInterest, Game, Results, AllResults]
+page_sequence = [Welcome, Instruction, Confirmation, CheckInterest, Game, Results, AllResults]
