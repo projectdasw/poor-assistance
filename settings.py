@@ -5,40 +5,40 @@ SESSION_CONFIGS = [
         display_name='Poor Assistance Experiment (Beta)',
         name='poor_assistance_experiment',
         app_sequence=[
-            'welcome_instructions',
+            'before_experiment',
             'risky_option_price',
             'risky_option_allocation',
             'cognitive_task',
             'asian_handicap',
-            'survey',
+            # 'survey',
             'pay_random'
         ],
         num_demo_participants=1
     ),
-    dict(
-        display_name='Risky Option Price',
-        name='risky_option_price',
-        app_sequence=['risky_option_price'],
-        num_demo_participants=1
-    ),
-    dict(
-        display_name='Risky Option Allocation',
-        name='risky_option_allocation',
-        app_sequence=['risky_option_allocation'],
-        num_demo_participants=1
-    ),
-    dict(
-        display_name='Cognitive Task',
-        name='cognitive_task',
-        app_sequence=['cognitive_task'],
-        num_demo_participants=1
-    ),
-    dict(
-        display_name='ASIAN Handicap',
-        name='asian_handicap',
-        app_sequence=['asian_handicap'],
-        num_demo_participants=1
-    ),
+    # dict(
+    #     display_name='Risky Option Price',
+    #     name='risky_option_price',
+    #     app_sequence=['risky_option_price'],
+    #     num_demo_participants=1
+    # ),
+    # dict(
+    #     display_name='Risky Option Allocation',
+    #     name='risky_option_allocation',
+    #     app_sequence=['risky_option_allocation'],
+    #     num_demo_participants=1
+    # ),
+    # dict(
+    #     display_name='Cognitive Task',
+    #     name='cognitive_task',
+    #     app_sequence=['cognitive_task'],
+    #     num_demo_participants=1
+    # ),
+    # dict(
+    #     display_name='ASIAN Handicap',
+    #     name='asian_handicap',
+    #     app_sequence=['asian_handicap'],
+    #     num_demo_participants=1
+    # ),
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
@@ -64,7 +64,16 @@ PARTICIPANT_FIELDS = [
     'offer_accepted',
     'still_interested',
     'board',
+    'dynamic_endowment_practice',
+    'dynamic_additional_endowment_practice',
+    'dynamic_consumption_cost_practice',
     'dynamic_endowment',
+    'dynamic_additional_endowment',
+    'dynamic_consumption_cost',
+    'app_investment1',
+    'app_investment2',
+    'app_investment3',
+    'app_investment4',
     'app_payoffs',
     'app_row',
     'expiry',
@@ -94,11 +103,11 @@ LANGUAGE_CODE = 'en'
 REAL_WORLD_CURRENCY_CODE = ''
 USE_POINTS = False
 
-DEBUG=True
+DEBUG = True
 ADMIN_USERNAME = 'admin'
 # for security, best to set admin passwordInput in an environment variable
 ADMIN_PASSWORD = 'admin'
-AUTH_LEVEL= environ.get('OTREE_AUTH_LEVEL')
+AUTH_LEVEL = environ.get('OTREE_AUTH_LEVEL')
 
 DEMO_PAGE_INTRO_HTML = """ """
 
