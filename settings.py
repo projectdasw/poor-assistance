@@ -10,35 +10,11 @@ SESSION_CONFIGS = [
             'risky_option_allocation',
             'cognitive_task',
             'asian_handicap',
-            # 'survey',
+            'survey',
             'pay_random'
         ],
         num_demo_participants=1
     ),
-    # dict(
-    #     display_name='Risky Option Price',
-    #     name='risky_option_price',
-    #     app_sequence=['risky_option_price'],
-    #     num_demo_participants=1
-    # ),
-    # dict(
-    #     display_name='Risky Option Allocation',
-    #     name='risky_option_allocation',
-    #     app_sequence=['risky_option_allocation'],
-    #     num_demo_participants=1
-    # ),
-    # dict(
-    #     display_name='Cognitive Task',
-    #     name='cognitive_task',
-    #     app_sequence=['cognitive_task'],
-    #     num_demo_participants=1
-    # ),
-    # dict(
-    #     display_name='ASIAN Handicap',
-    #     name='asian_handicap',
-    #     app_sequence=['asian_handicap'],
-    #     num_demo_participants=1
-    # ),
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
