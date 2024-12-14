@@ -5,51 +5,46 @@
 {% endblock %}
 
 {{ block title }}
-    <span hidden>Pembayaran</span>
+    <title>Hasil Pembayaran Anda</title>
 {{ endblock }}
 
 {{ block content }}
-    <span class="badge bg-danger fs-6 mb-2">
-        Sedang dalam Tahap Front-End
-    </span>
-    <div class="card mb-3">
+    <div class="card">
         <div class="card-header">
             <span class="badge bg-success fs-6 me-2">
-                Payment
+                Pembayaran Eksperimen
             </span>
         </div>
         <div class="card-body">
-            <h1 class="card-title">Pembayaran Anda</h1>
-            <div class="alert alert-success" role="alert">
-                Kalkulasi Perhitungan : <strong>(Jumlah Payoff Periode x 100) + Uang Kehadiran 10000</strong>
-            </div>
+            <h2 class="card-title">Hasil Pembayaran Anda</h2>
             <div class="card-text">
                 <table class="table">
                     <thead>
-                        <th>Periode</th>
-                        <th>Payoff Periode</th>
-                        <th>Uang Kehadiran</th>
-                        <th>Total Pembayaran</th>
+                        <th>Investment Game terpilih</th>
+                        <th>Hasil Akhir Investment Game terpilih</th>
+                        <th>Pembayaran Anda</th>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ player.round }}</td>
-                            <td>
-                                {{ player.potential_payoff }}
-                            </td>
-                            <td>10000</td>
-                            <td>{{ player.payoff }}</td>
+                            <td>{{ selected_app }}</td>
+                            <td>{{ selected_payoff }}</td>
+                            <td>( {{ selected_payoff }} x 100 ) + 10000</td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2">Total Pembayaran Anda</td>
+                            <td><strong>{{ final_pay }}</strong></td>
+                        </tr>
+                    </tfoot>
                 </table>
-                <span class="badge bg-primary fs-5">
-                    Pembayaran yang Anda dapatkan sebesar {{ player.payoff }}
-                </span>
             </div>
         </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Selesaikan Pembayaran</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
     </div>
-    <button class="otree-btn-next btn btn-outline-primary">
-        <span>Lanjut</span>
-        <i class="fa-solid fa-chevron-right"></i>
-    </button>
 {{ endblock }}

@@ -20,15 +20,31 @@
             <div class="card-text">
                 <p>
                     Anda telah melakukan seluruh rangkaian eksperimen. Anda akan mendapatkan pambayaran yang dimana
-                    pembayaran tersebut diambil dari final payoff periode eksperimen. Untuk pembayarannya diambil dari
-                    masing-masing periode secara acak, pembayaran akan diberikan kepada Anda tergantung besaran jumlah
-                    yang Anda dapatkan pada periode tersebut. Silahkan klik "Lanjut" untuk mengetahui pembayaran Anda.
+                    pembayaran tersebut diambil dari salah satu Investment Game. Pembayaran akan diberikan kepada Anda
+                    tergantung besaran jumlah yang Anda dapatkan pada Investment Game tersebut. Silahkan klik "Lanjut"
+                    untuk mengetahui pembayaran Anda.
                 </p>
+                <table class="table">
+                    <thead>
+                        <th>List Investment Game</th>
+                        <th>Total Akhir Investment Game</th>
+                    </thead>
+                    <tbody>
+                        {% for app, payoff in app_results.items %}
+                            <tr>
+                                <td>{{ app }}</td>
+                                <td>{{ payoff }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Dapatkan Pembayaran Anda</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
     </div>
-    <button class="otree-btn-next btn btn-outline-primary">
-        <span>Lanjut</span>
-        <i class="fa-solid fa-chevron-right"></i>
-    </button>
 {{ endblock }}
