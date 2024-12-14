@@ -5,34 +5,31 @@
 {% endblock %}
 
 {{ block title }}
-    <span hidden>Results ASIAN Handicap - Ronde {{ player.round_number }}</span>
+    <title>Hasil Investment Game 4 - Ronde {{ player.round_number }}</title>
 {{ endblock }}
 
 {{ block content }}
     <div class="card mb-3">
         <div class="card-header">
-            <span class="badge bg-success fs-6 me-2">
-                Ronde : {{ player.round_number }}
-            </span>
-            <span class="badge bg-danger fs-6">
-                Endowment Anda: {{ player.endowment }}
+            <span class="badge bg-primary fs-6 me-2">
+                Hasil Ronde - Investment Game 4
             </span>
         </div>
         <div class="card-body">
-            <h1 class="card-title">Results</h1>
+            <h2 class="card-title">Hasil Ronde {{ player.round_number }} - Investment Game 4</h2>
             <div class="card-text">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">Invest List</th>
-                            <th scope="col">Return x Alokasi Anda</th>
-                            <th scope="col">Alokasi Dana</th>
+                            <th scope="col">List Opsi Investasi</th>
+                            <th scope="col">Return x Alokasi Endowment</th>
+                            <th scope="col">Alokasi Endowment</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for investment in investment_results %}
                             <tr>
-                                <td>ASIAN Handicap - Opsi {{ investment.option_number }}</td>
+                                <td>Investment Game 4 - Opsi {{ investment.option_number }}</td>
                                 <td>
                                     {{ if investment.return == 0 }}
                                         <strong>{{ investment.return }}</strong>
@@ -51,28 +48,63 @@
                     <tfoot>
                         <tr>
                             <th>Total</th>
-                            <th>{{ total_return }}</th>
+                            <th>
+                                {{ if total_return == 0 }}
+                                    {{ total_return }}
+                                {{ else }}
+                                    <span class="text-success">+{{ total_return }}</span>
+                                {{ endif }}
+                            </th>
                             <th>{{ total_allocation }}</th>
                         </tr>
                     </tfoot>
                 </table>
-                {{ if player.subject_action == "skip" }}
+                <table class="table">
+                    <thead>
+                        <th scope="col">Sisa Endowment Anda</th>
+                        <th scope="col">Total Profit</th>
+                        <th scope="col">Bantuan</th>
+                        <th scope="col">Beban Konsumsi</th>
+                        <th scope="col">Endowment Akhir Ronde</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>{{ player.endowment }}</strong></td>
+                            <td><strong class="text-success">+{{ player.total_return }}</strong></td>
+                            <td><strong class="text-success">+{{ player.additional_endowment }}</strong></td>
+                            <td><strong class="text-danger">-{{ player.consumption_cost }}</strong></td>
+                            <td><strong>{{ player.payoff }}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                {{ if player.subject_action == "skip" and sum_profit > participant.dynamic_consumption_cost }}
                     <div class="alert alert-success" role="alert">
                         <strong>
                             Anda tidak melakukan investasi pada ronde ini.
                         </strong>
                     </div>
-                {{ elif total_return < 0 }}
-                    <div class="alert alert-danger" role="alert">
-                        <i class="fa-solid fa-circle-exclamation me-1"></i>
-                        <span>
-                            <strong>Endowment Anda tidak mencukupi untuk menuju ronde selanjutnya</strong>.
-                        </span>
-                    </div>
-                {{ else }}
+                {{ elif player.subject_action == "skip" and sum_profit < participant.dynamic_consumption_cost }}
                     <div class="alert alert-success" role="alert">
                         <strong>
-                            Hasil Profit yang didapatkan akan ditambahkan secara otomatis pada Endowment Anda
+                            Anda tidak melakukan investasi pada ronde ini.
+                        </strong>
+                    </div>
+                    <div class="alert alert-danger" role="alert">
+                        <strong>
+                            Anda terkena "Konsumsi di bawah Standar".
+                        </strong>
+                    </div>
+                {{ elif player.subject_action != "skip" and sum_profit < participant.dynamic_consumption_cost }}
+                    <div class="alert alert-danger" role="alert">
+                        <strong>
+                            Anda terkena "Konsumsi di bawah Standar".
+                        </strong>
+                    </div>
+                {{ endif }}
+                {{ if player.round_number != Constants.num_rounds }}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Endowment Akhir Ronde akan digunakan pada ronde berikutnya.
                         </strong>
                     </div>
                 {{ endif }}

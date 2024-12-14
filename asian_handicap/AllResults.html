@@ -5,81 +5,114 @@
 {% endblock %}
 
 {{ block title }}
-    <span hidden>Final Results - ASIAN Handicap</span>
+    <title>Hasil Akhir - Investment Game 4</title>
 {{ endblock }}
 
 {{ block content }}
     <div class="card mb-3">
         <div class="card-header">
-            <span class="badge bg-success fs-6 me-2">
-                ASIAN Handicap
+            <span class="badge bg-primary fs-6 me-2">
+                Hasil Akhir
             </span>
-            <span class="badge bg-danger fs-6">
-                Endowment Anda: {{ final_endowment }} Ronde {{ last_round }}
+            <span class="badge bg-success fs-6 me-2">
+                Investment Game 4
             </span>
         </div>
         <div class="card-body">
-            <h1 class="card-title">Final Results</h1>
-            <div class="card-text">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Ronde Investasi</th>
-                            <th scope="col">Profit</th>
-                            <th scope="col">Dana yang dialokasikan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for round in rounds_data %}
+            {{ if participant.offer_accepted == True }}
+                <h3 class="card-title">Hasil Akhir Keseluruhan Ronde - Investment Game 4</h3>
+                <div class="card-text">
+                    <table class="table">
+                        <thead>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Ronde Investasi</th>
+                                    <th scope="col">Profit</th>
+                                    <th scope="col">Alokasi Endowment</th>
+                                    <th scope="col">Bantuan</th>
+                                    <th scope="col">Beban Konsumsi</th>
+                                    <th scope="col">Endowment Akhir Ronde</th>
+                                </tr>
+                            </thead>
+                        </thead>
+                        <tbody>
+                            {% for round in rounds_data %}
+                                <tr>
+                                    <td>Investment Game 4 - Ronde {{ round.round_number }}</td>
+                                    <td>
+                                        {{ if round.return == 0 }}
+                                            <strong>{{ round.return }}</strong>
+                                        {{ else }}
+                                            <strong class="text-success">+{{ round.return }}</strong>
+                                        {{ endif }}
+                                    </td>
+                                    <td>
+                                        {{ if round.cost == 0 }}
+                                            <strong>{{ round.cost }}</strong>
+                                        {{ else }}
+                                            <strong class="text-danger">-{{ round.cost }}</strong>
+                                        {{ endif }}
+                                    </td>
+                                    <td>
+                                        <strong class="text-success">+{{ round.additional_investment4 }}</strong>
+                                    </td>
+                                    <td>
+                                        <strong class="text-danger">-{{ round.consumption_investment4 }}</strong>
+                                    </td>
+                                    <td>
+                                        <strong>{{ round.endowment_investment4 }}</strong>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
                             <tr>
-                                <td>ASIAN Handicap - Ronde {{ round.round_number }}</td>
+                                <th>Total</th>
                                 <td>
-                                    {{ if round.return == 0 }}
-                                        <strong>{{ round.return }}</strong>
-                                    {{ else }}
-                                        <strong class="text-success">+{{ round.return }}</strong>
-                                    {{ endif }}
+                                    <strong>{{ final_return }}</strong>
                                 </td>
                                 <td>
-                                    {{ if round.cost == 0 }}
-                                        <strong>{{ round.cost }}</strong>
+                                    {{ if final_cost == 0}}
+                                        <strong>0.0</strong>
                                     {{ else }}
-                                        <strong class="text-danger">-{{ round.cost }}</strong>
+                                        <strong>{{ final_cost }}</strong>
                                     {{ endif }}
                                 </td>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th>Total</th>
-                            <td>
-                                {{ if final_return == 0}}
-                                    <strong>{{ final_return }}</strong>
-                                {{ else }}
-                                    <strong class="text-success">+{{ final_return }}</strong>
-                                {{ endif }}
-                            </td>
-                            <td>
-                                {{ if final_cost == 0}}
-                                <strong>0.0</strong>
-                                {{ else }}
-                                    <strong class="text-danger">{{ final_cost }}</strong>
-                                {{ endif }}
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-                <div class="alert alert-success" role="alert">
-                    <strong>
-                        Selamat! Anda telah selesai melakukan investasi pada ASIAN Handicap.
-                    </strong>
-                </div>
+                        </tfoot>
+                    </table>
+                    <div class="alert alert-primary" role="alert">
+                        <h4 class="alert-heading">Anda telah menyelesaikan Investment Game 4</h4>
+                        <p>
+                            Informasi diatas adalah informasi yang Anda peroleh dari Investment Game 4. Selanjutnya,
+                            Anda akan diarahkan menuju Survey.
+                        </p>
+                        <hr>
+                        <p class="mb-0">
+                            <strong>Endowment Akhir Anda pada Investment Game 4 adalah
+                            {{ final_endowment }}</strong>
+                        </p>
+                    </div>
+            {{ elif participant.offer_accepted == False }}
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">Anda tidak berinvestasi pada Investment Game 4</h4>
+                        <p>
+
+                        </p>
+                        <hr>
+                        <p class="mb-0">
+                            <strong>Endowment Akhir Anda pada Investment Game 4 adalah
+                            {{ final_endowment }}</strong>
+                        </p>
+                    </div>
+            {{ endif }}
             </div>
         </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Lanjut Survey</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
     </div>
-    <button class="otree-btn-next btn btn-outline-primary">
-        <span>Lanjut</span>
-        <i class="fa-solid fa-chevron-right"></i>
-    </button>
 {{ endblock }}

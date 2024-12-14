@@ -11,7 +11,7 @@
 {% endblock %}
 
 {{ block title }}
-    <span hidden>Cognitive Task - Ronde {{ player.round_number }}</span>
+    <title>Investment Game 3 - Ronde {{ player.round_number }}</title>
 {{ endblock }}
 
 {{ block content }}
@@ -26,45 +26,68 @@
         </div>
         <div class="card-body">
             <div class="card-title">
-                <h1>Cognitive Task - Word Search</h1>
-                <div class="alert alert-success" role="alert">
-                    Petunjuk : Hitung jumlah Huruf/Angka sesuai Target.
-                    Jika Target tidak ada dalam papan, maka masukkan 0 untuk jawaban
+                <h3>Investment Game 3 - Word Search</h3>
+                <div class="alert alert-primary" role="alert">
+                    <h4 class="alert-heading">Petunjuk Permainan</h4>
+                    <p class="m-0">
+                        <i class="fa-solid fa-check"></i>
+                        Hitung jumlah Huruf/Angka sesuai Target yang muncul pada papan board yang telah tersedia
+                    </p>
+                    <p class="m-0">
+                        <i class="fa-solid fa-check"></i>
+                        Jika Target tidak muncul pada papan board, input form jawaban diisi 0
+                    </p>
+                    <p class="m-0">
+                        <i class="fa-solid fa-check"></i>
+                        Setiap jawaban benar bernilai 2 Endowment
+                    </p>
                 </div>
             </div>
             <div class="card-text">
-                <table id="boardContainer" class="table table-stripe border border-2 text-center">
-                    {% for row in board %}
-                        <tbody>
-                            {% for cell in row %}
-                                <td class="board-cell border border-3">
-                                    <strong>{{ cell }}</strong>
-                                </td>
+                <div class="row">
+                    <div class="col-7">
+                        <table id="boardContainer" class="table table-stripe border border-2 text-center">
+                            {% for row in board %}
+                                <tbody>
+                                    {% for cell in row %}
+                                        <td class="board-cell border border-3">
+                                            <strong>{{ cell }}</strong>
+                                        </td>
+                                    {% endfor %}
+                                </tbody>
                             {% endfor %}
-                        </tbody>
-                    {% endfor %}
-                </table>
-                <div class="fs-4 mb-3 text-center">
-                    Berapa jumlah Huruf/Angka
-                        <span id="targetCharacter" class="badge bg-danger fs-5">{{ target_character }}</span>
-                    yang muncul diatas?
-                </div>
-                <div class="d-flex justify-content-center mb-3">
-                    <div>
-                        <div class="input-group">
-                            <input id="countGuess" type="number" class="form-control" required>
-                            <button class="btn btn-primary" onclick="submitGuess()">Kirim</button>
+                        </table>
+                    </div>
+                    <div class="col-5">
+                        <div class="fs-5 mb-3">
+                            Berapa jumlah Huruf/Angka
+                                <span id="targetCharacter" class="badge bg-danger fs-5">{{ target_character }}</span>
+                            yang muncul diatas?
                         </div>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <div class="badge bg-success fs-5 me-1">
-                        <span>Skor Anda:</span>
-                        <span id="playerScore">{{ player_score }}</span>
-                    </div>
-                    <div class="badge bg-danger fs-5 ms-1">
-                        <span>Waktu Tersisa : </span>
-                        <span class="otree-timer__time-left"></span>
+                        <div class="mb-3">
+                            <div>
+                                <div class="input-group">
+                                    <input id="countGuess" type="number" class="form-control" required>
+                                    <button class="btn btn-primary" onclick="submitGuess()">Kirim</button>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <th scope="col">Skor Anda</th>
+                                <th scope="col">Waktu Anda</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span id="playerScore" class="fw-bold text-success">+{{ player_score }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="otree-timer__time-left fw-bold"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

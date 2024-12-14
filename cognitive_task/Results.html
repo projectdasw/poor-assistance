@@ -5,62 +5,94 @@
 {% endblock %}
 
 {{ block title }}
-    <span hidden>Results Cognitive Task - Ronde {{ player.round_number }}</span>
+    <title>Hasil Investment Game 3 - Ronde {{ player.round_number }}</title>
 {{ endblock }}
 
 {{ block content }}
     <div class="card mb-3">
         <div class="card-header">
-            <span class="badge bg-success fs-6 me-2">
-                Ronde : {{ player.round_number }}
-            </span>
-            <span class="badge bg-danger fs-6">
-                Endowment Anda: {{ player.endowment }}
+            <span class="badge bg-primary fs-6 me-2">
+                Hasil Ronde - Investment Game 3
             </span>
         </div>
         <div class="card-body">
-            <h1 class="card-title">Results</h1>
+            <h2 class="card-title">Hasil Ronde {{ player.round_number }} - Investment Game 3</h2>
             <div class="card-text">
                 {{ if participant.offer_accepted == True }}
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Ronde Permainan</th>
-                            <th scope="col">Waktu Bermain</th>
-                            <th scope="col">Skor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Cognitive Task - Word Search</td>
-                            <td>{{ get_time }} Detik</td>
-                            {{ if final_score == 0 }}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Jenis Permainan</th>
+                                <th scope="col">Waktu Bermain</th>
+                                <th scope="col">Skor</th>
+                                <th scope="col">Biaya Waktu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Investment Game 3 - Word Search</td>
+                                <td>{{ get_time }} Detik</td>
+                                {{ if final_score == 0 }}
+                                    <td>
+                                        <strong>{{ final_score }}</strong>
+                                    </td>
+                                {{ else }}
+                                    <td>
+                                        <strong class="text-success">+{{ final_score }}</strong>
+                                    </td>
+                                {{ endif }}
                                 <td>
-                                    <strong>{{ final_score }}</strong>
+                                    <strong class="text-danger">-{{ player.buy_time }}</strong>
                                 </td>
-                            {{ else }}
-                                <td>
-                                    <strong class="text-success">+{{ final_score }}</strong>
-                                </td>
-                            {{ endif }}
-                        </tr>
-                    </tbody>
-                </table>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table">
+                        <thead>
+                            <th scope="col">Sisa Endowment Anda</th>
+                            <th scope="col">Bantuan</th>
+                            <th scope="col">Beban Konsumsi</th>
+                            <th scope="col">Endowment Akhir Ronde</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>{{ player.endowment }}</strong></td>
+                                <td><strong class="text-success">+{{ player.additional_endowment }}</strong></td>
+                                <td><strong class="text-danger">-{{ player.consumption_cost }}</strong></td>
+                                <td><strong>{{ player.payoff }}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 {{ endif }}
-                {{ if player.endowment < 10 }}
+                {{ if player.subject_action == "end" and sum_profit > participant.dynamic_consumption_cost }}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Anda telah menghentikan permainan
+                        </strong>
+                    </div>
+                {{ elif player.subject_action == "end" and sum_profit < participant.dynamic_consumption_cost }}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Anda telah menghentikan permainan
+                        </strong>
+                    </div>
                     <div class="alert alert-danger" role="alert">
-                        <i class="fa-solid fa-circle-exclamation me-1"></i>
-                        <span>
-                            <strong>Endowment Anda tidak mencukupi untuk menuju ronde selanjutnya</strong>.
-                        </span>
+                        <strong>
+                            Anda terkena "Konsumsi di bawah Standar".
+                        </strong>
                     </div>
-                {{ elif get_time == 0 }}
-                    <div class="alert alert-success m-0" role="alert">
-                        <strong>Anda tidak mengerjakan Cognitive Task</strong>
+                {{ elif player.subject_action == "start" and sum_profit < participant.dynamic_consumption_cost }}
+                    <div class="alert alert-danger" role="alert">
+                        <strong>
+                            Anda terkena "Konsumsi di bawah Standar".
+                        </strong>
                     </div>
-                {{ else }}
-                    <div class="alert alert-success m-0" role="alert">
-                        <strong>Skor ini akan ditambahkan pada Endowment Anda.</strong>
+                {{ endif }}
+                {{ if player.round_number != Constants.num_rounds }}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Endowment Akhir Ronde akan digunakan pada ronde berikutnya.
+                        </strong>
                     </div>
                 {{ endif }}
             </div>
