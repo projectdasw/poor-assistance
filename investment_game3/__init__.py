@@ -7,7 +7,7 @@ Investment Game 3
 
 
 class Constants(BaseConstants):
-    name_in_url = 'cognitive_task'
+    name_in_url = 'investment_game3'
     players_per_group = None
     num_rounds = 3
     subject_interest = 3  # Atur tingkat ketertarikan Subjek dalam mengikuti permainan

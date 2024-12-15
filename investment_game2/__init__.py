@@ -7,7 +7,7 @@ Investment Game 2
 
 
 class Constants(BaseConstants):
-    name_in_url = 'risky_option_allocation'
+    name_in_url = 'investment_game2'
     players_per_group = None
     num_rounds = 3
     options_data_allocation = [

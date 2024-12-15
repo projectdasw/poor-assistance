@@ -7,7 +7,7 @@ Investment Game 4
 
 
 class Constants(BaseConstants):
-    name_in_url = 'asian_handicap'
+    name_in_url = 'investment_game4'
     players_per_group = None
     num_rounds = 3
     investment_scheme = [
