@@ -6,7 +6,7 @@
 {% endblock %}
 
 {{ block title }}
-    <span hidden>Survey</span>
+    <title>Survey</title>
 {{ endblock }}
 
 {% block content %}
@@ -27,9 +27,11 @@
                 {{ formfields }}
             </div>
         </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Lanjut</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
     </div>
-    <button class="otree-btn-next btn btn-outline-primary">
-        <span>Lanjut</span>
-        <i class="fa-solid fa-chevron-right"></i>
-    </button>
 {% endblock %}

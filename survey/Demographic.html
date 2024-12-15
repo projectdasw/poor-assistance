@@ -1,10 +1,28 @@
 {% extends "global/Page.html" %}
 
 {% block content %}
-    <h2>Survei Demografi</h2>
-    <form method="post">
-        {{ formfields }}
-        <p>Silakan klik Submit jika Anda sudah yakin dengan isian untuk proses pembayaran di atas. Anda akan keluar dari eksperimen ini setelah klik Submit.</p>
-        <button type="submit">Submit</button>
-    </form>
+    <div class="card mb-3">
+        <div class="card-header">
+            <span class="badge bg-success fs-6 me-2">
+                Demographic & Survey
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="card-title">
+                <h1>Survei Demografi Eksperimen</h1>
+                <p>
+                    Silahkan isi survei dibawh ini
+                </p>
+            </div>
+            <div class="card-text">
+                {{ formfields }}
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Lanjut</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
 {% endblock %}
