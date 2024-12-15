@@ -2,14 +2,17 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        display_name='Poor Assistance Experiment (Beta)',
+        display_name='Poor Assistance Experiment',
         name='poor_assistance_experiment',
         app_sequence=[
+            'welcome_instructions',
+            'investment_game1_practice',
+            'investment_game2_practice',
             'before_experiment',
-            'risky_option_price',
-            'risky_option_allocation',
-            'cognitive_task',
-            'asian_handicap',
+            'investment_game1',
+            'investment_game2',
+            'investment_game3',
+            'investment_game4',
             'survey',
             'pay_random'
         ],
