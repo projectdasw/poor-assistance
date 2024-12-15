@@ -1,0 +1,215 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <title>Hasil Investment Game 2 - Ronde Latihan</title>
+{{ endblock }}
+
+{{ block content }}
+    <div class="alert alert-warning" role="alert">
+        Sesi Latihan Eksperimen
+    </div>
+    <div class="card mb-3">
+        <div class="card-header">
+            <span class="badge bg-primary fs-6 me-2">
+                Hasil Ronde - Investment Game 2
+            </span>
+        </div>
+        <div class="card-body">
+            <h2 class="card-title">Hasil Ronde Latihan - Investment Game 2</h2>
+            <div class="card-text">
+                {{ if player.participant.offer_accepted == True }}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">List Opsi Investasi</th>
+                                <th scope="col">Alokasi Anda x Keuntungan Opsi</th>
+                                <th scope="col">Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{ if player.allocation_invest1 != 0 }}
+                                <tr>
+                                    <td>Investment Game 2 - Opsi 1</td>
+                                    {{ if result1 != 0 and profit1 != 0 }}
+                                        <td>
+                                            <strong>{{ allocation1 }}</strong>
+                                            x
+                                            <strong class="text-success">{{ result1 }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong class="text-success">+{{ profit1 }}</strong>
+                                        </td>
+                                    {{ else }}
+                                        <td>
+                                            <strong>{{ allocation1 }}</strong>
+                                            x
+                                            <strong>{{ result1 }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong>{{ profit1 }}</strong>
+                                        </td>
+                                    {{ endif }}
+                                </tr>
+                            {{ endif }}
+                            {{ if player.allocation_invest2 != 0 }}
+                                <tr>
+                                    <td>Investment Game 2 - Opsi 2</td>
+                                    {{ if result2 != 0 and profit2 != 0 }}
+                                        <td>
+                                            <strong>{{ allocation2 }}</strong>
+                                            x
+                                            <strong class="text-success">{{ result2 }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong class="text-success">+{{ profit2 }}</strong>
+                                        </td>
+                                    {{ else }}
+                                        <td>
+                                            <strong>{{ allocation2 }}</strong>
+                                            x
+                                            <strong>{{ result2 }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong>{{ profit2 }}</strong>
+                                        </td>
+                                    {{ endif }}
+                                </tr>
+                            {{ endif }}
+                            {{ if player.allocation_invest3 != 0 }}
+                                <tr>
+                                    <td>Investment Game 2 - Opsi 3</td>
+                                    {{ if result3 != 0 and profit3 != 0 }}
+                                        <td>
+                                            <strong>{{ allocation3 }}</strong>
+                                            x
+                                            <strong class="text-success">{{ result3 }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong class="text-success">+{{ profit3 }}</strong>
+                                        </td>
+                                    {{ else }}
+                                        <td>
+                                            <strong>{{ allocation3 }}</strong>
+                                            x
+                                            <strong>{{ result3 }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong>{{ profit3 }}</strong>
+                                        </td>
+                                    {{ endif }}
+                                </tr>
+                            {{ endif }}
+                            {{ if player.allocation_invest4 != 0 }}
+                                <tr>
+                                    <td>Investment Game 2 - Opsi 4</td>
+                                    {{ if result4 != 0 and profit4 != 0 }}
+                                        <td>
+                                            <strong>{{ allocation4 }}</strong>
+                                            x
+                                            <strong class="text-success">{{ result4 }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong class="text-success">+{{ profit4 }}</strong>
+                                        </td>
+                                    {{ else }}
+                                        <td>
+                                            <strong>{{ allocation4 }}</strong>
+                                            x
+                                            <strong>{{ result4 }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong>{{ profit4 }}</strong>
+                                        </td>
+                                    {{ endif }}
+                                </tr>
+                            {{ endif }}
+                            {{ if player.allocation_invest5 != 0 }}
+                                <tr>
+                                    <td>Investment Game 2 - Opsi 5</td>
+                                    {{ if result5 != 0 and profit5 != 0 }}
+                                        <td>
+                                            <strong>{{ allocation5 }}</strong>
+                                            x
+                                            <strong class="text-success">{{ result5 }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong class="text-success">+{{ profit5 }}</strong>
+                                        </td>
+                                    {{ else }}
+                                        <td>
+                                            <strong>{{ allocation5 }}</strong>
+                                            x
+                                            <strong>{{ result5 }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong>{{ profit5 }}</strong>
+                                        </td>
+                                    {{ endif }}
+                                </tr>
+                            {{ endif }}
+                        </tbody>
+                    </table>
+                    <table class="table">
+                        <thead>
+                            <th scope="col">Sisa Endowment Anda</th>
+                            <th scope="col">Total Profit</th>
+                            <th scope="col">Bantuan</th>
+                            <th scope="col">Beban Konsumsi</th>
+                            <th scope="col">Endowment Akhir Ronde</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>{{ player.endowment }}</strong></td>
+                                <td><strong class="text-success">+{{ player.total_profit }}</strong></td>
+                                <td><strong class="text-success">+{{ player.additional_endowment }}</strong></td>
+                                <td><strong class="text-danger">-{{ player.consumption_cost }}</strong></td>
+                                <td><strong>{{ player.payoff }}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {{ endif }}
+                {{ if player.subject_action == "skip" and sum_profit > participant.dynamic_consumption_cost_practice }}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Anda tidak melakukan investasi pada ronde ini.
+                        </strong>
+                    </div>
+                {{ elif player.subject_action == "skip" and sum_profit < participant.dynamic_consumption_cost_practice }}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Anda tidak melakukan investasi pada ronde ini.
+                        </strong>
+                    </div>
+                    <div class="alert alert-danger" role="alert">
+                        <strong>
+                            Anda terkena "Konsumsi di bawah Standar".
+                        </strong>
+                    </div>
+                {{ elif player.subject_action != "skip" and sum_profit < participant.dynamic_consumption_cost_practice }}
+                    <div class="alert alert-danger" role="alert">
+                        <strong>
+                            Anda terkena "Konsumsi di bawah Standar".
+                        </strong>
+                    </div>
+                {{ endif }}
+                {{ if player.round_number != Constants.num_rounds }}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Endowment Akhir Ronde akan digunakan pada ronde berikutnya.
+                        </strong>
+                    </div>
+                {{ endif }}
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Lanjut</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+{{ endblock }}

@@ -1,0 +1,65 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <title>Latihan Investment Game 1</title>
+{{ endblock }}
+
+{{ block content }}
+    <div class="alert alert-warning" role="alert">
+        Sesi Latihan Eksperimen
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title m-0">Informasi Endowment</h3>
+        </div>
+        <div class="card-body">
+            <div class="card-text">
+                <table class="table">
+                    <thead>
+                        <th scope="col">Endowment Anda</th>
+                        <th scope="col" class="text-success">Bantuan</th>
+                        <th scope="col" class="text-danger">Beban Konsumsi</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>{{ participant.dynamic_endowment_practice }}</strong>
+                            </td>
+                            <td>
+                                <strong class="text-success">
+                                    +{{ participant.dynamic_additional_endowment_practice }}
+                                </strong>
+                            </td>
+                            <td>
+                                <strong class="text-danger">
+                                    -{{ participant.dynamic_consumption_cost_practice }}
+                                </strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="alert alert-primary" role="alert">
+                    <p class="m-0">
+                        Bantuan akan diberikan setiap ronde, sedangkan Beban Konsumsi akan dikenakan setiap akhir ronde.
+                        Jika pada akhir ronde Endowment Anda tidak mencukupi untuk Beban Konsumsi, maka Sistem akan
+                        mendeteksi bahwa Anda terkena "Konsumsi di bawah Standar".
+                    </p>
+                    <hr>
+                    <p class="mb-0">
+                        Untuk penjelasan lebih lanjut, Silahkan klik "Lanjut".
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Lanjut</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+{{ endblock }}

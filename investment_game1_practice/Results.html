@@ -1,0 +1,173 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <span hidden>Hasil Investment Game 1 - Ronde Latihan</span>
+{{ endblock }}
+
+{{ block content }}
+    <div class="alert alert-warning" role="alert">
+        Sesi Latihan Eksperimen
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <span class="badge bg-primary fs-6 me-2">
+                Hasil Ronde Latihan - Investment Game 1
+            </span>
+        </div>
+        <div class="card-body">
+            <h2 class="card-title">Hasil Ronde Latihan - Investment Game 1</h2>
+            <div class="card-text">
+                {{ if participant.offer_accepted == True }}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">List Opsi Investasi</th>
+                                <th scope="col">Profit/Keuntungan</th>
+                                <th scope="col">Biaya Opsi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{ if player.selected_optionprice1 != "" }}
+                                <tr>
+                                    <td>Investment Game 1 - Opsi 1</td>
+                                    <td>
+                                        {{ if result1 != 0 }}
+                                            <strong class="text-success">+{{ result1 }}</strong>
+                                        {{ else }}
+                                            <strong>{{ result1 }}</strong>
+                                        {{ endif }}
+                                    </td>
+                                    <td><strong class="text-danger">-{{ Constants.cost_per_option }}</strong></td>
+                                </tr>
+                            {{ endif }}
+                            {{ if player.selected_optionprice2 != "" }}
+                                <tr>
+                                    <td>Investment Game 1 - Opsi 2</td>
+                                    <td>
+                                        {{ if result2 != 0 }}
+                                            <strong class="text-success">+{{ result2 }}</strong>
+                                        {{ else }}
+                                            <strong>{{ result2 }}</strong>
+                                        {{ endif }}
+                                    </td>
+                                    <td><strong class="text-danger">-{{ Constants.cost_per_option }}</strong></td>
+                                </tr>
+                            {{ endif }}
+                            {{ if player.selected_optionprice3 != "" }}
+                                <tr>
+                                    <td>Investment Game 1 - Opsi 3</td>
+                                    <td>
+                                        {{ if result3 != 0 }}
+                                            <strong class="text-success">+{{ result3 }}</strong>
+                                        {{ else }}
+                                            <strong>{{ result3 }}</strong>
+                                        {{ endif }}
+                                    </td>
+                                    <td><strong class="text-danger">-{{ Constants.cost_per_option }}</strong></td>
+                                </tr>
+                            {{ endif }}
+                            {{ if player.selected_optionprice4 != "" }}
+                                <tr>
+                                    <td>Investment Game 1 - Opsi 4</td>
+                                    <td>
+                                        {{ if result4 != 0 }}
+                                            <strong class="text-success">+{{ result4 }}</strong>
+                                        {{ else }}
+                                            <strong>{{ result4 }}</strong>
+                                        {{ endif }}
+                                    </td>
+                                    <td><strong class="text-danger">-{{ Constants.cost_per_option }}</strong></td>
+                                </tr>
+                            {{ endif }}
+                            {{ if player.selected_optionprice5 != "" }}
+                                <tr>
+                                    <td>Investment Game 1 - Opsi 5</td>
+                                    <td>
+                                        {{ if result5 != 0 }}
+                                            <strong class="text-success">+{{ result5 }}</strong>
+                                        {{ else }}
+                                            <strong>{{ result5 }}</strong>
+                                        {{ endif }}
+                                    </td>
+                                    <td><strong class="text-danger">-{{ Constants.cost_per_option }}</strong></td>
+                                </tr>
+                            {{ endif }}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td><strong>Total</strong></td>
+                                <td>
+                                    {{ if player.total_profit != 0 }}
+                                        <strong class="text-success">+{{ player.total_profit }}</strong>
+                                    {{ else }}
+                                        <strong>{{ player.total_profit }}</strong>
+                                    {{ endif }}
+                                </td>
+                                <td>
+                                    <strong class="text-danger">-{{ cost }}</strong>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <table class="table">
+                        <thead>
+                            <th scope="col">Sisa Endowment Anda</th>
+                            <th scope="col">Bantuan</th>
+                            <th scope="col">Beban Konsumsi</th>
+                            <th scope="col">Endowment Akhir Ronde</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>{{ player.endowment }}</strong></td>
+                                <td><strong class="text-success">+{{ player.additional_endowment }}</strong></td>
+                                <td><strong class="text-danger">-{{ player.consumption_cost }}</strong></td>
+                                <td><strong>{{ player.payoff }}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {{ endif }}
+                {{ if player.subject_action == "skip" and sum_profit > participant.dynamic_consumption_cost_practice }}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Anda tidak melakukan investasi pada ronde ini.
+                        </strong>
+                    </div>
+                {{ elif player.subject_action == "skip" and sum_profit < participant.dynamic_consumption_cost_practice }}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Anda tidak melakukan investasi pada ronde ini.
+                        </strong>
+                    </div>
+                    <div class="alert alert-danger" role="alert">
+                        <strong>
+                            Anda terkena "Konsumsi di bawah Standar".
+                        </strong>
+                    </div>
+                {{ elif player.subject_action != "skip" and sum_profit < participant.dynamic_consumption_cost_practice }}
+                    <div class="alert alert-danger" role="alert">
+                        <strong>
+                            Anda terkena "Konsumsi di bawah Standar".
+                        </strong>
+                    </div>
+                {{ endif }}
+                {{ if player.round_number != Constants.num_rounds }}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Endowment Akhir Ronde akan digunakan pada ronde berikutnya.
+                        </strong>
+                    </div>
+                {{ endif }}
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Lanjut</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+{{ endblock }}

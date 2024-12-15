@@ -1,0 +1,101 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <title>Investment Game 2 - Ronde Latihan</title>
+{{ endblock }}
+
+{{ block content }}
+    <div class="alert alert-warning" role="alert">
+        Sesi Latihan Eksperimen
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <span class="badge bg-success fs-6 me-2">
+                Ronde Latihan
+            </span>
+            <span class="badge bg-danger fs-6">
+                Endowment Anda: {{ player.endowment }}
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="card-text">
+                <div class="p-0">
+                    <h2>Investment Game 2</h2>
+                    <p>
+                        Anda dapat mengalokasikan Endowment Anda dengan bertaruh untuk mendapatkan keuntungan. Anda
+                        dapat mengisi alokasi dana lebih dari 1 opsi untuk mendapatkan keuntungan lebih banyak jika
+                        Endowment Anda mencukupi
+                    </p>
+                    <hr>
+                    <p class="m-0">
+                        <div class="alert alert-success" role="alert">
+                            Silahkan alokasikan dana yang Anda inginkan pada opsi-opsi yang tersedia,
+                            dan dapatkan keuntungannya.
+                            <br>
+                            <strong>
+                                Jika Anda hanya mengisi pada opsi tertentu, maka opsi lain di isi dengan angka 0.
+                            </strong>
+                            <br>
+                            <strong>Tidak tertarik berinvestasi pada ronde ini?</strong>
+                            Silahkan klik tombol <strong>"Lewati Ronde {{ player.round_number }}"</strong>
+                            untuk melanjutkan.
+                        </div>
+                    </p>
+                </div>
+                <div class="mt-4">
+                    <form method="post">
+                        <div class="row row-cols-1 row-cols-md-2 g-2">
+                            {% for option in random_options %}
+                                <div class="col">
+                                    <div class="card h-100">
+                                        <div class="card-header">
+                                            <h3>
+                                                Opsi {{ forloop.counter }}
+                                            </h3>
+                                            <input class="form-check-input" type="checkbox"
+                                               name="selected_optionallocation{{ forloop.counter }}"
+                                               value="{{ option.name }}" checked hidden>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                {% for outcome in option.formatted_outcomes %}
+                                                    <li class="list-group-item">{{ outcome }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                            <div class="mt-3">
+                                                <label for="allocation_invest{{ forloop.counter}}" class="form-label">
+                                                    Berapa Alokasi yang ingin dipertaruhkan pada opsi ini?
+                                                </label>
+                                                <input type="number" class="form-control"
+                                                   name="allocation_invest{{ forloop.counter }}" step="0.01" value="0"
+                                                   {{ if player.endowment == 0 }}readonly{{ endif }}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" name="subject_action" value="invested"
+                class="btn {{ if player.endowment == 0 }}btn-secondary{{ else }}btn-outline-success{{ endif }}"
+                {{ if player.endowment == 0 }}disabled{{ endif }}>
+                <i class="fa-solid fa-money-bill-trend-up"></i>
+                <span>Submit</span>
+            </button>
+            <button type="submit" name="subject_action" value="skip"
+                class="btn {{ if player.endowment == 0 }}btn-secondary{{ else }}btn-outline-danger{{ endif }}
+                    fs-6 ms-2" {{ if player.endowment == 0 }}disabled{{ endif }}>
+                <i class="fa-solid fa-forward"></i>
+                <span>Lewati Ronde {{ player.round_number }}</span>
+            </button>
+        </div>
+    </div>
+{{ endblock }}

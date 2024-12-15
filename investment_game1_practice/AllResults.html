@@ -1,0 +1,112 @@
+{% block styles  %}
+    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
+    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% endblock %}
+
+{{ block title }}
+    <title>Hasil Akhir Latihan- Investment Game 1</title>
+{{ endblock }}
+
+{{ block content }}
+    <div class="alert alert-warning" role="alert">
+        Sesi Latihan Eksperimen
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <span class="badge bg-primary fs-6 me-2">
+                Hasil Akhir Latihan
+            </span>
+            <span class="badge bg-success fs-6 me-2">
+                Investment Game 1
+            </span>
+        </div>
+        <div class="card-body">
+            {{ if participant.offer_accepted == True }}
+                <h3 class="card-title">Hasil Akhir Keseluruhan Ronde Latihan - Investment Game 1</h3>
+                <div class="card-text">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Ronde Investasi</th>
+                                <th scope="col">Profit</th>
+                                <th scope="col">Biaya Opsi</th>
+                                <th scope="col">Bantuan</th>
+                                <th scope="col">Beban Konsumsi</th>
+                                <th scope="col">Endowment Akhir Ronde</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in results_by_round_investment1_practice %}
+                            <tr>
+                                <td>Investment Game 1 - Ronde {{ item.round_number_investment1_practice }}</td>
+                                <td>
+                                    {{ if item.payoff_investment1_practice == 0 }}
+                                        <strong>{{ item.payoff_investment1_practice }}</strong>
+                                    {{ else }}
+                                        <strong class="text-success">+{{ item.payoff_investment1_practice }}</strong>
+                                    {{ endif }}
+                                </td>
+                                <td>
+                                    {{ if item.cost_investment1_practice == 0 }}
+                                        <strong>{{ item.cost_investment1_practice }}</strong>
+                                    {{ else }}
+                                        <strong class="text-danger">-{{ item.cost_investment1_practice }}</strong>
+                                    {{ endif }}
+                                </td>
+                                <td>
+                                    <strong class="text-success">+{{ item.additional_investment1_practice }}</strong>
+                                </td>
+                                <td>
+                                    <strong class="text-danger">-{{ item.consumption_investment1_practice }}</strong>
+                                </td>
+                                <td>
+                                    <strong>{{ item.endowment_investment1_practice }}</strong>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Total</th>
+                                <th>{{ total_payoff_investment1_practice }}</th>
+                                <th>{{ total_cost_investment1_practice }}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <div class="alert alert-primary" role="alert">
+                        <h4 class="alert-heading">Anda telah menyelesaikan Investment Game 1</h4>
+                        <p>
+                            Informasi diatas adalah informasi yang Anda peroleh dari Investment Game 1. Selanjutnya,
+                            Anda akan diarahkan menuju Investment Game 2. Endowment Akhir Investement Game 1 akan
+                            digunakan sebagai Default Endowment pada Investment Game selanjutnya.
+                        </p>
+                        <hr>
+                        <p class="mb-0">
+                            <strong>Endowment yang akan digunakan pada Investment Game 2 adalah
+                            {{ final_endowment_investment1_practice }}</strong>
+                        </p>
+                    </div>
+            {{ elif participant.offer_accepted == False }}
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">Anda tidak berinvestasi pada Investment Game 1</h4>
+                        <p>
+
+                        </p>
+                        <hr>
+                        <p class="mb-0">
+                            <strong>Endowment yang akan digunakan pada Investment Game 2 adalah
+                            {{ final_endowment_investment1_practice }}</strong>
+                        </p>
+                    </div>
+            {{ endif }}
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Lanjut Investment Game 2</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+{{ endblock }}
