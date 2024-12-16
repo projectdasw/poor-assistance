@@ -13,6 +13,7 @@ class Constants(BaseConstants):
     subject_interest = 3  # Atur tingkat ketertarikan Subjek dalam mengikuti permainan
     board_rows = 5  # Jumlah baris papan
     board_columns = 7  # Jumlah kolom papan
+    price_time = 5
     target_character = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
 
 
@@ -131,9 +132,9 @@ class BuyTime(Page):
                 error_msgs.append(
                     f"Anda tidak memiliki cukup endowment untuk membeli waktu."
                 )
-            elif values['buy_time'] % 10 != 0:
+            elif values['buy_time'] % Constants.price_time != 0:
                 error_msgs.append(
-                    f"Jumlah endowment yang dibelanjakan harus dalam kelipatan 10."
+                    f"Jumlah endowment yang dibelanjakan harus dalam kelipatan 5."
                 )
             elif values['buy_time'] == 0:
                 error_msgs.append(
@@ -184,7 +185,7 @@ class Game(Page):
     # Menggunakan waktu yang dibeli oleh pemain
     @staticmethod
     def get_timeout_seconds(player: Player):
-        return (player.buy_time // 10) * 20  # Setiap 10 endowment = 20 detik
+        return (player.buy_time // Constants.price_time) * 20  # Setiap 10 endowment = 20 detik
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -224,7 +225,7 @@ class Results(Page):
     def vars_for_template(player: Player):
         return {
             'final_score': player.score,
-            'get_time': (player.buy_time // 10) * 20,
+            'get_time': (player.buy_time // Constants.price_time) * 20,
             'sum_profit': player.endowment + player.score
         }
 
