@@ -9,7 +9,7 @@ Investment Game 3
 class Constants(BaseConstants):
     name_in_url = 'investment_game3'
     players_per_group = None
-    num_rounds = 3
+    num_rounds = 1
     subject_interest = 3  # Atur tingkat ketertarikan Subjek dalam mengikuti permainan
     board_rows = 5  # Jumlah baris papan
     board_columns = 7  # Jumlah kolom papan
@@ -69,8 +69,8 @@ class Confirmation(Page):
 
         if player.participant.offer_accepted:
             # Jika pemain memilih 'Yes', lanjutkan ke Game
-            player.endowment = participant.dynamic_endowment
             player.participant.vars['end_game'] = False
+            player.endowment = participant.dynamic_endowment
         else:
             # Jika pemain memilih 'No', tandai end_game dan arahkan ke AllResults
             player.participant.vars['end_game'] = True

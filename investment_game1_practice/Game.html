@@ -18,31 +18,20 @@
                 Ronde Latihan
             </span>
             <span class="badge bg-danger fs-6">
-                Endowment Anda: {{ player.endowment }}
+                Endowment Anda: {{ player.endowment }} poin
             </span>
-            {{ if player.endowment < 25 }}
-                <button type="submit" class="badge btn btn-primary fs-6 ms-2"
-                    name="subject_action" value="endowment_limit">
-                    Lanjut
-                </button>
-            {{ endif }}
         </div>
         <div class="card-body">
             <div class="card-text">
                 <div class="p-0">
                     <h2>Investment Game 1</h2>
-                    <p>
-                        Anda memiliki kesempatan untuk meningkatkan Endowment Anda melalui investasi ini dengan harga 25
-                        per opsi. Anda bisa memilih lebih dari 1 opsi untuk mendapatkan keuntungan yang lebih banyak
-                        jika Endowment Anda mencukupi.
-                    </p>
                     <hr>
                     <p class="m-0">
                         <div class="alert alert-success" role="alert">
                             Silahkan pilih opsi yang Anda inginkan, dan dapatkan keuntungannya.
                             <br>
                             <strong>Tidak tertarik berinvestasi pada ronde ini?</strong>
-                            Silahkan klik tombol <strong>"Lewati Ronde {{ player.round_number }}"</strong>
+                            Silahkan klik tombol <strong>"Lewati Ronde"</strong>
                             untuk melanjutkan.
                         </div>
                     </p>
@@ -71,6 +60,11 @@
                                                 {% endfor %}
                                             </ul>
                                         </div>
+                                        <div class="card-footer">
+                                            <span class="badge bg-danger fs-6">
+                                                Harga Opsi : {{ Constants.cost_per_option }} poin
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             {{ endfor }}
@@ -80,17 +74,13 @@
             </div>
         </div>
         <div class="card-footer">
-            <button type="submit" name="subject_action" value="invested"
-                class="btn {{ if player.endowment < 25 }}btn-secondary{{ else }}btn-outline-success{{ endif }}"
-                {{ if not player.endowment >= 25 }}disabled{{ endif }}>
+            <button type="submit" name="subject_action" value="invested" class="btn btn-outline-success">
                 <i class="fa-solid fa-money-bill-trend-up"></i>
                 <span>Submit</span>
             </button>
-            <button type="submit" name="subject_action" value="skip"
-                class="btn {{ if player.endowment < 25 }}btn-secondary{{ else }}btn-outline-danger{{ endif }}
-                    fs-6 ms-2" {{ if not player.endowment >= 25 }}disabled{{ endif }}>
+            <button type="submit" name="subject_action" value="skip" class="btn btn-outline-danger">
                 <i class="fa-solid fa-forward"></i>
-                <span>Lewati Ronde {{ player.round_number }}</span>
+                <span>Lewati Ronde</span>
             </button>
         </div>
     </div>

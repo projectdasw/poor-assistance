@@ -100,6 +100,7 @@ class Confirmation(Page):
 
         if player.participant.offer_accepted:
             # Jika pemain memilih 'Yes', lanjutkan ke Game
+            player.participant.vars['end_game'] = False
             player.endowment = participant.dynamic_endowment_practice
         else:
             # Jika pemain memilih 'No', tandai end_game dan arahkan ke AllResults

@@ -24,7 +24,7 @@
                     <h4>Durasi Waktu - Investment Game 3</h4>
                     <div class="mb-3">
                         <label class="form-label">
-                            Masukkan jumlah Endowment yang ingin Anda gunakan untuk membeli waktu
+                            Masukkan Alokasi yang ingin Anda gunakan untuk membeli waktu
                         </label>
                         <input type="text" class="form-control" name="buy_time" value="0">
                     </div>
@@ -38,20 +38,20 @@
                                 <li class="list-group-item list-group-item-success border-0 p-0">
                                     <i class="fa-solid fa-check"></i>
                                     <span>
-                                        Harga per 20 Detik adalah 5 Endowment.
+                                        Harga per 20 Detik adalah 5 poin.
                                     </span>
                                 </li>
                                 <li class="list-group-item list-group-item-success border-0 p-0">
                                     <i class="fa-solid fa-check"></i>
                                     <span>
-                                        Belaku kelipatan per 5 Endowment. Anda tidak dapat mengalokasi dana selain
+                                        Belaku kelipatan per 5 poin. Anda tidak dapat mengalokasi dana selain
                                         kelipatan yang telah ditentukan.
                                     </span>
                                 </li>
                                 <li class="list-group-item list-group-item-success border-0 p-0">
                                     <i class="fa-solid fa-check"></i>
                                     <span>
-                                        Jika Anda mengalokasi dana 20 Endowment, maka waktu yang Anda dapatkan adalah
+                                        Jika Anda mengalokasi dana 10 poin, maka waktu yang Anda dapatkan adalah
                                         40 Detik dan seterusnya.
                                     </span>
                                 </li>
@@ -65,8 +65,8 @@
                                     <li class="list-group-item list-group-item-success border-0 p-0">
                                         <i class="fa-solid fa-check"></i>
                                         <span>
-                                            Jika Anda tidak tertarik untuk kembali mengikuti Cognitive Task, Anda dapat
-                                            mengakhiri Cognitive Task dengan memilih "Akhiri Cognitive Task".
+                                            Jika Anda tidak tertarik untuk kembali mengikuti permainan kognitif, Anda
+                                            dapat mengakhiri permainan kognitif dengan memilih "Akhiri Permainan".
                                         </span>
                                     </li>
                                 {{ endif }}
@@ -77,18 +77,14 @@
             </div>
         </div>
         <div class="card-footer">
-            <button type="submit" name="subject_action" value="start"
-                class="btn {{ if player.endowment < 10 }}btn-secondary{{ else }}btn-outline-success{{ endif }}"
-                {{ if not player.endowment >= 10 }}disabled{{ endif }}>
+            <button type="submit" name="subject_action" value="start" class="btn btn-outline-success">
                 <i class="fa-regular fa-hourglass-half"></i>
                 <span>Mulai</span>
             </button>
             {{ if checkpoint >= Constants.subject_interest }}
-                <button type="submit" name="subject_action" value="end"
-                    class="btn {{ if player.endowment < 10 }}btn-secondary{{ else }}btn-outline-danger{{ endif }}"
-                    {{ if not player.endowment >= 10 }}disabled{{ endif }}>
+                <button type="submit" name="subject_action" value="end" class="btn btn-outline-danger">
                     <i class="fa-solid fa-forward-fast"></i>
-                    <span>Akhiri Cognitive Task</span>
+                    <span>Akhiri Permainan</span>
                 </button>
             {{ endif }}
         </div>

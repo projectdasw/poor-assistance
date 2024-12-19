@@ -9,7 +9,7 @@ Investment Game 1
 class Constants(BaseConstants):
     name_in_url = 'investment_game1'
     players_per_group = None
-    num_rounds = 3
+    num_rounds = 1
     cost_per_option = 25
     options_data_price = [
         {'name': 'Opsi 1', 'outcomes': [(45, 0.5), (10, 0.25), (0, 0.25)]},
@@ -96,6 +96,7 @@ class Confirmation(Page):
 
         if player.participant.offer_accepted:
             # Jika pemain memilih 'Yes', lanjutkan ke Game
+            player.participant.vars['end_game'] = False
             player.endowment = participant.dynamic_endowment
         else:
             # Jika pemain memilih 'No', tandai end_game dan arahkan ke AllResults

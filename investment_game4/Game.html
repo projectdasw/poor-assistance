@@ -15,18 +15,13 @@
                 Ronde : {{ player.round_number }}
             </span>
             <span class="badge bg-danger fs-6">
-                Endowment Anda: {{ player.endowment }}
+                Endowment Anda: {{ player.endowment }} poin
             </span>
         </div>
         <div class="card-body">
             <div class="card-text">
                 <div class="p-0">
                     <h2>Investment Game 4</h2>
-                    <p>
-                        Anda memiliki kembali kesempatan untuk meningkatkan Endowment yang Anda miliki sekarang
-                        dari skema investasi yang telah tersedia. Anda bisa mengalokasikan lebih dari 1 skema untuk
-                        mendapatkan keuntungan yang lebih banyak jika Endowment Anda mencukupi.
-                    </p>
                     <hr>
                     <p class="m-0">
                         <div class="alert alert-success" role="alert">
@@ -73,14 +68,14 @@
                             <th class="col">No.</th>
                             <th class="col">Return</th>
                             <th class="col">Probabilitas</th>
-                            <th class="col">Masukkan Alokasi Dana</th>
+                            <th class="col">Masukkan Alokasi Anda</th>
                         </thead>
                         <tbody>
                             {{ for scheme in investment_scheme }}
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{ scheme.investment_return }}</td>
-                                    <td>{{ scheme.probability }}</td>
+                                    <td>{{ scheme.probability }}%</td>
                                     <td>
                                         {{ if player.endowment < 0 or player.endowment == 0 }}
                                             <input type="number" class="form-control"
@@ -104,11 +99,9 @@
                 <i class="fa-solid fa-money-bill-trend-up"></i>
                 <span>Submit</span>
             </button>
-            <button type="submit" name="subject_action" value="skip"
-                class="btn {{ if player.endowment == 0 }}btn-secondary{{ else }}btn-outline-danger{{ endif }}
-                    fs-6 ms-2" {{ if player.endowment == 0 }}disabled{{ endif }}>
+            <button type="submit" name="subject_action" value="skip" class="btn btn-outline-danger">
                 <i class="fa-solid fa-forward"></i>
-                <span>Lewati Ronde {{ player.round_number }}</span>
+                <span>Lewati Ronde</span>
             </button>
         </div>
     </div>

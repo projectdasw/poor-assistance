@@ -9,7 +9,7 @@ Investment Game 4
 class Constants(BaseConstants):
     name_in_url = 'investment_game4'
     players_per_group = None
-    num_rounds = 3
+    num_rounds = 1
     investment_scheme = [
         {"investment_return": 1.15, "probability": 0.9},
         {"investment_return": 1.2, "probability": 0.85},
@@ -202,9 +202,17 @@ class Game(Page):
         player.endowment = previous_round_endowment
         player.additional_endowment = participant.dynamic_additional_endowment
 
-        # Menyediakan investment_scheme untuk template
+        # Mengonversi probabilitas menjadi persentase
+        investment_scheme_with_percentage = [
+            {
+                "investment_return": scheme["investment_return"],
+                "probability": int(scheme["probability"] * 100)  # Konversi ke persentase
+            }
+            for scheme in Constants.investment_scheme
+        ]
+
         return {
-            'investment_scheme': Constants.investment_scheme,
+            'investment_scheme': investment_scheme_with_percentage,
         }
 
     @staticmethod
