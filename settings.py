@@ -40,6 +40,7 @@ SESSION_FIELDS = [
 PARTICIPANT_FIELDS = [
     'get_endowment',
     'get_payment',
+    'offer_accepted_practice',
     'offer_accepted',
     'still_interested',
     'board',
