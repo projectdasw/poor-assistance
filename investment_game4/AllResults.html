@@ -5,7 +5,7 @@
 {% endblock %}
 
 {{ block title }}
-    <title>Hasil Akhir - Investment Game 4</title>
+    <title>Hasil Akhir - Investasi Berisiko 4</title>
 {{ endblock }}
 
 {{ block content }}
@@ -15,12 +15,12 @@
                 Hasil Akhir
             </span>
             <span class="badge bg-success fs-6 me-2">
-                Investment Game 4
+                Investasi Berisiko 4
             </span>
         </div>
         <div class="card-body">
             {{ if participant.offer_accepted == True }}
-                <h3 class="card-title">Hasil Akhir Keseluruhan Ronde - Investment Game 4</h3>
+                <h3 class="card-title">Hasil Akhir Keseluruhan Ronde - Investasi Berisiko 4</h3>
                 <div class="card-text">
                     <table class="table">
                         <thead>
@@ -38,7 +38,7 @@
                         <tbody>
                             {% for round in rounds_data %}
                                 <tr>
-                                    <td>Investment Game 4 - Ronde {{ round.round_number }}</td>
+                                    <td>Investasi Berisiko 4 - Ronde {{ round.round_number }}</td>
                                     <td>
                                         {{ if round.return == 0 }}
                                             <strong>{{ round.return }}</strong>
@@ -82,26 +82,26 @@
                         </tfoot>
                     </table>
                     <div class="alert alert-primary" role="alert">
-                        <h4 class="alert-heading">Anda telah menyelesaikan Investment Game 4</h4>
+                        <h4 class="alert-heading">Anda telah menyelesaikan Investasi Berisiko 4</h4>
                         <p>
-                            Informasi diatas adalah informasi yang Anda peroleh dari Investment Game 4. Selanjutnya,
-                            Anda akan diarahkan menuju Survey.
+                            Informasi diatas adalah informasi yang Anda peroleh dari Investasi Berisiko 4. Selanjutnya,
+                            Anda akan diarahkan menuju Survei.
                         </p>
                         <hr>
                         <p class="mb-0">
-                            <strong>Endowment Akhir Anda pada Investment Game 4 adalah
+                            <strong>Endowment Akhir Anda pada Investasi Berisiko 4 adalah
                             {{ final_endowment }}</strong>
                         </p>
                     </div>
             {{ elif participant.offer_accepted == False }}
                     <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading">Anda tidak berinvestasi pada Investment Game 4</h4>
+                        <h4 class="alert-heading">Anda tidak berinvestasi pada Investasi Berisiko 4</h4>
                         <p>
 
                         </p>
                         <hr>
                         <p class="mb-0">
-                            <strong>Endowment Akhir Anda pada Investment Game 4 adalah
+                            <strong>Endowment Akhir Anda pada Investasi Berisiko 4 adalah
                             {{ final_endowment }}</strong>
                         </p>
                     </div>
@@ -110,7 +110,7 @@
         </div>
         <div class="card-footer">
             <button class="otree-btn-next btn btn-outline-primary">
-                <span>Lanjut Survey</span>
+                <span>Lanjut Survei</span>
                 <i class="fa-solid fa-chevron-right"></i>
             </button>
         </div>

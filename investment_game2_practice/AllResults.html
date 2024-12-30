@@ -5,7 +5,7 @@
 {% endblock %}
 
 {{ block title }}
-    <title>Hasil Akhir Latihan - Investment Game 2</title>
+    <title>Hasil Akhir Latihan - Investasi Berisiko 2</title>
 {{ endblock }}
 
 {{ block content }}
@@ -18,12 +18,12 @@
                 Hasil Akhir Latihan
             </span>
             <span class="badge bg-success fs-6 me-2">
-                Investment Game 2
+                Investasi Berisiko 2
             </span>
         </div>
         <div class="card-body">
             {{ if participant.offer_accepted == True }}
-                <h3 class="card-title">Hasil Akhir Keseluruhan Ronde - Investment Game 2</h3>
+                <h3 class="card-title">Hasil Akhir Keseluruhan Ronde - Investasi Berisiko 2</h3>
                 <div class="card-text">
                     <table class="table">
                         <thead>
@@ -39,7 +39,7 @@
                         <tbody>
                             {% for item in results_by_round_investment2_practice %}
                             <tr>
-                                <td>Investment Game 2 - Ronde {{ item.round_number_investment2_practice }}</td>
+                                <td>Investasi Berisiko 2 - Ronde {{ item.round_number_investment2_practice }}</td>
                                 <td>
                                     {{ if item.payoff_investment2_practice == 0 }}
                                         <strong>{{ item.payoff_investment2_practice }}</strong>
@@ -75,9 +75,9 @@
                         </tfoot>
                     </table>
                     <div class="alert alert-primary" role="alert">
-                        <h4 class="alert-heading">Anda telah menyelesaikan Investment Game 2</h4>
+                        <h4 class="alert-heading">Anda telah menyelesaikan Investasi Berisiko 2</h4>
                         <p>
-                            Informasi diatas adalah informasi yang Anda peroleh dari Investment Game 2.
+                            Informasi diatas adalah informasi yang Anda peroleh dari Investasi Berisiko 2.
                         </p>
                         <hr>
                         <p class="mb-0">
@@ -86,7 +86,7 @@
                     </div>
             {{ elif participant.offer_accepted == False }}
                     <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading">Anda tidak berinvestasi pada Investment Game 2</h4>
+                        <h4 class="alert-heading">Anda tidak berinvestasi pada Investasi Berisiko 2</h4>
                         <p>
 
                         </p>
