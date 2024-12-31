@@ -5,7 +5,7 @@
 {% endblock %}
 
 {{ block title }}
-    <title>Hasil Akhir - Investment Game 1</title>
+    <title>Hasil Akhir - Investasi Berisiko 1</title>
 {{ endblock }}
 
 {{ block content }}
@@ -15,12 +15,12 @@
                 Hasil Akhir
             </span>
             <span class="badge bg-success fs-6 me-2">
-                Investment Game 1
+                Investasi Berisiko 1
             </span>
         </div>
         <div class="card-body">
             {{ if participant.offer_accepted == True }}
-                <h3 class="card-title">Hasil Akhir Keseluruhan Ronde - Investment Game 1</h3>
+                <h3 class="card-title">Hasil Akhir Keseluruhan Ronde - Investasi Berisiko 1</h3>
                 <div class="card-text">
                     <table class="table">
                         <thead>
@@ -36,7 +36,7 @@
                         <tbody>
                             {% for item in results_by_round_investment1 %}
                             <tr>
-                                <td>Investment Game 1 - Ronde {{ item.round_number_investment1 }}</td>
+                                <td>Investasi Berisiko 1 - Ronde {{ item.round_number_investment1 }}</td>
                                 <td>
                                     {{ if item.payoff_investment1 == 0 }}
                                         <strong>{{ item.payoff_investment1 }}</strong>
@@ -72,27 +72,25 @@
                         </tfoot>
                     </table>
                     <div class="alert alert-primary" role="alert">
-                        <h4 class="alert-heading">Anda telah menyelesaikan Investment Game 1</h4>
+                        <h4 class="alert-heading">Anda telah menyelesaikan Investasi Berisiko 1</h4>
                         <p>
-                            Informasi diatas adalah informasi yang Anda peroleh dari Investment Game 1. Selanjutnya, Anda
-                            akan diarahkan menuju Investment Game 2. Endowment Akhir Investement Game 1 akan digunakan
-                            sebagai Default Endowment pada Investment Game selanjutnya.
+                            Informasi diatas adalah informasi yang Anda peroleh dari Investasi Berisiko 1. Selanjutnya, Anda akan diarahkan menuju Investasi Berisiko 2. Endowment Akhir Investasi Berisiko 1 akan digunakan sebagai Default Endowment pada Investasi Berisiko selanjutnya.
                         </p>
                         <hr>
                         <p class="mb-0">
-                            <strong>Endowment yang akan digunakan pada Investment Game 2 adalah
+                            <strong>Endowment yang akan digunakan pada Investasi Berisiko 2 adalah
                             {{ final_endowment_investment1 }}</strong>
                         </p>
                     </div>
             {{ elif participant.offer_accepted == False }}
                     <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading">Anda tidak berinvestasi pada Investment Game 1</h4>
+                        <h4 class="alert-heading">Anda tidak berinvestasi pada Investasi Berisiko 1</h4>
                         <p>
 
                         </p>
                         <hr>
                         <p class="mb-0">
-                            <strong>Endowment yang akan digunakan pada Investment Game 2 adalah
+                            <strong>Endowment yang akan digunakan pada Investasi Berisiko 2 adalah
                             {{ final_endowment_investment1 }}</strong>
                         </p>
                     </div>
@@ -101,7 +99,7 @@
         </div>
         <div class="card-footer">
             <button class="otree-btn-next btn btn-outline-primary">
-                <span>Lanjut Investment Game 2</span>
+                <span>Lanjut Investasi Berisiko 2</span>
                 <i class="fa-solid fa-chevron-right"></i>
             </button>
         </div>

@@ -13,66 +13,66 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     # Define form fields based on the questions
-    q1 = models.StringField(
-        label="Saya yakin saya akan selalu membeli BBM Pertamax Green 95 demi lingkungan dan pembangunan yang berkelanjutan meski SPBU yang menjualnya cukup jauh (3 km) dari tempat saya tinggal.",
-        choices=['Di bawah 3km', '3km-5km','Di atas 5km'],
-        widget=widgets.RadioSelect
-    )
-    q2 = models.StringField(
-        label="Saya yakin bahwa pemerintah akan segera membangun infrastruktur yang baik untuk mendukung lingkungan dan pembangunan yang berkelanjutan (misal: memperluas pembangunan pembangkit listrik tenaga surya).",
-        choices=['Ya', 'Tidak'],
-        widget=widgets.RadioSelect
-    )
-    q3 = models.StringField(
-        label="Saya yakin bahwa pihak swasta (investor) akan segera ikut dalam pembangunan infrastruktur yang tepat dan baik untuk mendukung lingkungan yang berkelanjutan (misal: terkait penyediaan stasiun pengisian kendaraan listrik umum/SPKLU).",
-        choices=['Ya', 'Tidak'],
-        widget=widgets.RadioSelect
-    )
-    q4 = models.StringField(
-        label="Saya yakin bahwa saya akan tetap membeli mobil listrik (jika memiliki uang cukup) meski saya tinggal di daerah pedesaan yang jauh dari dealer mobil tersebut demi mendukung lingkungan dan pembangunan yang berkelanjutan.",
-        choices=['Ya', 'Tidak'],
-        widget=widgets.RadioSelect
-    )
-    q5 = models.StringField(
-        label="Saya yakin dalam waktu dekat akan banyak produsen panel surya rumahan, termasuk di sekitar daerah saya tinggal, dan saya akan membelinya jika memiliki uang yang cukup untuk mendukung pembangunan yang berkelanjutan.",
-        choices=['Ya', 'Tidak'],
-        widget=widgets.RadioSelect
-    )
-    q6 = models.StringField(
-        label="Saya yakin pemerintah akan segera merealisasikan jaringan gas rumah tangga di sekitar saya tinggal dan saya (rumah saya) akan berlangganan jaringan gas tersebut untuk mendukung pembangunan yang berkelanjutan.",
-        choices=['Ya', 'Tidak'],
-        widget=widgets.RadioSelect
-    )
-    q7 = models.StringField(
-        label="Saya yakin untuk tetap menggunakan kompor listrik di rumah saya (jika memiliki uang cukup) demi mendukung lingkungan dan pembangunan berkelanjutan meskipun tidak banyak tetangga sekitar dan orang yang saya kenal menggunakan kompor listrik tersebut.",
-        choices=['Ya', 'Tidak'],
-        widget=widgets.RadioSelect
-    )
-    q8 = models.StringField(
-        label="Saya yakin dalam waktu dekat akan banyak yang sadar dan menggunakan BBM Pertamax Green 95 demi lingkungan dan pembangunan berkelanjutan di Indonesia yang berkelanjutan.",
-        choices=['Ya', 'Tidak'],
-        widget=widgets.RadioSelect
-    )
-    q9 = models.StringField(
-        label="Saya yakin bahwa keluarga, kolega, dan teman saya akan ikut menggunakan BBM Pertamax Green 95 demi lingkungan dan pembangunan berkelanjutan meskipun mereka setelahnya tidak tahu apa manfaatnya.",
-        choices=['Ya', 'Tidak'],
-        widget=widgets.RadioSelect
-    )
-    q10 = models.StringField(
-        label="Saya yakin akan tetap membeli mobil listrik (jika memiliki uang cukup) meskipun saya tahu bahwa mobil listrik tersebut diproduksi perusahaan asing.",
-        choices=['Ya', 'Tidak'],
-        widget=widgets.RadioSelect
-    )
-    q11 = models.StringField(
-        label="Saya yakin untuk tetap mendukung program kompor listrik dari pemerintah meskipun saya tahu jika listrik di Indonesia kebanyakan masih dihasilkan dari Batubara.",
-        choices=['Ya', 'Tidak'],
-        widget=widgets.RadioSelect
-    )
-    q12 = models.StringField(
-        label="Saya yakin untuk tetap mendukung dan menggunakan BBM Pertamax Green 95 meskipun saya tahu bahwa bahan utama campuran BBM Pertamax Green 95 berasal dari kelapa sawit yang banyak ditanam di Pulau Kalimantan, Sumatera, dan Sulawesi.",
-        choices=['Ya', 'Tidak'],
-        widget=widgets.RadioSelect
-    )
+    # q1 = models.StringField(
+    #     label="Saya yakin saya akan selalu membeli BBM Pertamax Green 95 demi lingkungan dan pembangunan yang berkelanjutan meski SPBU yang menjualnya cukup jauh (3 km) dari tempat saya tinggal.",
+    #     choices=['Di bawah 3km', '3km-5km','Di atas 5km'],
+    #     widget=widgets.RadioSelect
+    # )
+    # q2 = models.StringField(
+    #     label="Saya yakin bahwa pemerintah akan segera membangun infrastruktur yang baik untuk mendukung lingkungan dan pembangunan yang berkelanjutan (misal: memperluas pembangunan pembangkit listrik tenaga surya).",
+    #     choices=['Ya', 'Tidak'],
+    #     widget=widgets.RadioSelect
+    # )
+    # q3 = models.StringField(
+    #     label="Saya yakin bahwa pihak swasta (investor) akan segera ikut dalam pembangunan infrastruktur yang tepat dan baik untuk mendukung lingkungan yang berkelanjutan (misal: terkait penyediaan stasiun pengisian kendaraan listrik umum/SPKLU).",
+    #     choices=['Ya', 'Tidak'],
+    #     widget=widgets.RadioSelect
+    # )
+    # q4 = models.StringField(
+    #     label="Saya yakin bahwa saya akan tetap membeli mobil listrik (jika memiliki uang cukup) meski saya tinggal di daerah pedesaan yang jauh dari dealer mobil tersebut demi mendukung lingkungan dan pembangunan yang berkelanjutan.",
+    #     choices=['Ya', 'Tidak'],
+    #     widget=widgets.RadioSelect
+    # )
+    # q5 = models.StringField(
+    #     label="Saya yakin dalam waktu dekat akan banyak produsen panel surya rumahan, termasuk di sekitar daerah saya tinggal, dan saya akan membelinya jika memiliki uang yang cukup untuk mendukung pembangunan yang berkelanjutan.",
+    #     choices=['Ya', 'Tidak'],
+    #     widget=widgets.RadioSelect
+    # )
+    # q6 = models.StringField(
+    #     label="Saya yakin pemerintah akan segera merealisasikan jaringan gas rumah tangga di sekitar saya tinggal dan saya (rumah saya) akan berlangganan jaringan gas tersebut untuk mendukung pembangunan yang berkelanjutan.",
+    #     choices=['Ya', 'Tidak'],
+    #     widget=widgets.RadioSelect
+    # )
+    # q7 = models.StringField(
+    #     label="Saya yakin untuk tetap menggunakan kompor listrik di rumah saya (jika memiliki uang cukup) demi mendukung lingkungan dan pembangunan berkelanjutan meskipun tidak banyak tetangga sekitar dan orang yang saya kenal menggunakan kompor listrik tersebut.",
+    #     choices=['Ya', 'Tidak'],
+    #     widget=widgets.RadioSelect
+    # )
+    # q8 = models.StringField(
+    #     label="Saya yakin dalam waktu dekat akan banyak yang sadar dan menggunakan BBM Pertamax Green 95 demi lingkungan dan pembangunan berkelanjutan di Indonesia yang berkelanjutan.",
+    #     choices=['Ya', 'Tidak'],
+    #     widget=widgets.RadioSelect
+    # )
+    # q9 = models.StringField(
+    #     label="Saya yakin bahwa keluarga, kolega, dan teman saya akan ikut menggunakan BBM Pertamax Green 95 demi lingkungan dan pembangunan berkelanjutan meskipun mereka setelahnya tidak tahu apa manfaatnya.",
+    #     choices=['Ya', 'Tidak'],
+    #     widget=widgets.RadioSelect
+    # )
+    # q10 = models.StringField(
+    #     label="Saya yakin akan tetap membeli mobil listrik (jika memiliki uang cukup) meskipun saya tahu bahwa mobil listrik tersebut diproduksi perusahaan asing.",
+    #     choices=['Ya', 'Tidak'],
+    #     widget=widgets.RadioSelect
+    # )
+    # q11 = models.StringField(
+    #     label="Saya yakin untuk tetap mendukung program kompor listrik dari pemerintah meskipun saya tahu jika listrik di Indonesia kebanyakan masih dihasilkan dari Batubara.",
+    #     choices=['Ya', 'Tidak'],
+    #     widget=widgets.RadioSelect
+    # )
+    # q12 = models.StringField(
+    #     label="Saya yakin untuk tetap mendukung dan menggunakan BBM Pertamax Green 95 meskipun saya tahu bahwa bahan utama campuran BBM Pertamax Green 95 berasal dari kelapa sawit yang banyak ditanam di Pulau Kalimantan, Sumatera, dan Sulawesi.",
+    #     choices=['Ya', 'Tidak'],
+    #     widget=widgets.RadioSelect
+    # )
 
     # Demographic questions
     usia = models.IntegerField(
@@ -122,9 +122,9 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect
     )
 
-class Survey(Page):
-    form_model = 'player'
-    form_fields = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11', 'q12']
+# class Survey(Page):
+#     form_model = 'player'
+#     form_fields = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11', 'q12']
 
 class Demographic(Page):
     form_model = 'player'
@@ -134,4 +134,4 @@ class Demographic(Page):
         'metode_pembayaran', 'no_hp_rekening', 'menariknya_eksperimen'
     ]
 
-page_sequence = [Survey, Demographic]
+page_sequence = [Demographic]

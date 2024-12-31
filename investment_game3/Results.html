@@ -5,18 +5,18 @@
 {% endblock %}
 
 {{ block title }}
-    <title>Hasil Investment Game 3 - Ronde {{ player.round_number }}</title>
+    <title>Hasil Investasi Berisiko 3 - Ronde {{ player.round_number }}</title>
 {{ endblock }}
 
 {{ block content }}
     <div class="card mb-3">
         <div class="card-header">
             <span class="badge bg-primary fs-6 me-2">
-                Hasil Ronde - Investment Game 3
+                Hasil Ronde - Investasi Berisiko 3
             </span>
         </div>
         <div class="card-body">
-            <h2 class="card-title">Hasil Ronde {{ player.round_number }} - Investment Game 3</h2>
+            <h2 class="card-title">Hasil Ronde {{ player.round_number }} - Investasi Berisiko 3</h2>
             <div class="card-text">
                 {{ if participant.offer_accepted == True }}
                     <table class="table">
@@ -30,7 +30,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Investment Game 3 - Word Search</td>
+                                <td>Investasi Berisiko 3 - Word Search</td>
                                 <td>{{ get_time }} Detik</td>
                                 {{ if final_score == 0 }}
                                     <td>
