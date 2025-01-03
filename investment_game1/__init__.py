@@ -9,7 +9,7 @@ Investment Game 1
 class Constants(BaseConstants):
     name_in_url = 'investment_game1'
     players_per_group = None
-    num_rounds = 1
+    num_rounds = 10
     cost_per_option = 25
     options_data_price = [
         {'name': 'Opsi 1', 'outcomes': [(45, 0.5), (10, 0.25), (0, 0.25)]},

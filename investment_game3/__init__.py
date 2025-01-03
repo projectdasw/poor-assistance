@@ -9,7 +9,7 @@ Investment Game 3
 class Constants(BaseConstants):
     name_in_url = 'investment_game3'
     players_per_group = None
-    num_rounds = 1
+    num_rounds = 10
     subject_interest = 3  # Atur tingkat ketertarikan Subjek dalam mengikuti permainan
     board_rows = 5  # Jumlah baris papan
     board_columns = 7  # Jumlah kolom papan
@@ -152,7 +152,7 @@ def live_method(player: Player, data):
         guess = int(data['count_guess'])
         # Tambah skor jika jawaban benar
         if guess == player.actual_count:
-            player.score += 2
+            player.score += 3
 
         # Randomize ulang papan dan target karakter
         player.current_target = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')

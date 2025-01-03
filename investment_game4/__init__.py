@@ -9,7 +9,7 @@ Investment Game 4
 class Constants(BaseConstants):
     name_in_url = 'investment_game4'
     players_per_group = None
-    num_rounds = 1
+    num_rounds = 10
     investment_scheme = [
         {"investment_return": 1.15, "probability": 0.9},
         {"investment_return": 1.2, "probability": 0.85},
