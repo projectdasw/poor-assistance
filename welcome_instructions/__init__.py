@@ -5,9 +5,6 @@ class C(BaseConstants):
     NAME_IN_URL = 'welcome_instructions'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
-    initial_endowment_practice = 100
-    additional_endowment_practice = 30
-    consumption_cost_practice = 50
 
 
 class Subsession(BaseSubsession):
@@ -22,21 +19,40 @@ class Player(BasePlayer):
     pass
 
 
-class Instruction1(Page):
+class welcome(Page):
     pass
 
 
-class Instruction2(Page):
+class general_instruction(Page):
     pass
 
 
-class Confirmation(Page):
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        participant = player.participant
-        participant.dynamic_endowment_practice = C.initial_endowment_practice
-        participant.dynamic_additional_endowment_practice = C.additional_endowment_practice
-        participant.dynamic_consumption_cost_practice = C.consumption_cost_practice
+class risky_choice_price_instruction(Page):
+    pass
 
 
-page_sequence = [Instruction1, Instruction2, Confirmation]
+class risky_choice_allocation_instruction(Page):
+    pass
+
+
+class real_effort_decoding_instruction(Page):
+    pass
+
+
+class asian_handicap_instruction(Page):
+    pass
+
+
+class confirmation(Page):
+    pass
+
+
+page_sequence = [
+    welcome,
+    general_instruction,
+    risky_choice_price_instruction,
+    risky_choice_allocation_instruction,
+    real_effort_decoding_instruction,
+    asian_handicap_instruction,
+    confirmation
+]

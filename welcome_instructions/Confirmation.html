@@ -1,25 +1,22 @@
-{% block styles  %}
-    <link href="{% static 'fontawesome/css/all.css' %}" rel="stylesheet"/>
-    <link href="{% static 'fontawesome/css/solid.css' %}" rel="stylesheet"/>
-    <link href="{% static 'fontawesome/css/brands.css' %}" rel="stylesheet"/>
-{% endblock %}
+{% extends "global/Page.html" %}
+{% load otree static %}
 
-{{ block title }}
+{% block title %}
     <title>Sesi Latihan Eksperimen</title>
-{{ endblock }}
+{% endblock %}
 
 {{ block content }}
     <div class="card">
         <div class="card-header">
-            <h1 class="m-0">Sesi Latihan Eksperimen</h1>
+            <h3 class="m-0">Sesi Latihan Eksperimen</h3>
         </div>
         <div class="card-body">
             Anda akan memasuki Sesi Latihan Eksperimen untuk mengetahui eksperimen yang akan dilakukan.
-            Sesi latihan akan terdiri dari 2 aplikasi eksperimen, termasuk hasil dari pilihan Anda dalam sesi latihan ini. Silahkan klik "Mulai Latihan" untuk masuk ke sesi latihan eksperimen.
+            Silahkan klik "Mulai Latihan" untuk masuk ke sesi latihan eksperimen.
         </div>
         <div class="card-footer">
             <button class="otree-btn-next btn btn-outline-success">
-                <i class="fa-solid fa-check"></i>
+                <i class="fa-solid fa-circle-play"></i>
                 <span>Mulai Latihan</span>
             </button>
         </div>

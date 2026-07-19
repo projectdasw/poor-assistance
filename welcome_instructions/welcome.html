@@ -1,0 +1,51 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+    <style>
+        .logo{
+            width: 150px;
+            height: 150px;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}
+    <title>Eksperimen Bantuan Sosial dan Investasi</title>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <div class="container d-flex justify-content-center align-items-center mb-3">
+                <img src="{% static 'image/ugm-logo.png' %}" class="img-fluid logo me-3" alt="ugm-logo">
+                <img src="{% static 'image/um-logo.png' %}" class="img-fluid logo" alt="um-logo">
+            </div>
+            <h4 class="text-center">Selamat Datang di eksperimen</h4>
+            <h2 class="text-center">Bantuan Sosial & Investasi</h2>
+            <p class="text-center">
+                Eksperimen ini bertujuan untuk mengetahui preferensi individu terhadap penggunaan bantuan sosial dalam
+                kaitannya dengan pilihan investasi yang dapat dilakukan.
+            </p>
+            <p class="m-0 text-center">
+                Terdapat dua jenis aktivitas pada hari ini:
+            </p>
+            <ul class="list-group list-group-flush list-group-numbered mx-auto w-50">
+                <li class="list-group-item">
+                    Eksperimen preferensi penggunaan Bantuan Sosial
+                    <ul>
+                        <li>4 Eksperimen Investasi Berisiko</li>
+                        <li>Tiap eksperimen terdiri dari atas 10 Ronde</li>
+                    </ul>
+                </li>
+                <li class="list-group-item">Survei & Demografi</li>
+            </ul>
+        </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Lanjut</span>
+                <i class="fa-solid fa-circle-arrow-right ms-1"></i>
+            </button>
+        </div>
+    </div>
+{% endblock %}
