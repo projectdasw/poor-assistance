@@ -6,6 +6,7 @@ SESSION_CONFIGS = [
         name='poor_assistance_experiment',
         app_sequence=[
             'welcome_instructions',
+            'risky_investment_purchase',
         ],
         num_demo_participants=1
     ),
@@ -31,16 +32,7 @@ SESSION_FIELDS = [
 PARTICIPANT_FIELDS = [
     'get_endowment',
     'get_payment',
-    'offer_accepted_practice',
-    'offer_accepted',
-    'still_interested',
     'board',
-    'dynamic_endowment_practice',
-    'dynamic_additional_endowment_practice',
-    'dynamic_consumption_cost_practice',
-    'dynamic_endowment',
-    'dynamic_additional_endowment',
-    'dynamic_consumption_cost',
     'app_investment1',
     'app_investment2',
     'app_investment3',

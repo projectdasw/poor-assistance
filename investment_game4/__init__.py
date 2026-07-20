@@ -158,12 +158,12 @@ class CheckInterest(Page):
     def before_next_page(player: Player, timeout_happened):
         participant = player.participant
         if player.still_interested == "no":
-            # Hentikan permainan dan ambil endowment dari ronde sebelumnya
+            # Hentikan permainan dan ambil uang_sebelum_tambah_bansos dari ronde sebelumnya
             player.participant.vars['end_game'] = True
             last_round = player.round_number - 1 if player.round_number > 1 else 1
             player.participant.vars['last_round_played_investment4'] = last_round
 
-            # Tetapkan endowment ke nilai payoff ronde sebelumnya
+            # Tetapkan uang_sebelum_tambah_bansos ke nilai payoff ronde sebelumnya
             previous_round = player.in_round(last_round)
             player.endowment = previous_round.payoff + participant.dynamic_additional_endowment
             player.payoff = player.endowment
@@ -306,7 +306,7 @@ class Game(Page):
                            values['asian_ev_13'] + values['asian_ev_14'] + values['asian_ev_15'] +
                            values['asian_ev_16'] + values['asian_ev_17'])
 
-        # Periksa apakah total investasi melebihi endowment
+        # Periksa apakah total investasi melebihi uang_sebelum_tambah_bansos
         error_msgs = []
         if values['subject_action'] == 'invested':
             if total_investasi > player.endowment:

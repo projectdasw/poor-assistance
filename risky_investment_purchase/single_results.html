@@ -1,0 +1,83 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    <title>Hasil Ronde {% player.round_number %} - Risky Investment Purchase</title>
+{% endblock %}
+
+{% block content %}
+    <div class="card mb-3">
+        <div class="card-header">
+            <h3 class="card-title text-center m-0">
+                Hasil Ronde {{ player.round_number }} - Risky Investment Purchase
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="card-text">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">List Opsi Investasi</th>
+                            <th scope="col">Profit/Keuntungan</th>
+                            <th scope="col">Biaya Opsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ for item in options }}
+                            <tr>
+                                <td>Risky Investment Purchase - Opsi {{ item.no }}</td>
+                                <td>
+                                    {{ if item.result != 0 }}
+                                        <strong class="text-success">+{{ item.result }}</strong>
+                                    {{ else }}
+                                        <strong>{{ item.result }}</strong>
+                                    {{ endif }}
+                                </td>
+                                <td>
+                                    <strong class="text-danger">-{{ Constants.cost_per_option }}</strong>
+                                </td>
+                            </tr>
+                        {{ endfor }}
+                    </tbody>
+                </table>
+                <table class="table">
+                    <thead>
+                        <th scope="col">Uang Anda</th>
+                        <th scope="col">Total Profit/Keuntungan</th>
+                        <th scope="col">Biaya Beli Opsi</th>
+                        <th scope="col">Beban Konsumsi</th>
+                        <th scope="col">Sisa Uang Anda</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>{{ player.uang_sesudah_tambah_bansos }}</strong></td>
+                            <td>
+                                {{ if player.total_profit != 0 }}
+                                    <strong class="text-success">+{{ player.total_profit }}</strong>
+                                {{ else }}
+                                    <strong>{{ player.total_profit }}</strong>
+                                {{ endif }}
+                            </td>
+                            <td><strong class="text-danger">-{{ player.total_biaya_beli_opsi }}</strong></td>
+                            <td><strong class="text-danger">-{{ player.beban_konsumsi }}</strong></td>
+                            <td><strong>{{ player.payoff }}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                {{ if player.round_number != Constants.num_rounds }}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Sisa uang Anda pada ronde ini akan digunakan pada ronde selanjutnya.
+                        </strong>
+                    </div>
+                {{ endif }}
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Lanjut</span>
+                <i class="fa-solid fa-circle-arrow-right ms-1"></i>
+            </button>
+        </div>
+    </div>
+{% endblock %}

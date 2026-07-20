@@ -95,7 +95,7 @@ class BuyTime(Page):
         # Hitung total skip akumulatif
         still_interested = sum(1 for p in player.in_all_rounds() if p.subject_action == 'start')
 
-        # Simpan endowment terakhir
+        # Simpan uang_sebelum_tambah_bansos terakhir
         previous_round_endowment = player.in_round(
             player.round_number - 1).payoff + participant.dynamic_additional_endowment \
             if player.round_number > 1 else participant.dynamic_endowment + participant.dynamic_additional_endowment
@@ -112,12 +112,12 @@ class BuyTime(Page):
         if action == "start":
             player.endowment -= player.buy_time
         elif action == "end":
-            # Hentikan permainan dan ambil endowment dari ronde sebelumnya
+            # Hentikan permainan dan ambil uang_sebelum_tambah_bansos dari ronde sebelumnya
             player.participant.vars['end_game'] = True
             last_round = player.round_number - 1 if player.round_number > 1 else 1
             player.participant.vars['last_round_played_investment3'] = last_round
 
-            # Tetapkan endowment ke nilai payoff ronde sebelumnya
+            # Tetapkan uang_sebelum_tambah_bansos ke nilai payoff ronde sebelumnya
             previous_round = player.in_round(last_round)
             player.endowment = previous_round.payoff
             player.payoff = player.endowment
@@ -185,7 +185,7 @@ class Game(Page):
     # Menggunakan waktu yang dibeli oleh pemain
     @staticmethod
     def get_timeout_seconds(player: Player):
-        return (player.buy_time // Constants.price_time) * 20  # Setiap 10 endowment = 20 detik
+        return (player.buy_time // Constants.price_time) * 20  # Setiap 10 uang_sebelum_tambah_bansos = 20 detik
 
     @staticmethod
     def vars_for_template(player: Player):

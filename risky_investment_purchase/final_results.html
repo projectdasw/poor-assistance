@@ -1,0 +1,78 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    <title>Hasil Akhir Risky Investment Purchase</title>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <div class="alert p-0 mb-0" role="alert">
+                <h3 class="alert-heading">Hasil Akhir Risky Investment Purchase</h3>
+                <p>
+                    Selamat Anda telah menyelesaikan sesi eksperimen <strong>Risky Investment Purchase</strong>.
+                    Selanjutnya Anda akan memasuki sesi eksperimen berikutnya yaitu
+                    <strong>Risky Investment Allocation</strong>. Berikut di bawah ini hasil keseluruhan ronde sesi
+                    eksperimen Risky Investment Purchase:
+                </p>
+                <hr>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Sesi Ronde</th>
+                            <th scope="col">Profit</th>
+                            <th scope="col">Biaya Opsi</th>
+                            <th scope="col">Bantuan</th>
+                            <th scope="col">Beban Konsumsi</th>
+                            <th scope="col">Sisa Uang Akhir Ronde</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in results_by_round_investment1 %}
+                        <tr>
+                            <td>Ronde {{ item.round_number_investment1 }}</td>
+                            <td>
+                                {{ if item.payoff_investment1 == 0 }}
+                                    <strong>{{ item.payoff_investment1 }}</strong>
+                                {{ else }}
+                                    <strong class="text-success">+{{ item.payoff_investment1 }}</strong>
+                                {{ endif }}
+                            </td>
+                            <td>
+                                {{ if item.cost_investment1 == 0 }}
+                                    <strong>{{ item.cost_investment1 }}</strong>
+                                {{ else }}
+                                    <strong class="text-danger">-{{ item.cost_investment1 }}</strong>
+                                {{ endif }}
+                            </td>
+                            <td>
+                                <strong class="text-success">+{{ item.additional_investment1 }}</strong>
+                            </td>
+                            <td>
+                                <strong class="text-danger">-{{ item.consumption_investment1 }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ item.endowment_investment1 }}</strong>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total Akhir</th>
+                            <th>{{ total_payoff_investment1 }}</th>
+                            <th>{{ total_cost_investment1 }}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Lanjut menuju sesi eksperimen selanjutnya</span>
+                <i class="fa-solid fa-circle-arrow-right ms-1"></i>
+            </button>
+        </div>
+    </div>
+{% endblock %}
