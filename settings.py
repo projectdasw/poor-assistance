@@ -7,6 +7,7 @@ SESSION_CONFIGS = [
         app_sequence=[
             'welcome_instructions',
             'risky_investment_purchase',
+            'risky_investment_allocation',
         ],
         num_demo_participants=1
     ),
@@ -33,10 +34,6 @@ PARTICIPANT_FIELDS = [
     'get_endowment',
     'get_payment',
     'board',
-    'app_investment1',
-    'app_investment2',
-    'app_investment3',
-    'app_investment4',
     'app_payoffs',
     'app_row',
     'expiry',

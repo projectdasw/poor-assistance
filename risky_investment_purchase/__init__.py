@@ -10,6 +10,7 @@ class Constants(BaseConstants):
     name_in_url = 'risky_investment_purchase'
     players_per_group = None
     num_rounds = 3
+    endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
     cost_per_option = cu(25)
@@ -76,7 +77,7 @@ class endowment_information(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        player.uang_sebelum_tambah_bansos = 100
+        player.uang_sebelum_tambah_bansos = Constants.endowment
         player.bantuan_sosial = Constants.additional
         player.beban_konsumsi = Constants.consumption
 
@@ -99,8 +100,6 @@ class game(Page):
             player.bantuan_sosial = Constants.additional
             player.uang_sesudah_tambah_bansos = player.uang_sebelum_tambah_bansos + player.bantuan_sosial
             player.beban_konsumsi = Constants.consumption
-        else:
-            player.uang_sebelum_tambah_bansos = 100
 
         # Mendapatkan 5 pilihan acak unik dari daftar opsi
         random_options = random.sample(Constants.options_data_price, 5)
@@ -231,19 +230,6 @@ class final_results(Page):
             'last_round_played_investment1': last_round_investment1,
             'final_endowment_investment1': final_endowment_investment1
         }
-
-    # @staticmethod
-    # def before_next_page(player: Player, timeout_happened):
-    #     participant = player.participant
-    #     results_by_round_investment1 = player.participant.vars.get('results_by_round_investment1', [])
-    #
-    #     if participant.vars.get('end_game', False):
-    #         last_round = participant.vars.get('last_round_played_investment1', 1)
-    #         participant.dynamic_endowment = player.in_round(last_round).payoff
-    #     else:
-    #         participant.dynamic_endowment = player.payoff
-    #
-    #     participant.app_investment1 = sum(item['payoff_investment1'] for item in results_by_round_investment1)
 
 
 page_sequence = [endowment_information, game, single_results, final_results]
