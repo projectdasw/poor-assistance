@@ -1,32 +1,61 @@
-{% block styles  %}
-    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
-    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
-    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
-{% endblock %}
+{% extends "global/Page.html" %}
+{% load otree static %}
 
-{{ block title }}
-    <title>Beli Waktu - Investasi Berisiko 3</title>
-{{ endblock }}
+{% block title %}
+    <title>Real Effort - Decoding</title>
+{% endblock %}
 
 {{ block content }}
     <div class="card mb-3">
         <div class="card-header">
+            <h4 class="m-0">Informasi Pendapatan</h4>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Uang + Bantuan</th>
+                        <th scope="col">Total Uang Anda</th>
+                        <th scope="col">Beban Konsumsi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            {% player.uang_sebelum_tambah_bansos %} + {% player.bantuan_sosial %}
+                        </td>
+                        <td>
+                            {% player.uang_sesudah_tambah_bansos %}
+                        </td>
+                        <td>
+                            {% player.beban_konsumsi %} (dikenakan setiap akhir ronde)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
             <span class="badge bg-success fs-6 me-2">
-                Ronde : {{ player.round_number }}
+                Ronde: {{ player.round_number }}
             </span>
-            <span class="badge bg-danger fs-6">
-                Endowment Anda: {{ player.endowment }}
+            <span class="badge bg-danger fs-6 me-2">
+                Uang Anda saat ini: {{ player.uang_sesudah_tambah_bansos }}
+            </span>
+            <span class="badge bg-primary fs-6">
+                Anda adalah Player [id_player]
             </span>
         </div>
         <div class="card-body">
             <div class="card-text">
                 <div class="p-0">
-                    <h4>Durasi Waktu - Investasi Berisiko 3</h4>
+                    <h4>Durasi Waktu - Real Effort Decoding</h4>
                     <div class="mb-3">
                         <label class="form-label">
                             Masukkan Alokasi yang ingin Anda gunakan untuk membeli waktu
                         </label>
-                        <input type="text" class="form-control" name="buy_time" value="0">
+                        <input type="number" class="form-control" name="beli_waktu" required>
                     </div>
                     <hr>
                     <p class="m-0">
@@ -61,15 +90,13 @@
                                         Input Form tidak boleh kosong.
                                     </span>
                                 </li>
-                                {{ if checkpoint >= Constants.subject_interest }}
-                                    <li class="list-group-item list-group-item-success border-0 p-0">
-                                        <i class="fa-solid fa-check"></i>
-                                        <span>
-                                            Jika Anda tidak tertarik untuk kembali mengikuti aktivitas ini, Anda
-                                            dapat mengakhiri dengan menekan tombol "Akhiri Aktivitas".
-                                        </span>
-                                    </li>
-                                {{ endif }}
+                                <li class="list-group-item list-group-item-success border-0 p-0">
+                                    <i class="fa-solid fa-check"></i>
+                                    <span>
+                                        Jika Anda tidak tertarik untuk kembali mengikuti aktivitas ini, Anda
+                                        dapat mengakhiri dengan menekan tombol "Akhiri Aktivitas".
+                                    </span>
+                                </li>
                             </ul>
                         </div>
                     </p>
@@ -77,16 +104,10 @@
             </div>
         </div>
         <div class="card-footer">
-            <button type="submit" name="subject_action" value="start" class="btn btn-outline-success">
+            <button type="submit" class="otree-btn-next btn btn-outline-success">
                 <i class="fa-regular fa-hourglass-half"></i>
                 <span>Mulai</span>
             </button>
-            {{ if checkpoint >= Constants.subject_interest }}
-                <button type="submit" name="subject_action" value="end" class="btn btn-outline-danger">
-                    <i class="fa-solid fa-forward-fast"></i>
-                    <span>Akhiri Aktivitas</span>
-                </button>
-            {{ endif }}
         </div>
     </div>
 {{ endblock }}

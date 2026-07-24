@@ -1,27 +1,56 @@
-{% block styles  %}
-    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
-    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
-    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
-{% endblock %}
+{% extends "global/Page.html" %}
+{% load otree static %}
 
-{{ block title }}
-    <title>Investasi Berisiko 4 - Ronde {{ player.round_number }}</title>
-{{ endblock }}
+{% block title %}
+    <title>Investment Panel Allocation</title>
+{% endblock %}
 
 {{ block content }}
     <div class="card mb-3">
         <div class="card-header">
+            <h4 class="m-0">Informasi Pendapatan</h4>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Uang + Bantuan</th>
+                        <th scope="col">Total Uang Anda</th>
+                        <th scope="col">Beban Konsumsi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            {% player.uang_sebelum_tambah_bansos %} + {% player.bantuan_sosial %}
+                        </td>
+                        <td>
+                            {% player.uang_sesudah_tambah_bansos %}
+                        </td>
+                        <td>
+                            {% player.beban_konsumsi %} (dikenakan setiap akhir ronde)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
             <span class="badge bg-success fs-6 me-2">
-                Ronde : {{ player.round_number }}
+                Ronde: {{ player.round_number }}
             </span>
-            <span class="badge bg-danger fs-6">
-                Endowment Anda: {{ player.endowment }} poin
+            <span class="badge bg-danger fs-6 me-2">
+                Uang Anda saat ini: {{ player.uang_sesudah_tambah_bansos }}
+            </span>
+            <span class="badge bg-primary fs-6">
+                Anda adalah Player [id_player]
             </span>
         </div>
         <div class="card-body">
             <div class="card-text">
                 <div class="p-0">
-                    <h2>Investasi Berisiko 4</h2>
+                    <h2>Investment Panel Allocation</h2>
                     <hr>
                     <p class="m-0">
                         <div class="alert alert-success" role="alert">
@@ -77,13 +106,8 @@
                                     <td>{{ scheme.investment_return }}</td>
                                     <td>{{ scheme.probability }}%</td>
                                     <td>
-                                        {{ if player.endowment < 0 or player.endowment == 0 }}
-                                            <input type="number" class="form-control"
-                                               name="asian_ev_{{ forloop.counter }}" step="0.01" value="0" readonly>
-                                        {{ else }}
-                                            <input type="number" class="form-control"
-                                               name="asian_ev_{{ forloop.counter }}" step="0.01" value="0" required>
-                                        {{ endif }}
+                                        <input type="number" class="form-control" name="asian_ev_{{ forloop.counter }}"
+                                               value="0" required>
                                     </td>
                                 </tr>
                             {{ endfor }}
@@ -93,15 +117,9 @@
             </div>
         </div>
         <div class="card-footer">
-            <button type="submit" name="subject_action" value="invested"
-                class="btn {{ if player.endowment == 0 }}btn-secondary{{ else }}btn-outline-success{{ endif }}"
-                {{ if player.endowment == 0 }}disabled{{ endif }}>
+            <button type="submit" class="otree-btn-next btn btn-outline-success">
                 <i class="fa-solid fa-money-bill-trend-up"></i>
                 <span>Submit</span>
-            </button>
-            <button type="submit" name="subject_action" value="skip" class="btn btn-outline-danger">
-                <i class="fa-solid fa-forward"></i>
-                <span>Lewati Ronde</span>
             </button>
         </div>
     </div>

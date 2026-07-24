@@ -1,0 +1,74 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    <title>Hasil Akhir Real Effort Decoding</title>
+{% endblock %}
+
+{{ block content }}
+    <div class="card">
+        <div class="card-body">
+            <div class="alert p-0 mb-0" role="alert">
+                <h3 class="alert-heading">Hasil Akhir Real Effort Decoding</h3>
+                <p>
+                    Selamat Anda telah menyelesaikan sesi eksperimen <strong>Real Effort - Decoding</strong>.
+                    Selanjutnya Anda akan memasuki sesi eksperimen berikutnya yaitu
+                    <strong>Investment Panel Allocation</strong>. Berikut di bawah ini hasil keseluruhan ronde sesi
+                    eksperimen Real Effort - Decoding:
+                </p>
+                <hr>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Ronde Permainan</th>
+                            <th scope="col">Total Skor</th>
+                            <th scope="col">Biaya Beli Waktu</th>
+                            <th scope="col">Bantuan</th>
+                            <th scope="col">Beban Konsumsi</th>
+                            <th scope="col">Endwment Akhir Ronde</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in all_rounds_results_investment3 %}
+                            <tr>
+                                <td>Investasi Berisiko 3 - Ronde {{ result.round_number_investment3 }}</td>
+                                <td>
+                                    {{ if result.score_investment3 == 0 }}
+                                        <strong>{{ result.score_investment3 }}</strong>
+                                    {{ else }}
+                                        <strong class="text-success">+{{ result.score_investment3 }}</strong>
+                                    {{ endif }}
+                                </td>
+                                <td>
+                                    <strong class="text-danger">-{{ result.time_cost_investment3 }}</strong>
+                                </td>
+                                <td>
+                                    <strong class="text-success">+{{ result.additional_investment3 }}</strong>
+                                </td>
+                                <td>
+                                    <strong class="text-danger">-{{ result.consumption_investment3 }}</strong>
+                                </td>
+                                <td>
+                                    <strong>{{ result.endowment_investment3 }}</strong>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total</th>
+                            <th>{{ total_score_investment3 }}</th>
+                            <th>{{ total_cost_investment3 }}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Lanjut menuju sesi eksperimen selanjutnya</span>
+                <i class="fa-solid fa-circle-arrow-right ms-1"></i>
+            </button>
+        </div>
+    </div>
+{{ endblock }}

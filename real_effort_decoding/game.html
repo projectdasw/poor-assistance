@@ -1,7 +1,7 @@
-{% block styles  %}
-    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
-    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
-    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
     <style>
         .otree-form-errors,
         .otree-timer{
@@ -10,23 +10,18 @@
     </style>
 {% endblock %}
 
-{{ block title }}
-    <title>Investasi Berisiko 3 - Ronde {{ player.round_number }}</title>
-{{ endblock }}
+{% block title %}
+    <title>Real Effort - Decoding</title>
+{% endblock %}
 
 {{ block content }}
-    <div class="card mb-3">
-        <div class="card-header">
-            <span class="badge bg-success fs-6 me-2">
-                Ronde : {{ player.round_number }}
-            </span>
-            <span class="badge bg-danger fs-6">
-                Endowment Anda: {{ player.endowment }}
-            </span>
-        </div>
+    <div class="card">
         <div class="card-body">
             <div class="card-title">
-                <h3>Investasi Berisiko 3</h3>
+                <h1 class="text-center mb-3">
+                    Real Effort Decoding -
+                    <span class="badge bg-success me-2">Ronde : {{ player.round_number }}</span>
+                </h1>
                 <div class="alert alert-primary" role="alert">
                     <h4 class="alert-heading">Petunjuk Permainan</h4>
                     <p class="m-0">
@@ -44,13 +39,13 @@
                 </div>
             </div>
             <div class="card-text">
-                <div class="row">
+                <div class="row align-items-center">
                     <div class="col-7">
                         <table id="boardContainer" class="table table-stripe border border-2 text-center">
                             {% for row in board %}
                                 <tbody>
                                     {% for cell in row %}
-                                        <td class="board-cell border border-3">
+                                        <td class="board-cell border border-3 fs-4">
                                             <strong>{{ cell }}</strong>
                                         </td>
                                     {% endfor %}
@@ -62,7 +57,7 @@
                         <div class="fs-5 mb-3">
                             Berapa jumlah Huruf/Angka
                                 <span id="targetCharacter" class="badge bg-danger fs-5">{{ target_character }}</span>
-                            yang muncul diatas?
+                            yang muncul pada tabel?
                         </div>
                         <div class="mb-3">
                             <div>
@@ -72,7 +67,7 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table">
+                        <table class="table fs-5">
                             <thead>
                                 <th scope="col">Skor Anda</th>
                                 <th scope="col">Waktu Anda</th>
@@ -93,40 +88,40 @@
             </div>
         </div>
     </div>
-<script>
-    function submitGuess() {
-        const guess = document.getElementById("countGuess").value;
-        liveSend({ count_guess: guess }); // Kirim jawaban
-    }
-
-    liveRecv((data) => {
-        // Update skor dan target karakter baru
-        if (data.new_score !== undefined) {
-            document.getElementById("playerScore").textContent = data.new_score;
-        }
-        if (data.new_target_character) {
-            document.getElementById("targetCharacter").textContent = data.new_target_character;
+    <script>
+        function submitGuess() {
+            const guess = document.getElementById("countGuess").value;
+            liveSend({ count_guess: guess }); // Kirim jawaban
         }
 
-        // Update papan baru
-        if (data.new_board) {
-            const boardContainer = document.getElementById("boardContainer");
-            boardContainer.innerHTML = ""; // Bersihkan papan lama
+        liveRecv((data) => {
+            // Update skor dan target karakter baru
+            if (data.new_score !== undefined) {
+                document.getElementById("playerScore").textContent = data.new_score;
+            }
+            if (data.new_target_character) {
+                document.getElementById("targetCharacter").textContent = data.new_target_character;
+            }
 
-            // Generate papan baru
-            data.new_board.forEach(row => {
-                const rowDiv = document.createElement("div");
-                row.forEach(char => {
-                    const cell = document.createElement("span");
-                    cell.textContent = char;
-                    cell.className = "board-cell";
-                    rowDiv.appendChild(cell);
+            // Update papan baru
+            if (data.new_board) {
+                const boardContainer = document.getElementById("boardContainer");
+                boardContainer.innerHTML = ""; // Bersihkan papan lama
+
+                // Generate papan baru
+                data.new_board.forEach(row => {
+                    const rowDiv = document.createElement("div");
+                    row.forEach(char => {
+                        const cell = document.createElement("span");
+                        cell.textContent = char;
+                        cell.className = "board-cell";
+                        rowDiv.appendChild(cell);
+                    });
+                    boardContainer.appendChild(rowDiv);
                 });
-                boardContainer.appendChild(rowDiv);
-            });
-        }
+            }
 
-        document.getElementById("countGuess").value = ""; // Reset input setelah submit
-    });
-</script>
+            document.getElementById("countGuess").value = ""; // Reset input setelah submit
+        });
+    </script>
 {{ endblock }}

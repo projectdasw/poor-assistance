@@ -2,13 +2,13 @@
 {% load otree static %}
 
 {% block title %}
-    <title>Penjelasan Risky Choice with Allocation</title>
+    <title>Penjelasan Risky Investment Allocation</title>
 {% endblock %}
 
 {% block content %}
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title m-0">Penjelasan mengenai Risky Choice with Allocation</h3>
+            <h3 class="card-title m-0">Penjelasan mengenai Risky Investment Allocation</h3>
         </div>
         <div class="card-body">
             <div class="card-text">
@@ -17,33 +17,33 @@
                         <div class="ms-2 me-auto">
                             <div class="fw-bold">Konsep Dasar</div>
                             <p class="m-0 fs-6">
-                                Investasi Berisiko 2 merupakan opsi investasi dengan mengalokasikan Endowment yang Anda
-                                miliki. Dalam Investasi Berisiko 2, Anda akan diberikan 5 pilihan opsi dengan per opsi
-                                memiliki 3 keuntungan. Dari opsi tersebut, Anda hanya akan mendapatkan keuntungan salah
-                                satu dari 3 keuntungan tersebut. Bentuk opsi investasi pilihan adalah
+                                Risky Investment Allocation merupakan opsi investasi dengan mengalokasikan Uang yang
+                                Anda miliki. Dalam Risky Investment Allocation, Anda akan diberikan 5 pilihan opsi
+                                dengan per opsi memiliki 3 keuntungan. Dari opsi tersebut, Anda hanya akan mendapatkan
+                                keuntungan salah satu dari 3 keuntungan tersebut. Bentuk opsi investasi pilihan adalah
                                 berikut gambar dibawah ini:
                             </p>
-                            <img src="{{ static 'image/investment_game2.png' }}" class="mb-4 w-100"
-                                 alt="image/png">
+<!--                            <img src="{{ static 'image/investment_game2.png' }}" class="mb-4 w-100"-->
+<!--                                 alt="image/png">-->
                             <p class="m-0 fs-6">
-                                Dalam hal ini, Investasi Berisiko 2 memiliki ketentuan yaitu:
+                                Dalam hal ini, Risky Investment Allocation memiliki ketentuan yaitu:
                             </p>
                             <ol class="list-group list-group-numbered fs-6">
                                 <li class="list-group-item d-flex justify-content-between align-items-start border-0">
                                     <div class="ms-2 me-auto">
-                                        Anda dapat mengalokasikan Endowment (Poin) yang Anda miliki pada opsi-opsi yang
-                                        tersedia secara bebas sesuai dengan kemampuan Endowment (Poin) Yang Anda miliki.
+                                        Anda dapat mengalokasikan Uang (Poin) yang Anda miliki pada opsi-opsi yang
+                                        tersedia secara bebas sesuai dengan kemampuan Uang (Poin) yang Anda miliki.
                                         <strong>Setiap opsi tidak memiliki biaya tetap</strong> sehingga Anda dapat
-                                        secara bebas mengalokasikan Endowment (Poin) Anda. Jika Endowment Anda melebihi
+                                        secara bebas mengalokasikan Uang (Poin) Anda. Jika Uang Anda melebihi
                                         biaya opsi yang dipilih, maka Anda tidak dapat melakukan investasi tersebut dan
                                         Anda harus kembali memilih dan mengalokasikan opsi sesuai dengan kemampuan
-                                        Endowment yang Anda miliki.
+                                        Uang yang Anda miliki.
                                     </div>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-start border-0">
                                     <div class="ms-2 me-auto">
                                         Anda mendapatkan profit/keuntungan berdasarkan opsi yang Anda pilih, dengan
-                                        contoh: dari gambar diatas jika Anda memilih mengalokasikan Endowment (Poin)
+                                        contoh: dari gambar diatas jika Anda memilih mengalokasikan Uang (Poin)
                                         pada Opsi 1, maka Sistem akan membaca dan menentukan profit/keuntungan dari
                                         salah satu 3 keuntungan dari Opsi 1 secara acak. Jika Sistem telah menentukan
                                         pilihan keuntungan <strong>"Anda mendapatkan x2 dengan peluang 35%" dan Anda
@@ -91,13 +91,6 @@
                                     <div class="ms-2 me-auto">
                                         <strong>Jika Anda tidak melakukan investasi pada ronde tertentu, maka
                                         <span class="text-danger">Anda tidak mendapatkan profit/keuntungan</span>
-                                        </strong> dan <strong>Sistem juga dapat mendeteksi jika Anda tidak melakukan
-                                        investasi sebanyak kelipatan 5 ronde. Jika Anda terdeteksi setiap 5 ronde tidak
-                                        melakukan investasi, maka <span class="text-danger">Sistem akan memberikan
-                                        konfirmasi kepada Anda</span></strong>. Jika Anda masih tertarik berinvestasi
-                                        maka Investasi Berisiko 2 akan dilanjutkan seperti biasanya, sedangkan
-                                        <strong>jika Anda sudah tidak tertarik investasi pada Investasi Berisiko 2 maka
-                                        <span class="text-danger">Investasi Berisiko 2 akan langsung dihentikan</span>
                                         </strong>.
                                     </div>
                                 </li>
@@ -124,20 +117,9 @@
                                     border-0">
                                     <i class="fa-solid fa-circle-exclamation text-danger"></i>
                                     <div class="ms-2 me-auto">
-                                        Jika <strong>Endowment Anda tidak mencukupi untuk Beban Konsumsi</strong>, maka
-                                        sistem akan mendeteksi bahwa Anda terkena <strong class="text-danger">Konsumsi
-                                        di bawah Standar</strong>, dengan kata lain
-                                        <strong class="text-danger">keseluruhan Endowment Anda akan digunakan sebagai
-                                        Beban Konsumsi pada ronde tersebut</strong>.
-                                    </div>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-start
-                                    border-0">
-                                    <i class="fa-solid fa-circle-exclamation text-danger"></i>
-                                    <div class="ms-2 me-auto">
-                                        Setiap aplikasi pada eksperimen ini memiliki sistem yang kompleks. Jika <strong>
+                                        Setiap sesi eksperimen ini memiliki sistem yang kompleks. Jika <strong>
                                         Anda terdeteksi tidak melakukan investasi pada ronde tertentu</strong>,
-                                        <strong>Bantuan & Beban Konsumsi akan tetap <span class="text-danger">BERLAKU
+                                        <strong>Beban Konsumsi akan tetap <span class="text-danger">BERLAKU
                                         </span></strong>. Harap lebih teliti pada saat melakukan investasi.
                                     </div>
                                 </li>
@@ -146,16 +128,15 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-start fs-4 border-0">
                         <div class="ms-2 me-auto">
-                            <div class="fw-bold">Hasil Ronde & Hasil Akhir Investasi Berisiko 2</div>
+                            <div class="fw-bold">Hasil Ronde & Hasil Akhir Risky Investment Allocation</div>
                             <p class="m-0 fs-6">
                                 Setiap ronde akan merekap hasil investasi yang Anda lakukan. <i>Hasil Ronde</i>
                                 menyajikan informasi rekapan hasil investasi Anda meliputi profit/keuntungan, biaya
-                                opsi, Bantuan & Beban Konsumsi serta Endowment Akhir yang akan digunakan pada ronde
-                                selanjutnya. <i>Hasil Akhir</i> menyajikan informasi rekapan keseluruhan ronde yang
-                                telah Anda lakukan terlepas dari Anda melakukan investasi maupun tidak melakukan
-                                investasi serta total keseluruhan profit/keuntungan setiap ronde. Endowment Akhir
-                                pada Investasi Berisiko 2 akan digunakan sebagai Default Endowment pada Investasi Berisiko
-                                selanjutnya.
+                                opsi, Bantuan & Beban Konsumsi serta Uang Akhir Ronde. <i>Hasil Akhir</i> menyajikan
+                                informasi rekapan keseluruhan ronde yang telah Anda lakukan terlepas dari Anda
+                                melakukan investasi maupun tidak melakukan investasi serta total
+                                keseluruhan profit/keuntungan setiap ronde. <strong>Uang Akhir pada Risky Investment
+                                Allocation akan digunakan pada ronde berikutnya</strong>.
                             </p>
                         </div>
                     </li>

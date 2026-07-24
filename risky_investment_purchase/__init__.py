@@ -92,26 +92,50 @@ class game(Page):
                    'opsi_4', 'opsi_5']
 
     @staticmethod
+    def error_message(player, values):
+
+        # Hitung jumlah opsi yang dipilih
+        selected_count = sum(
+            1 for i in range(1, 6)
+            if values[f'opsi_{i}']
+        )
+
+        total_cost = selected_count * Constants.cost_per_option
+
+        if total_cost > player.uang_sesudah_tambah_bansos:
+            return (
+                f"Total biaya pembelian adalah {total_cost}, "
+                f"sedangkan uang yang Anda miliki hanya "
+                f"{player.uang_sesudah_tambah_bansos}."
+            )
+
+    @staticmethod
     def vars_for_template(player: Player):
+        # Key berdasarkan ronde
+        key = f'random_options_round_{player.round_number}'
+
+        # Acak hanya sekali untuk ronde ini
+        if key not in player.participant.vars:
+            random_options = random.sample(Constants.options_data_price, 5)
+            for option in random_options:
+                option['formatted_outcomes'] = [
+                    f"Anda mendapatkan {value} dengan peluang {int(probability * 100)}%"
+                    for value, probability in option['outcomes']
+                ]
+
+            player.participant.vars[key] = random_options
+
+        random_options = player.participant.vars[key]
+
         # Ambil sisa uang subjek dari ronde sebelumnya
         if player.round_number > 1:
             previous_round_endowment = player.in_round(player.round_number - 1).payoff
             player.uang_sebelum_tambah_bansos = previous_round_endowment
             player.bantuan_sosial = Constants.additional
-            player.uang_sesudah_tambah_bansos = player.uang_sebelum_tambah_bansos + player.bantuan_sosial
+            player.uang_sesudah_tambah_bansos = (
+                    player.uang_sebelum_tambah_bansos + player.bantuan_sosial
+            )
             player.beban_konsumsi = Constants.consumption
-
-        # Mendapatkan 5 pilihan acak unik dari daftar opsi
-        random_options = random.sample(Constants.options_data_price, 5)
-
-        # Membuat teks yang terstruktur untuk setiap opsi
-        for option in random_options:
-            option_outcomes = option['outcomes']
-            formatted_outcomes = [
-                f"Anda mendapatkan {value} dengan peluang {int(probability * 100)}%"
-                for value, probability in option_outcomes
-            ]
-            option['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
 
         return {
             'random_options': random_options,
@@ -119,6 +143,9 @@ class game(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
+        # Key berdasarkan ronde
+        key = f'random_options_round_{player.round_number}'
+
         # Daftar pilihan opsi
         selected_options = [
             (getattr(player, f"opsi_{i}"), f"hasil_opsi_{i}")
@@ -128,21 +155,28 @@ class game(Page):
         # Proses setiap pilihan
         for selected_option_name, result_field in selected_options:
             selected_option = next(
-                (option for option in Constants.options_data_price if option['name'] == selected_option_name),
+                (
+                    option
+                    for option in Constants.options_data_price
+                    if option['name'] == selected_option_name
+                ),
                 None
             )
 
             if selected_option:
-                draw = random.randint(1, 100)  # Lakukan drawing angka 1-100
+                draw = random.randint(1, 100)
                 cumulative_probability = 0
 
-                # Hitung hasil berdasarkan peluang
                 for outcome, probability in selected_option['outcomes']:
                     cumulative_probability += probability * 100
+
                     if draw <= cumulative_probability:
-                        setattr(player, result_field, outcome)  # Set hasil ke field yang sesuai
+                        setattr(player, result_field, outcome)
                         player.total_profit += outcome
                         break
+
+        # Hapus data acakan ronde ini
+        player.participant.vars.pop(key, None)
 
 
 class single_results(Page):

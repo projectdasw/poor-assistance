@@ -27,11 +27,11 @@ class general_instruction(Page):
     pass
 
 
-class risky_choice_price_instruction(Page):
+class risky_investment_purchase_instruction(Page):
     pass
 
 
-class risky_choice_allocation_instruction(Page):
+class risky_investment_allocation_instruction(Page):
     pass
 
 
@@ -39,7 +39,7 @@ class real_effort_decoding_instruction(Page):
     pass
 
 
-class asian_handicap_instruction(Page):
+class investment_panel_allocation_instruction(Page):
     pass
 
 
@@ -50,9 +50,9 @@ class confirmation(Page):
 page_sequence = [
     welcome,
     general_instruction,
-    risky_choice_price_instruction,
-    risky_choice_allocation_instruction,
+    risky_investment_purchase_instruction,
+    risky_investment_allocation_instruction,
     real_effort_decoding_instruction,
-    asian_handicap_instruction,
-    confirmation
+    investment_panel_allocation_instruction,
+    # confirmation
 ]

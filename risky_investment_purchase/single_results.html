@@ -58,19 +58,30 @@
                                     <strong>{{ player.total_profit }}</strong>
                                 {{ endif }}
                             </td>
-                            <td><strong class="text-danger">-{{ player.total_biaya_beli_opsi }}</strong></td>
+                            <td>
+                                {{ if player.total_biaya_beli_opsi != 0 }}
+                                    <strong class="text-danger">-{{ player.total_biaya_beli_opsi }}</strong>
+                                {{ else }}
+                                    <strong>{{ player.total_biaya_beli_opsi }}</strong>
+                                {{ endif }}
+                            </td>
                             <td><strong class="text-danger">-{{ player.beban_konsumsi }}</strong></td>
                             <td><strong>{{ player.payoff }}</strong></td>
                         </tr>
                     </tbody>
                 </table>
-                {{ if player.round_number != Constants.num_rounds }}
-                    <div class="alert alert-success" role="alert">
+                {% if player.total_biaya_beli_opsi == 0 %}
+                    <div class="alert alert-primary" role="alert">
                         <strong>
-                            Sisa uang Anda pada ronde ini akan digunakan pada ronde selanjutnya.
+                            Anda tidak melakukan investasi pada ronde ini.
                         </strong>
                     </div>
-                {{ endif }}
+                {% endif %}
+                <div class="alert alert-success m-0" role="alert">
+                    <strong>
+                        Sisa uang Anda pada ronde ini akan digunakan pada ronde selanjutnya.
+                    </strong>
+                </div>
             </div>
         </div>
         <div class="card-footer">

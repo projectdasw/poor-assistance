@@ -1,0 +1,86 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    <title>Investment Panel Allocation</title>
+{% endblock %}
+
+{{ block content }}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="alert p-0 mb-0" role="alert">
+                <h3 class="alert-heading">Hasil Akhir Investment Panel Allocation</h3>
+                <p>
+                    Selamat Anda telah menyelesaikan sesi eksperimen <strong>Investment Panel Allocation</strong>.
+                    Berikut di bawah ini hasil keseluruhan ronde sesi eksperimen Investment Panel Allocation:
+                </p>
+                <hr>
+                <table class="table">
+                    <thead>
+                        <thead>
+                            <tr>
+                                <th scope="col">Ronde Investasi</th>
+                                <th scope="col">Profit</th>
+                                <th scope="col">Alokasi Endowment</th>
+                                <th scope="col">Bantuan</th>
+                                <th scope="col">Beban Konsumsi</th>
+                                <th scope="col">Endowment Akhir Ronde</th>
+                            </tr>
+                        </thead>
+                    </thead>
+                    <tbody>
+                        {% for round in rounds_data %}
+                            <tr>
+                                <td>Investment Panel Allocation - Ronde {{ round.round_number }}</td>
+                                <td>
+                                    {{ if round.return == 0 }}
+                                        <strong>{{ round.return }}</strong>
+                                    {{ else }}
+                                        <strong class="text-success">+{{ round.return }}</strong>
+                                    {{ endif }}
+                                </td>
+                                <td>
+                                    {{ if round.cost == 0 }}
+                                        <strong>{{ round.cost }}</strong>
+                                    {{ else }}
+                                        <strong class="text-danger">-{{ round.cost }}</strong>
+                                    {{ endif }}
+                                </td>
+                                <td>
+                                    <strong class="text-success">+{{ round.additional_investment4 }}</strong>
+                                </td>
+                                <td>
+                                    <strong class="text-danger">-{{ round.consumption_investment4 }}</strong>
+                                </td>
+                                <td>
+                                    <strong>{{ round.endowment_investment4 }}</strong>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total</th>
+                            <td>
+                                <strong>{{ final_return }}</strong>
+                            </td>
+                            <td>
+                                {{ if final_cost == 0}}
+                                    <strong>0.0</strong>
+                                {{ else }}
+                                    <strong>{{ final_cost }}</strong>
+                                {{ endif }}
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-primary">
+                <span>Lanjut</span>
+                <i class="fa-solid fa-circle-arrow-right ms-1"></i>
+            </button>
+        </div>
+    </div>
+{{ endblock }}

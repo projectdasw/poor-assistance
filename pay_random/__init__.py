@@ -37,10 +37,10 @@ class Pay_info(Page):
         # Hitung total payoff dari setiap aplikasi
         participant = player.participant
         app_results = {
-            'Investment Game 1': participant.app_investment1,
-            'Investment Game 2': participant.app_investment2,
-            'Investment Game 3': participant.app_investment3,
-            'Investment Game 4': participant.app_investment4,
+            'Investment game 1': participant.app_investment1,
+            'Investment game 2': participant.app_investment2,
+            'Investment game 3': participant.app_investment3,
+            'Investment game 4': participant.app_investment4,
         }
 
         # Simpan hasil ke participant.vars untuk digunakan di halaman kedua

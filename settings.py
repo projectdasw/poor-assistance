@@ -8,6 +8,8 @@ SESSION_CONFIGS = [
             'welcome_instructions',
             'risky_investment_purchase',
             'risky_investment_allocation',
+            'real_effort_decoding',
+            'investment_panel_allocation',
         ],
         num_demo_participants=1
     ),
