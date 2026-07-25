@@ -9,7 +9,7 @@ Risky Investment Allocation
 class Constants(BaseConstants):
     name_in_url = 'risky_investment_allocation'
     players_per_group = None
-    num_rounds = 3
+    num_rounds = 10
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -124,39 +124,40 @@ class game(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        # Daftar pilihan yang dipilih pemain beserta alokasi dan hasilnya
-        selected_allocations = [
-            (
-                getattr(player, f"opsi_{i}"),
-                f"hasil_opsi_{i}",
-                getattr(player, f"alokasi_opsi_{i}")
-            )
-            for i in range(1, 6)
-        ]
+        for i in range(1, 6):
+            selected_name = getattr(player, f"opsi_{i}")
+            allocation = getattr(player, f"alokasi_opsi_{i}")
 
-        # Proses setiap pilihan
-        for selected_name, result_field, allocation in selected_allocations:
+            if not selected_name or allocation == 0:
+                continue
+
             selected_option = next(
-                (option for option in Constants.options_data_allocation if option['name'] == selected_name),
-                None
+                (
+                    option
+                    for option in Constants.options_data_allocation
+                    if option["name"] == selected_name
+                ),
+                None,
             )
 
-            if selected_option:
-                draw = random.randint(1, 100)  # Lakukan drawing angka 1-100
-                cumulative_probability = 0
+            if not selected_option:
+                continue
 
-                # Hitung hasil berdasarkan peluang
-                for outcome, probability in selected_option['outcomes']:
-                    cumulative_probability += probability * 100
-                    if draw <= cumulative_probability:
-                        setattr(player, result_field, outcome)  # Set hasil ke field yang sesuai
-                        total_profit = (player.alokasi_opsi_1 * player.hasil_opsi_1) + \
-                                       (player.alokasi_opsi_2 * player.hasil_opsi_2) + \
-                                       (player.alokasi_opsi_3 * player.hasil_opsi_3) + \
-                                       (player.alokasi_opsi_4 * player.hasil_opsi_4) + \
-                                       (player.alokasi_opsi_5 * player.hasil_opsi_5)
-                        player.total_profit = total_profit
-                        break
+            draw = random.randint(1, 100)
+            cumulative_probability = 0
+
+            for outcome, probability in selected_option["outcomes"]:
+                cumulative_probability += probability * 100
+
+                if draw <= cumulative_probability:
+                    setattr(player, f"hasil_opsi_{i}", outcome)
+                    break
+
+        player.total_profit = sum(
+            getattr(player, f"alokasi_opsi_{i}") *
+            getattr(player, f"hasil_opsi_{i}")
+            for i in range(1, 6)
+        )
 
 
 class single_results(Page):
@@ -190,26 +191,18 @@ class single_results(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        # Hitung total cost berdasarkan selected_optionprice
-        total_cost = sum([
-            player.alokasi_opsi_1,
-            player.alokasi_opsi_2,
-            player.alokasi_opsi_3,
-            player.alokasi_opsi_4,
-            player.alokasi_opsi_5
-        ])
+        total_cost = sum(
+            getattr(player, f"alokasi_opsi_{i}")
+            for i in range(1, 6)
+        )
 
-        # Tambahkan payoff dan cost ke list di participant.vars
-        if 'results_by_round_investment2' not in player.participant.vars:
-            player.participant.vars['results_by_round_investment2'] = []
-
-        player.participant.vars['results_by_round_investment2'].append({
-            'round_number_investment2': player.round_number,
-            'payoff_investment2': player.total_profit,
-            'cost_investment2': total_cost,
-            'endowment_investment2': player.payoff,
-            'additional_investment2': player.bantuan_sosial,
-            'consumption_investment2': player.beban_konsumsi
+        player.participant.vars.setdefault("results_risky_allocation", []).append({
+            "round_number_risky_allocation": player.round_number,
+            "payoff_risky_allocation": player.total_profit,
+            "cost_risky_allocation": total_cost,
+            "endowment_risky_allocation": player.payoff,
+            "additional_risky_allocation": player.bantuan_sosial,
+            "consumption_risky_allocation": player.beban_konsumsi,
         })
 
 
@@ -221,29 +214,30 @@ class final_results(Page):
     @staticmethod
     def vars_for_template(player: Player):
         participant = player.participant
-        # Ambil daftar hasil dari participant.vars
-        results_by_round_investment2 = player.participant.vars.get('results_by_round_investment2', [])
+        results_risky_allocation = participant.vars.get(
+            "results_risky_allocation", []
+        )
 
-        # Tentukan ronde terakhir yang dimainkan
-        end_game = participant.vars.get('end_game', False)
-        if end_game:
-            last_round_investment2 = participant.vars.get('last_round_played_investment2', 1)
-        else:
-            last_round_investment2 = player.round_number
-
-        # Ambil nilai payoff dari ronde terakhir yang dimainkan
-        final_endowment_investment2 = player.in_round(last_round_investment2).payoff
-
-        # Hitung total payoff dan total cost
-        total_payoff_investment2 = sum(item['payoff_investment2'] for item in results_by_round_investment2)
-        total_cost_investment2 = sum(item['cost_investment2'] for item in results_by_round_investment2)
+        last_round_risky_allocation = (
+            participant.vars.get("last_round_played_risky_allocation", 1)
+            if participant.vars.get("end_game", False)
+            else player.round_number
+        )
 
         return {
-            'results_by_round_investment2': results_by_round_investment2,
-            'total_payoff_investment2': total_payoff_investment2,
-            'total_cost_investment2': total_cost_investment2,
-            'last_round_investment2': last_round_investment2,
-            'final_endowment_investment2': final_endowment_investment2
+            "results_risky_allocation": results_risky_allocation,
+            "total_payoff_risky_allocation": sum(
+                item["payoff_risky_allocation"]
+                for item in results_risky_allocation
+            ),
+            "total_cost_risky_allocation": sum(
+                item["cost_risky_allocation"]
+                for item in results_risky_allocation
+            ),
+            "last_round_risky_allocation": last_round_risky_allocation,
+            "final_endowment_risky_allocation": player.in_round(
+                last_round_risky_allocation
+            ).payoff,
         }
 
 

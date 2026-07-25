@@ -20,18 +20,18 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>
-                                <strong>{% player.uang_sebelum_tambah_bansos %}</strong>
+                            <td class="fw-bold">
+                                {% if player.uang_sebelum_tambah_bansos < 0 %}
+                                    <span class="text-danger">{% player.uang_sebelum_tambah_bansos %}</span>
+                                {% elif player.uang_sebelum_tambah_bansos >= 0 %}
+                                    {% player.uang_sebelum_tambah_bansos %}
+                                {% endif %}
                             </td>
-                            <td>
-                                <strong class="text-success">
-                                    +{% player.bantuan_sosial %}
-                                </strong>
+                            <td class="fw-bold">
+                                <span class="text-success">+{% player.bantuan_sosial %}</span>
                             </td>
-                            <td>
-                                <strong class="text-danger">
-                                    -{% player.beban_konsumsi %}
-                                </strong>
+                            <td class="fw-bold">
+                                <span class="text-danger">-{% player.beban_konsumsi %}</span>
                             </td>
                         </tr>
                     </tbody>

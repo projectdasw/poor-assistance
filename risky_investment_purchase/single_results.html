@@ -9,7 +9,7 @@
     <div class="card mb-3">
         <div class="card-header">
             <h3 class="card-title text-center m-0">
-                Hasil Ronde {{ player.round_number }} - Risky Investment Purchase
+                Hasil Ronde {% player.round_number %} - Risky Investment Purchase
             </h3>
         </div>
         <div class="card-body">
@@ -23,21 +23,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{ for item in options }}
+                        {% for item in options %}
                             <tr>
-                                <td>Risky Investment Purchase - Opsi {{ item.no }}</td>
-                                <td>
-                                    {{ if item.result != 0 }}
-                                        <strong class="text-success">+{{ item.result }}</strong>
-                                    {{ else }}
-                                        <strong>{{ item.result }}</strong>
-                                    {{ endif }}
+                                <td>Opsi {% item.no %}</td>
+                                <td class="fw-bold">
+                                    {% if item.result != 0 %}
+                                        <span class="text-success">+{% item.result %}</span>
+                                    {% else %}
+                                        {% item.result %}
+                                    {% endif %}
                                 </td>
-                                <td>
-                                    <strong class="text-danger">-{{ Constants.cost_per_option }}</strong>
+                                <td class="fw-bold">
+                                    <span class="text-danger">-{% Constants.cost_per_option %}</span>
                                 </td>
                             </tr>
-                        {{ endfor }}
+                        {% endfor %}
                     </tbody>
                 </table>
                 <table class="table">
@@ -50,23 +50,37 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>{{ player.uang_sesudah_tambah_bansos }}</strong></td>
-                            <td>
-                                {{ if player.total_profit != 0 }}
-                                    <strong class="text-success">+{{ player.total_profit }}</strong>
-                                {{ else }}
-                                    <strong>{{ player.total_profit }}</strong>
-                                {{ endif }}
+                            <td class="fw-bold">
+                                {% if player.uang_sesudah_tambah_bansos < 0 %}
+                                    <span class="text-danger">{% player.uang_sesudah_tambah_bansos %}</span>
+                                {% elif player.uang_sesudah_tambah_bansos >= 0 %}
+                                    {% player.uang_sesudah_tambah_bansos %}
+                                {% endif %}
                             </td>
-                            <td>
-                                {{ if player.total_biaya_beli_opsi != 0 }}
-                                    <strong class="text-danger">-{{ player.total_biaya_beli_opsi }}</strong>
-                                {{ else }}
-                                    <strong>{{ player.total_biaya_beli_opsi }}</strong>
-                                {{ endif }}
+                            <td class="fw-bold">
+                                {% if player.total_profit != 0 %}
+                                    <span class="text-success">+{% player.total_profit %}</span>
+                                {% else %}
+                                    {% player.total_profit %}
+                                {% endif %}
                             </td>
-                            <td><strong class="text-danger">-{{ player.beban_konsumsi }}</strong></td>
-                            <td><strong>{{ player.payoff }}</strong></td>
+                            <td class="fw-bold">
+                                {% if player.total_biaya_beli_opsi != 0 %}
+                                    <span class="text-danger">-{% player.total_biaya_beli_opsi %}</span>
+                                {% else %}
+                                    {% player.total_biaya_beli_opsi %}
+                                {% endif %}
+                            </td>
+                            <td class="fw-bold">
+                                <span class="text-danger">-{% player.beban_konsumsi %}</span>
+                            </td>
+                            <td class="fw-bold">
+                                {% if player.payoff < 0 %}
+                                    <span class="text-danger">{% player.payoff %}</span>
+                                {% elif player.payoff >= 0 %}
+                                    {% player.payoff %}
+                                {% endif %}
+                            </td>
                         </tr>
                     </tbody>
                 </table>

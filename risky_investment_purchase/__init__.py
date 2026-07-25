@@ -91,23 +91,23 @@ class game(Page):
     form_fields = ['opsi_1', 'opsi_2', 'opsi_3',
                    'opsi_4', 'opsi_5']
 
-    @staticmethod
-    def error_message(player, values):
-
-        # Hitung jumlah opsi yang dipilih
-        selected_count = sum(
-            1 for i in range(1, 6)
-            if values[f'opsi_{i}']
-        )
-
-        total_cost = selected_count * Constants.cost_per_option
-
-        if total_cost > player.uang_sesudah_tambah_bansos:
-            return (
-                f"Total biaya pembelian adalah {total_cost}, "
-                f"sedangkan uang yang Anda miliki hanya "
-                f"{player.uang_sesudah_tambah_bansos}."
-            )
+    # @staticmethod
+    # def error_message(player, values):
+    #
+    #     # Hitung jumlah opsi yang dipilih
+    #     selected_count = sum(
+    #         1 for i in range(1, 6)
+    #         if values[f'opsi_{i}']
+    #     )
+    #
+    #     total_cost = selected_count * Constants.cost_per_option
+    #
+    #     if total_cost > player.uang_sesudah_tambah_bansos:
+    #         return (
+    #             f"Total biaya pembelian adalah {total_cost}, "
+    #             f"sedangkan uang yang Anda miliki hanya "
+    #             f"{player.uang_sesudah_tambah_bansos}."
+    #         )
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -119,7 +119,7 @@ class game(Page):
             random_options = random.sample(Constants.options_data_price, 5)
             for option in random_options:
                 option['formatted_outcomes'] = [
-                    f"Anda mendapatkan {value} dengan peluang {int(probability * 100)}%"
+                    f"Anda mendapatkan {value} poin dengan peluang {int(probability * 100)}%"
                     for value, probability in option['outcomes']
                 ]
 
@@ -206,29 +206,24 @@ class single_results(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        # Hitung total cost berdasarkan opsi yang dipilih
-        selected_options = [
-            player.opsi_1,
-            player.opsi_2,
-            player.opsi_3,
-            player.opsi_4,
-            player.opsi_5
-        ]
+        # Hitung total biaya berdasarkan jumlah opsi yang dipilih
+        total_cost = (
+                sum(
+                    1
+                    for i in range(1, 6)
+                    if getattr(player, f"opsi_{i}")
+                )
+                * Constants.cost_per_option
+        )
 
-        # Filter opsi yang valid (tidak kosong) dan hitung biaya
-        total_cost = len([option for option in selected_options if option]) * Constants.cost_per_option
-
-        # Tambahkan payoff dan cost ke list di participant.vars
-        if 'results_by_round_investment1' not in player.participant.vars:
-            player.participant.vars['results_by_round_investment1'] = []
-
-        player.participant.vars['results_by_round_investment1'].append({
-            'round_number_investment1': player.round_number,
-            'payoff_investment1': player.total_profit,
-            'cost_investment1': total_cost,
-            'endowment_investment1': player.payoff,
-            'additional_investment1': player.bantuan_sosial,
-            'consumption_investment1': player.beban_konsumsi
+        # Simpan hasil ronde
+        player.participant.vars.setdefault("results_risky_purchase", []).append({
+            "round_number_risky_purchase": player.round_number,
+            "payoff_risky_purchase": player.total_profit,
+            "cost_risky_purchase": total_cost,
+            "endowment_risky_purchase": player.payoff,
+            "additional_risky_purchase": player.bantuan_sosial,
+            "consumption_risky_purchase": player.beban_konsumsi,
         })
 
 
@@ -240,29 +235,28 @@ class final_results(Page):
     @staticmethod
     def vars_for_template(player: Player):
         participant = player.participant
-        # Ambil daftar hasil dari participant.vars
-        results_by_round_investment1 = player.participant.vars.get('results_by_round_investment1', [])
+        results_risky_purchase = participant.vars.get("results_risky_purchase", [])
 
-        # Tentukan ronde terakhir yang dimainkan
-        end_game = participant.vars.get('end_game', False)
-        if end_game:
-            last_round_investment1 = participant.vars.get('last_round_played_investment1', 1)
-        else:
-            last_round_investment1 = player.round_number
-
-        # Ambil nilai payoff dari ronde terakhir yang dimainkan
-        final_endowment_investment1 = player.in_round(last_round_investment1).payoff
-
-        # Hitung total payoff dan total cost
-        total_payoff_investment1 = sum(item['payoff_investment1'] for item in results_by_round_investment1)
-        total_cost_investment1 = sum(item['cost_investment1'] for item in results_by_round_investment1)
+        last_round_risky_purchase = (
+            participant.vars.get("last_round_played_risky_purchase", 1)
+            if participant.vars.get("end_game", False)
+            else player.round_number
+        )
 
         return {
-            'results_by_round_investment1': results_by_round_investment1,
-            'total_payoff_investment1': total_payoff_investment1,
-            'total_cost_investment1': total_cost_investment1,
-            'last_round_played_investment1': last_round_investment1,
-            'final_endowment_investment1': final_endowment_investment1
+            "results_risky_purchase": results_risky_purchase,
+            "total_payoff_risky_purchase": sum(
+                item["payoff_risky_purchase"]
+                for item in results_risky_purchase
+            ),
+            "total_cost_risky_purchase": sum(
+                item["cost_risky_purchase"]
+                for item in results_risky_purchase
+            ),
+            "last_round_played_risky_purchase": last_round_risky_purchase,
+            "final_endowment_risky_purchase": player.in_round(
+                last_round_risky_purchase
+            ).payoff,
         }
 
 

@@ -5,7 +5,7 @@
     <title>Hasil Akhir Risky Investment Allocation</title>
 {% endblock %}
 
-{{ block content }}
+{% block content %}
     <div class="card mb-3">
         <div class="card-body">
             <div class="alert p-0 mb-0" role="alert">
@@ -22,47 +22,51 @@
                         <tr>
                             <th scope="col">Sesi Ronde</th>
                             <th scope="col">Profit</th>
-                            <th scope="col">Biaya Opsi</th>
+                            <th scope="col">Alokasi Opsi</th>
                             <th scope="col">Bantuan</th>
                             <th scope="col">Beban Konsumsi</th>
                             <th scope="col">Sisa Uang Akhir Ronde</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for item in results_by_round_investment2 %}
-                        <tr>
-                            <td>Ronde {{ item.round_number_investment2 }}</td>
-                            <td>
-                                {{ if item.payoff_investment2 == 0 }}
-                                    <strong>{{ item.payoff_investment2 }}</strong>
-                                {{ else }}
-                                    <strong class="text-success">+{{ item.payoff_investment2 }}</strong>
-                                {{ endif }}
-                            </td>
-                            <td>
-                                {{ if item.cost_investment2 == 0 }}
-                                    <strong>{{ item.cost_investment2 }}</strong>
-                                {{ else }}
-                                    <strong class="text-danger">-{{ item.cost_investment2 }}</strong>
-                                {{ endif }}
-                            </td>
-                            <td>
-                                <strong class="text-success">+{{ item.additional_investment2 }}</strong>
-                            </td>
-                            <td>
-                                <strong class="text-danger">-{{ item.consumption_investment2 }}</strong>
-                            </td>
-                            <td>
-                                <strong>{{ item.endowment_investment2 }}</strong>
-                            </td>
-                        </tr>
+                        {% for item in results_risky_allocation %}
+                            <tr>
+                                <td>Ronde {% item.round_number_risky_allocation %}</td>
+                                <td class="fw-bold">
+                                    {% if item.payoff_risky_allocation != 0 %}
+                                        <span class="text-success">+{% item.payoff_risky_allocation %}</span>
+                                    {% else %}
+                                        {% item.payoff_risky_allocation %}
+                                    {% endif %}
+                                </td>
+                                <td class="fw-bold">
+                                    {% if item.cost_risky_allocation != 0 %}
+                                        <span class="text-danger">-{% item.cost_risky_allocation %}</span>
+                                    {% else %}
+                                        {% item.cost_risky_allocation %}
+                                    {% endif %}
+                                </td>
+                                <td class="fw-bold">
+                                    <span class="text-success">+{% item.additional_risky_allocation %}</span>
+                                </td>
+                                <td class="fw-bold">
+                                    <span class="text-danger">-{% item.consumption_risky_allocation %}</span>
+                                </td>
+                                <td class="fw-bold">
+                                    {% if item.endowment_risky_allocation < 0 %}
+                                        <span class="text-danger">{% item.endowment_risky_allocation %}</span>
+                                    {% elif item.endowment_risky_allocation >= 0 %}
+                                        {% item.endowment_risky_allocation %}
+                                    {% endif %}
+                                </td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                     <tfoot>
                         <tr>
                             <th>Total</th>
-                            <th>{{ total_payoff_investment2 }}</th>
-                            <th>{{ total_cost_investment2 }}</th>
+                            <th>{% total_payoff_risky_allocation %}</th>
+                            <th>{% total_cost_risky_allocation %}</th>
                         </tr>
                     </tfoot>
                 </table>

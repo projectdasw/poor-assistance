@@ -9,7 +9,7 @@
     <div class="card mb-3">
         <div class="card-header">
             <h3 class="card-title text-center m-0">
-                Hasil Ronde {{ player.round_number }} - Risky Investment Allocation
+                Hasil Ronde {% player.round_number %} - Risky Investment Allocation
             </h3>
         </div>
         <div class="card-body">
@@ -23,29 +23,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{ for item in allocations }}
+                        {% for item in allocations %}
                             <tr>
-                                <td>Risky Investment Allocation - Opsi {{ item.no }}</td>
-
-                                <td>
-                                    <strong>{{ item.allocation }}</strong>
-                                    x
-                                    {{ if item.result != 0 }}
-                                        <strong class="text-success">{{ item.result }}</strong>
-                                    {{ else }}
-                                        <strong>{{ item.result }}</strong>
-                                    {{ endif }}
+                                <td>Opsi {% item.no %}</td>
+                                <td class="fw-bold">
+                                    {% if item.result != 0 %}
+                                        {% item.allocation %} x <span class="text-success">{{ item.result }}</span>
+                                    {% else %}
+                                        {% item.allocation %} x {% item.result %}
+                                    {% endif %}
                                 </td>
-
-                                <td>
-                                    {{ if item.profit != 0 }}
-                                        <strong class="text-success">+{{ item.profit }}</strong>
-                                    {{ else }}
-                                        <strong>{{ item.profit }}</strong>
-                                    {{ endif }}
+                                <td class="fw-bold">
+                                    {% if item.profit != 0 %}
+                                        <span class="text-success">+{{ item.profit }}</span>
+                                    {% else %}
+                                        {% item.profit %}
+                                    {% endif %}
                                 </td>
                             </tr>
-                        {{ endfor }}
+                        {% endfor %}
                     </tbody>
                 </table>
                 <table class="table">
@@ -58,40 +54,61 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>{{ player.uang_sesudah_tambah_bansos }}</strong></td>
-                            <td>
-                                {% if player.total_profit == 0 %}
-                                    <strong>{{ player.total_profit }}</strong>
-                                {% else%}
-                                    <strong class="text-success">+{{ player.total_profit }}</strong>
+                            <td class="fw-bold">
+                                {% if player.uang_sesudah_tambah_bansos < 0 %}
+                                    <span class="text-danger">{% player.uang_sesudah_tambah_bansos %}</span>
+                                {% elif player.uang_sesudah_tambah_bansos >= 0%}
+                                    {% player.uang_sesudah_tambah_bansos %}
                                 {% endif %}
                             </td>
-                            <td>
-                                {% if player.total_alokasi_opsi == 0 %}
-                                    <strong>{{ player.total_alokasi_opsi }}</strong>
-                                {% else%}
-                                    <strong class="text-danger">-{{ player.total_alokasi_opsi }}</strong>
+                            <td class="fw-bold">
+                                {% if player.total_profit != 0 %}
+                                    <span class="text-success">+{% player.total_profit %}</span>
+                                {% else %}
+                                    {% player.total_profit %}
                                 {% endif %}
                             </td>
-                            <td><strong class="text-danger">-{{ player.beban_konsumsi }}</strong></td>
-                            <td><strong>{{ player.payoff }}</strong></td>
+                            <td class="fw-bold">
+                                {% if player.total_alokasi_opsi != 0 %}
+                                    <span class="text-danger">-{% player.total_alokasi_opsi %}</span>
+                                {% else %}
+                                    {% player.total_alokasi_opsi %}
+                                {% endif %}
+                            </td>
+                            <td class="fw-bold">
+                                <span class="text-danger">-{% player.beban_konsumsi %}</span>
+                            </td>
+                            <td class="fw-bold">
+                                {% if player.payoff < 0 %}
+                                    <span class="text-danger">{% player.payoff %}</span>
+                                {% elif player.payoff >= 0 %}
+                                    {% player.payoff %}
+                                {% endif %}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
-                {{ if player.round_number != Constants.num_rounds }}
-                    <div class="alert alert-success" role="alert">
+                {% if player.total_alokasi_opsi == 0 %}
+                    <div class="alert alert-primary" role="alert">
+                        <strong>
+                            Anda tidak melakukan investasi pada ronde ini.
+                        </strong>
+                    </div>
+                {% endif %}
+                {% if player.round_number != Constants.num_rounds %}
+                    <div class="alert alert-success m-0" role="alert">
                         <strong>
                             Sisa uang Anda pada ronde ini akan digunakan pada ronde selanjutnya.
                         </strong>
                     </div>
-                {{ endif }}
+                {% endif %}
             </div>
         </div>
         <div class="card-footer">
             <button class="otree-btn-next btn btn-outline-primary">
                 <span>Lanjut</span>
-                <i class="fa-solid fa-chevron-right"></i>
+                <i class="fa-solid fa-circle-arrow-right ms-1"></i>
             </button>
         </div>
     </div>
-{{ endblock }}
+{% endblock %}

@@ -29,31 +29,35 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for item in results_by_round_investment1 %}
+                        {% for item in results_risky_purchase %}
                         <tr>
-                            <td>Ronde {{ item.round_number_investment1 }}</td>
-                            <td>
-                                {{ if item.payoff_investment1 == 0 }}
-                                    <strong>{{ item.payoff_investment1 }}</strong>
-                                {{ else }}
-                                    <strong class="text-success">+{{ item.payoff_investment1 }}</strong>
-                                {{ endif }}
+                            <td>Ronde {% item.round_number_risky_purchase %}</td>
+                            <td class="fw-bold">
+                                {% if item.payoff_risky_purchase != 0 %}
+                                    <span class="text-success">+{% item.payoff_risky_purchase %}</span>
+                                {% else %}
+                                    {% item.payoff_risky_purchase %}
+                                {% endif %}
                             </td>
-                            <td>
-                                {{ if item.cost_investment1 == 0 }}
-                                    <strong>{{ item.cost_investment1 }}</strong>
-                                {{ else }}
-                                    <strong class="text-danger">-{{ item.cost_investment1 }}</strong>
-                                {{ endif }}
+                            <td class="fw-bold">
+                                {% if item.cost_risky_purchase != 0 %}
+                                    <span class="text-danger">-{% item.cost_risky_purchase %}</span>
+                                {% else %}
+                                    {% item.cost_risky_purchase %}
+                                {% endif %}
                             </td>
-                            <td>
-                                <strong class="text-success">+{{ item.additional_investment1 }}</strong>
+                            <td class="fw-bold">
+                                <span class="text-success">+{% item.additional_risky_purchase %}</span>
                             </td>
-                            <td>
-                                <strong class="text-danger">-{{ item.consumption_investment1 }}</strong>
+                            <td class="fw-bold">
+                                <span class="text-danger">-{% item.consumption_risky_purchase %}</span>
                             </td>
-                            <td>
-                                <strong>{{ item.endowment_investment1 }}</strong>
+                            <td class="fw-bold">
+                                {% if item.endowment_risky_purchase < 0 %}
+                                    <span class="text-danger">{% item.endowment_risky_purchase %}</span>
+                                {% elif item.endowment_risky_purchase >= 0 %}
+                                    {% item.endowment_risky_purchase %}
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -61,8 +65,8 @@
                     <tfoot>
                         <tr>
                             <th>Total Akhir</th>
-                            <th>{{ total_payoff_investment1 }}</th>
-                            <th>{{ total_cost_investment1 }}</th>
+                            <th>{% total_payoff_risky_purchase %}</th>
+                            <th>{% total_cost_risky_purchase %}</th>
                         </tr>
                     </tfoot>
                 </table>
