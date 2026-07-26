@@ -54,5 +54,5 @@ page_sequence = [
     risky_investment_allocation_instruction,
     real_effort_decoding_instruction,
     investment_panel_allocation_instruction,
-    # confirmation
+    confirmation
 ]

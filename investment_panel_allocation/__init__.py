@@ -9,7 +9,7 @@ Investment Panel Allocation
 class Constants(BaseConstants):
     name_in_url = 'investment_panel_allocation'
     players_per_group = None
-    num_rounds = 5
+    num_rounds = 3
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -83,6 +83,10 @@ class Player(BasePlayer):
     result_asian_16 = models.FloatField(initial=0)
     asian_ev_17 = models.FloatField(initial=0)
     result_asian_17 = models.FloatField(initial=0)
+
+
+class Loading(WaitPage):
+    title_text = "Ruang Tunggu Eksperimen"
 
 
 class endowment_information(Page):
@@ -269,4 +273,4 @@ class final_results(Page):
         }
 
 
-page_sequence = [endowment_information, game, single_results, final_results]
+page_sequence = [endowment_information, Loading, game, single_results, Loading, final_results]

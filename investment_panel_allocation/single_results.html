@@ -32,9 +32,6 @@
                                         {% investment.return %}
                                     {% endif %} x {% investment.allocated %}
                                 </td>
-<!--                                <td>-->
-<!--                                    <strong class="text-danger">-{{ investment.allocated }}</strong>-->
-<!--                                </td>-->
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -48,7 +45,6 @@
                                     <span class="text-success">+{% total_profit_return %}</span>
                                 {% endif %}
                             </th>
-<!--                            <th>{{ total_allocation }}</th>-->
                         </tr>
                     </tfoot>
                 </table>
@@ -103,11 +99,13 @@
                         </strong>
                     </div>
                 {% endif %}
-                <div class="alert alert-success" role="alert">
-                    <strong>
-                        Sisa uang Anda pada ronde ini akan digunakan pada ronde selanjutnya.
-                    </strong>
-                </div>
+                {% if player.round_number != Constants.num_rounds %}
+                    <div class="alert alert-success" role="alert">
+                        <strong>
+                            Sisa uang Anda pada ronde ini akan digunakan pada ronde selanjutnya.
+                        </strong>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div class="card-footer">

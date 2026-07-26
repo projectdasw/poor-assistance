@@ -9,7 +9,7 @@ Real Effort Decoding
 class Constants(BaseConstants):
     name_in_url = 'real_effort_decoding'
     players_per_group = None
-    num_rounds = 5
+    num_rounds = 3
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -40,6 +40,10 @@ class Player(BasePlayer):
     count_guess = models.IntegerField(label="Berapa kali huruf/angka muncul:")
     actual_count = models.IntegerField(initial=0)
     current_target = models.StringField()  # Target huruf/angka yang diacak setiap putaran
+
+
+class Loading(WaitPage):
+    title_text = "Ruang Tunggu Eksperimen"
 
 
 class endowment_information(Page):
@@ -204,4 +208,4 @@ class final_results(Page):
         }
 
 
-page_sequence = [endowment_information, buy_time, game, single_results, final_results]
+page_sequence = [endowment_information, Loading, buy_time, game, single_results, Loading, final_results]

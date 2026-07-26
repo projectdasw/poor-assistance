@@ -1,0 +1,40 @@
+{% extends "otree/WaitPage.html" %}
+{% load otree static %}
+
+{% block styles %}
+    <style>
+        .logo{
+            width: 150px;
+            height: 150px;
+        }
+        .spinnerSize{
+            width: 80px;
+            height: 80px;
+        }
+        .progress {
+            display: none !important;
+        }
+        .card-body{
+            margin: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}
+    <div class="text-center">{% title_text %}</div>
+{% endblock %}
+
+{% block progress %}
+{% endblock %}
+
+{% block content %}
+    <h3 class="text-center mb-3">Eksperimen Bantuan Sosial & Investasi</h3>
+    <div class="container d-flex justify-content-center align-items-center mb-3">
+        <img src="{% static 'image/ugm-logo.png' %}" class="img-fluid logo me-3" alt="ugm-logo">
+        <img src="{% static 'image/um-logo.png' %}" class="img-fluid logo" alt="um-logo">
+    </div>
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <div class="spinner-border text-primary spinnerSize mb-3" role="status"></div>
+        <h5 class="text-center text-muted m-0">Mohon tunggu sampai semua peserta masuk pada sesi eksperimen</h5>
+    </div>
+{% endblock %}

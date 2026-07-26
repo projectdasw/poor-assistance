@@ -14,8 +14,10 @@ SESSION_CONFIGS = [
             'risky_investment_allocation',
             'real_effort_decoding',
             'investment_panel_allocation',
+            # 'survey',
+            # 'payment_random'
         ],
-        num_demo_participants=1
+        num_demo_participants=4
     ),
 ]
 

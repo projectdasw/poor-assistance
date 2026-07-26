@@ -9,7 +9,7 @@ Risky Investment Allocation
 class Constants(BaseConstants):
     name_in_url = 'risky_investment_allocation'
     players_per_group = None
-    num_rounds = 5
+    num_rounds = 3
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -72,6 +72,10 @@ class Player(BasePlayer):
     opsi_5 = models.StringField(blank=True, initial="")
     alokasi_opsi_5 = models.FloatField(initial=0)
     hasil_opsi_5 = models.FloatField(initial=0)
+
+
+class Loading(WaitPage):
+    title_text = "Ruang Tunggu Eksperimen"
 
 
 class endowment_information(Page):
@@ -241,4 +245,4 @@ class final_results(Page):
         }
 
 
-page_sequence = [endowment_information, game, single_results, final_results]
+page_sequence = [endowment_information, Loading, game, single_results, Loading, final_results]

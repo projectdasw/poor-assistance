@@ -91,11 +91,13 @@
                         </strong>
                     </div>
                 {% endif %}
+                {% if player.round_number != Constants.num_rounds %}
                 <div class="alert alert-success m-0" role="alert">
                     <strong>
                         Sisa uang Anda pada ronde ini akan digunakan pada ronde selanjutnya.
                     </strong>
                 </div>
+                {% endif %}
             </div>
         </div>
         <div class="card-footer">
