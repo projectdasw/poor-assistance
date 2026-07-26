@@ -9,7 +9,7 @@ Real Effort Decoding
 class Constants(BaseConstants):
     name_in_url = 'real_effort_decoding'
     players_per_group = None
-    num_rounds = 3
+    num_rounds = 5
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)

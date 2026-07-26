@@ -47,16 +47,16 @@
                                     {% endif %}
                                 </td>
                                 <td class="fw-bold">
-                                    <span class="text-success">+{% round.additional_investment4 %}</span>
+                                    <span class="text-success">+{% round.additional_panel_allocation %}</span>
                                 </td>
                                 <td class="fw-bold">
-                                    <span class="text-danger">-{% round.consumption_investment4 %}</span>
+                                    <span class="text-danger">-{% round.consumption_panel_allocation %}</span>
                                 </td>
                                 <td class="fw-bold">
-                                    {% if round.endowment_investment4 < 0 %}
-                                        <span class="text-danger">{% round.endowment_investment4 %}</span>
-                                    {% elif round.endowment_investment4 >= 0 %}
-                                        {% round.endowment_investment4 %}
+                                    {% if round.endowment_panel_allocation < 0 %}
+                                        <span class="text-danger">{% round.endowment_panel_allocation %}</span>
+                                    {% elif round.endowment_panel_allocation >= 0 %}
+                                        {% round.endowment_panel_allocation %}
                                     {% endif %}
                                 </td>
                             </tr>

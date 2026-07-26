@@ -9,7 +9,7 @@ Investment Panel Allocation
 class Constants(BaseConstants):
     name_in_url = 'investment_panel_allocation'
     players_per_group = None
-    num_rounds = 10
+    num_rounds = 5
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -141,17 +141,11 @@ class game(Page):
                 # Subjek tidak mendapatkan return
                 setattr(player, f"result_asian_{i}", 0)
 
-        player.total_profit_return = sum([
-            (player.asian_ev_1 * player.result_asian_1), (player.asian_ev_2 * player.result_asian_2),
-            (player.asian_ev_3 * player.result_asian_3), (player.asian_ev_4 * player.result_asian_4),
-            (player.asian_ev_5 * player.result_asian_5), (player.asian_ev_6 * player.result_asian_6),
-            (player.asian_ev_7 * player.result_asian_7), (player.asian_ev_8 * player.result_asian_8),
-            (player.asian_ev_9 * player.result_asian_9), (player.asian_ev_10 * player.result_asian_10),
-            (player.asian_ev_11 * player.result_asian_11), (player.asian_ev_12 * player.result_asian_12),
-            (player.asian_ev_13 * player.result_asian_13), (player.asian_ev_14 * player.result_asian_14),
-            (player.asian_ev_15 * player.result_asian_15), (player.asian_ev_16 * player.result_asian_16),
-            (player.asian_ev_17 * player.result_asian_17)
-        ])
+        player.total_profit_return = sum(
+            getattr(player, f"asian_ev_{i}") *
+            getattr(player, f"result_asian_{i}")
+            for i in range(1, 18)
+        )
 
         # player.uang_sesudah_tambah_bansos = player.uang_sesudah_tambah_bansos - sum([
         #     player.asian_ev_1, player.asian_ev_2, player.asian_ev_3, player.asian_ev_4, player.asian_ev_5,
@@ -237,45 +231,36 @@ class final_results(Page):
         # Tentukan ronde terakhir yang dimainkan
         end_game = participant.vars.get('end_game', False)
         if end_game:
-            last_round_investment4 = participant.vars.get('last_round_played_investment4', 1)
+            last_round_panel_allocation = participant.vars.get('last_round_played_panel_allocation', 1)
         else:
-            last_round_investment4 = player.round_number
+            last_round_panel_allocation = player.round_number
 
-        final_endowment = player.in_round(last_round_investment4).payoff
+        final_endowment = player.in_round(last_round_panel_allocation).payoff
 
         # Ambil data semua ronde
         rounds_data = []
-        for p in player.in_rounds(1, last_round_investment4):
+        for p in player.in_rounds(1, last_round_panel_allocation):
             rounds_data.append({
                 'round_number': p.round_number,
                 'return': p.total_profit_return,
-                'cost': sum([
-                    p.asian_ev_1, p.asian_ev_2, p.asian_ev_3, p.asian_ev_4, p.asian_ev_5,
-                    p.asian_ev_6, p.asian_ev_7, p.asian_ev_8, p.asian_ev_9, p.asian_ev_10,
-                    p.asian_ev_11, p.asian_ev_12, p.asian_ev_13, p.asian_ev_14, p.asian_ev_15,
-                    p.asian_ev_16, p.asian_ev_17
-                ]),
+                "cost": sum(getattr(p, f"asian_ev_{i}") for i in range(1, 18)),
                 'payoff': p.payoff,
-                'endowment_investment4': p.payoff,
-                'additional_investment4': p.bantuan_sosial,
-                'consumption_investment4': p.beban_konsumsi
+                'endowment_panel_allocation': p.payoff,
+                'additional_panel_allocation': p.bantuan_sosial,
+                'consumption_panel_allocation': p.beban_konsumsi
             })
 
         # Hitung hasil akhir
-        final_return = sum([p.total_profit_return for p in player.in_rounds(1, last_round_investment4)])
-        final_cost = sum([
-            sum([
-                p.asian_ev_1, p.asian_ev_2, p.asian_ev_3, p.asian_ev_4, p.asian_ev_5,
-                p.asian_ev_6, p.asian_ev_7, p.asian_ev_8, p.asian_ev_9, p.asian_ev_10,
-                p.asian_ev_11, p.asian_ev_12, p.asian_ev_13, p.asian_ev_14, p.asian_ev_15,
-                p.asian_ev_16, p.asian_ev_17
-            ])
-            for p in player.in_rounds(1, last_round_investment4)
-        ])
-        final_payoff = sum([p.payoff for p in player.in_rounds(1, last_round_investment4)])
+        final_return = sum([p.total_profit_return for p in player.in_rounds(1, last_round_panel_allocation)])
+        final_cost = sum(
+            getattr(p, f"asian_ev_{i}")
+            for p in player.in_rounds(1, last_round_panel_allocation)
+            for i in range(1, 18)
+        )
+        final_payoff = sum([p.payoff for p in player.in_rounds(1, last_round_panel_allocation)])
 
         return {
-            'last_round': last_round_investment4,
+            'last_round': last_round_panel_allocation,
             'final_endowment': final_endowment,
             'rounds_data': rounds_data,
             'final_return': final_return,
