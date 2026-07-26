@@ -2,10 +2,10 @@
 {% load otree static %}
 
 {% block title %}
-    <title>Investment Panel Allocation</title>
+    <title>Investment Panel Allocation - Ronde {% player.round_number %}</title>
 {% endblock %}
 
-{{ block content }}
+{% block content %}
     <div class="card mb-3">
         <div class="card-header">
             <h4 class="m-0">Informasi Pendapatan</h4>
@@ -21,14 +21,22 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>
-                            {% player.uang_sebelum_tambah_bansos %} + {% player.bantuan_sosial %}
+                        <td class="fw-bold">
+                            {% if player.uang_sebelum_tambah_bansos < 0 %}
+                                <span class="text-danger">{% player.uang_sebelum_tambah_bansos %}</span>
+                            {% elif player.uang_sebelum_tambah_bansos >= 0 %}
+                                {% player.uang_sebelum_tambah_bansos %}
+                            {% endif %} + <span class="text-success">{% player.bantuan_sosial %}</span>
                         </td>
-                        <td>
-                            {% player.uang_sesudah_tambah_bansos %}
+                        <td class="fw-bold">
+                            {% if player.uang_sesudah_tambah_bansos < 0 %}
+                                <span class="text-danger">{% player.uang_sesudah_tambah_bansos %}</span>
+                            {% elif player.uang_sesudah_tambah_bansos >= 0 %}
+                                {% player.uang_sesudah_tambah_bansos %}
+                            {% endif %}
                         </td>
-                        <td>
-                            {% player.beban_konsumsi %} (dikenakan setiap akhir ronde)
+                        <td class="fw-bold">
+                            <span class="text-danger">{% player.beban_konsumsi %} (dikenakan setiap akhir ronde)</span>
                         </td>
                     </tr>
                 </tbody>
@@ -38,10 +46,10 @@
     <div class="card">
         <div class="card-header">
             <span class="badge bg-success fs-6 me-2">
-                Ronde: {{ player.round_number }}
+                Ronde: {% player.round_number %}
             </span>
             <span class="badge bg-danger fs-6 me-2">
-                Uang Anda saat ini: {{ player.uang_sesudah_tambah_bansos }}
+                Uang Anda saat ini: {% player.uang_sesudah_tambah_bansos %}
             </span>
             <span class="badge bg-primary fs-6">
                 Anda adalah Player [id_player]
@@ -94,23 +102,23 @@
                     <!-- Tabel untuk menampilkan semua opsi investasi -->
                     <table class="table table-bordered">
                         <thead>
-                            <th class="col">No.</th>
+                            <th class="col">Pilihan Opsi</th>
                             <th class="col">Return</th>
                             <th class="col">Probabilitas</th>
                             <th class="col">Masukkan Alokasi Anda</th>
                         </thead>
                         <tbody>
-                            {{ for scheme in investment_scheme }}
+                            {% for scheme in investment_scheme %}
                                 <tr>
-                                    <td>{{ forloop.counter }}</td>
-                                    <td>{{ scheme.investment_return }}</td>
-                                    <td>{{ scheme.probability }}%</td>
+                                    <td>Opsi {% forloop.counter %}</td>
+                                    <td>{% scheme.investment_return %}</td>
+                                    <td>{% scheme.probability %}%</td>
                                     <td>
                                         <input type="number" class="form-control" name="asian_ev_{{ forloop.counter }}"
                                                value="0" required>
                                     </td>
                                 </tr>
-                            {{ endfor }}
+                            {% endfor %}
                         </tbody>
                     </table>
                 </form>
@@ -123,4 +131,4 @@
             </button>
         </div>
     </div>
-{{ endblock }}
+{% endblock %}

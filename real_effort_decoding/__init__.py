@@ -72,22 +72,22 @@ class buy_time(Page):
             player.uang_sesudah_tambah_bansos = player.uang_sebelum_tambah_bansos + player.bantuan_sosial
             player.beban_konsumsi = Constants.consumption
 
-    @staticmethod
-    def error_message(player: Player, values):
-        error_msgs = []
-        if values['beli_waktu'] > player.uang_sesudah_tambah_bansos:
-            error_msgs.append(
-                f"Uang Anda tidak cukup untuk membeli waktu."
-            )
-        elif values['beli_waktu'] % Constants.price_time != 0:
-            error_msgs.append(
-                f"Jumlah endowment yang dibelanjakan harus dalam kelipatan 5."
-            )
-
-        # Jika ada pesan kesalahan, gabungkan dan kembalikan
-        if error_msgs:
-            return "<br>".join(error_msgs)
-        return ""
+    # @staticmethod
+    # def error_message(player: Player, values):
+    #     error_msgs = []
+    #     if values['beli_waktu'] > player.uang_sesudah_tambah_bansos:
+    #         error_msgs.append(
+    #             f"Uang Anda tidak cukup untuk membeli waktu."
+    #         )
+    #     elif values['beli_waktu'] % Constants.price_time != 0:
+    #         error_msgs.append(
+    #             f"Jumlah endowment yang dibelanjakan harus dalam kelipatan 5."
+    #         )
+    #
+    #     # Jika ada pesan kesalahan, gabungkan dan kembalikan
+    #     if error_msgs:
+    #         return "<br>".join(error_msgs)
+    #     return ""
 
 
 def live_method(player: Player, data):
@@ -156,16 +156,16 @@ class single_results(Page):
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         # Simpan hasil ronde ke participant.vars
-        if 'cognitive_task_results_investment3' not in player.participant.vars:
-            player.participant.vars['cognitive_task_results_investment3'] = []
+        if 'cognitive_task_results' not in player.participant.vars:
+            player.participant.vars['cognitive_task_results'] = []
 
-        player.participant.vars['cognitive_task_results_investment3'].append({
-            'round_number_investment3': player.round_number,
-            'score_investment3': player.total_score,
-            'time_cost_investment3': player.beli_waktu,
-            'endowment_investment3': player.payoff,
-            'additional_investment3': player.bantuan_sosial,
-            'consumption_investment3': player.beban_konsumsi
+        player.participant.vars['cognitive_task_results'].append({
+            'round_number_cognitive': player.round_number,
+            'score_cognitive': player.total_score,
+            'time_cost_cognitive': player.beli_waktu,
+            'endowment_cognitive': player.payoff,
+            'additional_cognitive': player.bantuan_sosial,
+            'consumption_cognitive': player.beban_konsumsi
         })
 
 
@@ -177,28 +177,30 @@ class final_results(Page):
     @staticmethod
     def vars_for_template(player: Player):
         participant = player.participant
-        all_rounds_results_investment3 = player.participant.vars.get('cognitive_task_results_investment3', [])
+        all_rounds_results_cognitive = participant.vars.get(
+            "cognitive_task_results", []
+        )
 
-        # Tentukan ronde terakhir yang dimainkan
-        end_game = participant.vars.get('end_game', False)
-        if end_game:
-            last_round_investment3 = participant.vars.get('last_round_played_investment3', 1)
-        else:
-            last_round_investment3 = player.round_number
-
-        # Ambil nilai payoff dari ronde terakhir yang dimainkan
-        final_endowment_investment3 = player.in_round(last_round_investment3).payoff
-
-        # Ambil hasil dari semua ronde
-        total_score_investment3 = sum(result['score_investment3'] for result in all_rounds_results_investment3)
-        total_cost_investment3 = sum(result['time_cost_investment3'] for result in all_rounds_results_investment3)
+        last_round_cognitive = (
+            participant.vars.get("last_round_played_cognitive", 1)
+            if participant.vars.get("end_game", False)
+            else player.round_number
+        )
 
         return {
-            'last_round_investment3': last_round_investment3,
-            'final_endowment_investment3': final_endowment_investment3,
-            'all_rounds_results_investment3': all_rounds_results_investment3,
-            'total_score_investment3': total_score_investment3,
-            'total_cost_investment3': total_cost_investment3
+            "last_round_cognitive": last_round_cognitive,
+            "final_endowment_cognitive": player.in_round(
+                last_round_cognitive
+            ).payoff,
+            "all_rounds_results_cognitive": all_rounds_results_cognitive,
+            "total_score_cognitive": sum(
+                item["score_cognitive"]
+                for item in all_rounds_results_cognitive
+            ),
+            "total_cost_cognitive": sum(
+                item["time_cost_cognitive"]
+                for item in all_rounds_results_cognitive
+            ),
         }
 
 

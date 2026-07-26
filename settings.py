@@ -12,8 +12,8 @@ SESSION_CONFIGS = [
             # 'investment_panel_allocation_practice',
             'risky_investment_purchase',
             'risky_investment_allocation',
-            # 'real_effort_decoding',
-            # 'investment_panel_allocation',
+            'real_effort_decoding',
+            'investment_panel_allocation',
         ],
         num_demo_participants=1
     ),

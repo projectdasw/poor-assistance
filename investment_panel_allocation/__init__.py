@@ -9,7 +9,7 @@ Investment Panel Allocation
 class Constants(BaseConstants):
     name_in_url = 'investment_panel_allocation'
     players_per_group = None
-    num_rounds = 3
+    num_rounds = 10
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -103,16 +103,7 @@ class endowment_information(Page):
 
 class game(Page):
     form_model = "player"
-    form_fields = [
-        'asian_ev_1', 'asian_ev_2', 'asian_ev_3', 'asian_ev_4', 'asian_ev_5', 'asian_ev_6', 'asian_ev_7', 'asian_ev_8',
-        'asian_ev_9', 'asian_ev_10', 'asian_ev_11', 'asian_ev_12', 'asian_ev_13', 'asian_ev_14', 'asian_ev_15',
-        'asian_ev_16', 'asian_ev_17'
-    ]
-
-    # @staticmethod
-    # def is_displayed(player: Player):
-    #     # Hanya tampilkan halaman ini jika pemain memilih "Ya" di ronde pertama
-    #     return not player.participant.vars.get('end_game', False)
+    form_fields = [f"asian_ev_{i}" for i in range(1, 18)]
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -169,33 +160,32 @@ class game(Page):
         #     player.asian_ev_15, player.asian_ev_16, player.asian_ev_17
         # ])
 
+    # @staticmethod
+    # def error_message(player: Player, values):
+    #     # Hitung total investasi
+    #     total_investasi = (values['asian_ev_1'] + values['asian_ev_2'] + values['asian_ev_3'] +
+    #                        values['asian_ev_4'] + values['asian_ev_5'] + values['asian_ev_6'] +
+    #                        values['asian_ev_7'] + values['asian_ev_8'] + values['asian_ev_9'] +
+    #                        values['asian_ev_10'] + values['asian_ev_11'] + values['asian_ev_12'] +
+    #                        values['asian_ev_13'] + values['asian_ev_14'] + values['asian_ev_15'] +
+    #                        values['asian_ev_16'] + values['asian_ev_17'])
 
-    @staticmethod
-    def error_message(player: Player, values):
-        # Hitung total investasi
-        total_investasi = (values['asian_ev_1'] + values['asian_ev_2'] + values['asian_ev_3'] +
-                           values['asian_ev_4'] + values['asian_ev_5'] + values['asian_ev_6'] +
-                           values['asian_ev_7'] + values['asian_ev_8'] + values['asian_ev_9'] +
-                           values['asian_ev_10'] + values['asian_ev_11'] + values['asian_ev_12'] +
-                           values['asian_ev_13'] + values['asian_ev_14'] + values['asian_ev_15'] +
-                           values['asian_ev_16'] + values['asian_ev_17'])
-
-        # Periksa apakah total investasi melebihi uang_sebelum_tambah_bansos
-        error_msgs = []
-        if total_investasi > player.uang_sesudah_tambah_bansos:
-            error_msgs.append(
-                f"Endowment Anda tidak mencukupi untuk membeli opsi-opsi tersebut"
-                f" (Total alokasi: {total_investasi})."
-            )
-        elif total_investasi == 0:
-            error_msgs.append(
-                f"Anda tidak mengalokasikan apapun pada setiap opsi-opsi yang tersedia"
-            )
-
-        # Jika ada pesan kesalahan, gabungkan dan kembalikan
-        if error_msgs:
-            return "<br>".join(error_msgs)
-        return ""
+        # # Periksa apakah total investasi melebihi uang_sebelum_tambah_bansos
+        # error_msgs = []
+        # if total_investasi > player.uang_sesudah_tambah_bansos:
+        #     error_msgs.append(
+        #         f"Endowment Anda tidak mencukupi untuk membeli opsi-opsi tersebut"
+        #         f" (Total alokasi: {total_investasi})."
+        #     )
+        # elif total_investasi == 0:
+        #     error_msgs.append(
+        #         f"Anda tidak mengalokasikan apapun pada setiap opsi-opsi yang tersedia"
+        #     )
+        #
+        # # Jika ada pesan kesalahan, gabungkan dan kembalikan
+        # if error_msgs:
+        #     return "<br>".join(error_msgs)
+        # return ""
 
 
 class single_results(Page):
@@ -243,9 +233,6 @@ class final_results(Page):
     @staticmethod
     def vars_for_template(player: Player):
         participant = player.participant
-
-        # Ambil ronde terakhir bermain
-        last_round_investment4 = player.participant.vars.get('last_round_played_investment4', player.round_number)
 
         # Tentukan ronde terakhir yang dimainkan
         end_game = participant.vars.get('end_game', False)
@@ -295,19 +282,6 @@ class final_results(Page):
             'final_cost': final_cost,
             'final_payoff': final_payoff
         }
-
-    @staticmethod
-    def before_next_page(player: Player, timeout_happened):
-        participant = player.participant
-        results_by_round_investment4 = player.participant.vars.get('results_by_round_investment4', [])
-
-        if participant.vars.get('end_game', False):
-            last_round = participant.vars.get('last_round_played_investment4', 1)
-            participant.dynamic_endowment = player.in_round(last_round).payoff
-        else:
-            participant.dynamic_endowment = player.payoff
-
-        participant.app_investment4 = sum(item['final_return'] for item in results_by_round_investment4)
 
 
 page_sequence = [endowment_information, game, single_results, final_results]

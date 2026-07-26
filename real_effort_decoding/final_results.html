@@ -5,7 +5,7 @@
     <title>Hasil Akhir Real Effort Decoding</title>
 {% endblock %}
 
-{{ block content }}
+{% block content %}
     <div class="card">
         <div class="card-body">
             <div class="alert p-0 mb-0" role="alert">
@@ -17,39 +17,47 @@
                     eksperimen Real Effort - Decoding:
                 </p>
                 <hr>
-                <table class="table">
+                <table class="table m-0">
                     <thead>
                         <tr>
-                            <th scope="col">Ronde Permainan</th>
-                            <th scope="col">Total Skor</th>
-                            <th scope="col">Biaya Beli Waktu</th>
+                            <th scope="col">Sesi Ronde</th>
+                            <th scope="col">Skor</th>
+                            <th scope="col">Total Biaya Waktu</th>
                             <th scope="col">Bantuan</th>
                             <th scope="col">Beban Konsumsi</th>
-                            <th scope="col">Endwment Akhir Ronde</th>
+                            <th scope="col">Sisa Uang Akhir Ronde</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for result in all_rounds_results_investment3 %}
+                        {% for result in all_rounds_results_cognitive %}
                             <tr>
-                                <td>Investasi Berisiko 3 - Ronde {{ result.round_number_investment3 }}</td>
-                                <td>
-                                    {{ if result.score_investment3 == 0 }}
-                                        <strong>{{ result.score_investment3 }}</strong>
-                                    {{ else }}
-                                        <strong class="text-success">+{{ result.score_investment3 }}</strong>
-                                    {{ endif }}
+                                <td>Ronde {% result.round_number_cognitive %}</td>
+                                <td class="fw-bold">
+                                    {% if result.score_cognitive != 0 %}
+                                        <span class="text-success">+{% result.score_cognitive %}</span>
+                                    {% else %}
+                                        {% result.score_cognitive %}
+                                    {% endif %}
                                 </td>
-                                <td>
-                                    <strong class="text-danger">-{{ result.time_cost_investment3 }}</strong>
+                                <td class="fw-bold">
+                                    {% if result.score_cognitive != 0 %}
+                                        <span class="text-danger">-{% result.time_cost_cognitive %}</span>
+                                    {% else %}
+                                        {% result.score_cognitive %}
+                                    {% endif %}
                                 </td>
-                                <td>
-                                    <strong class="text-success">+{{ result.additional_investment3 }}</strong>
+                                <td class="fw-bold">
+                                    <span class="text-success">+{{ result.additional_cognitive }}</span>
                                 </td>
-                                <td>
-                                    <strong class="text-danger">-{{ result.consumption_investment3 }}</strong>
+                                <td class="fw-bold">
+                                    <span class="text-danger">-{{ result.consumption_cognitive }}</span>
                                 </td>
-                                <td>
-                                    <strong>{{ result.endowment_investment3 }}</strong>
+                                <td class="fw-bold">
+                                    {% if result.endowment_cognitive < 0 %}
+                                        <span class="text-danger">{% result.endowment_cognitive %}</span>
+                                    {% elif result.endowment_cognitive >= 0 %}
+                                        {% result.endowment_cognitive %}
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -57,8 +65,8 @@
                     <tfoot>
                         <tr>
                             <th>Total</th>
-                            <th>{{ total_score_investment3 }}</th>
-                            <th>{{ total_cost_investment3 }}</th>
+                            <th>{% total_score_cognitive %}</th>
+                            <th>{% total_cost_cognitive %}</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -71,4 +79,4 @@
             </button>
         </div>
     </div>
-{{ endblock }}
+{% endblock %}

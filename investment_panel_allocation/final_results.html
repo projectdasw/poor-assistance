@@ -2,10 +2,10 @@
 {% load otree static %}
 
 {% block title %}
-    <title>Investment Panel Allocation</title>
+    <title>Hasil Akhir Investment Panel Allocation</title>
 {% endblock %}
 
-{{ block content }}
+{% block content %}
     <div class="card mb-3">
         <div class="card-body">
             <div class="alert p-0 mb-0" role="alert">
@@ -19,41 +19,45 @@
                     <thead>
                         <thead>
                             <tr>
-                                <th scope="col">Ronde Investasi</th>
+                                <th scope="col">Sesi Ronde</th>
                                 <th scope="col">Profit</th>
-                                <th scope="col">Alokasi Endowment</th>
+                                <th scope="col">Alokasi Opsi</th>
                                 <th scope="col">Bantuan</th>
                                 <th scope="col">Beban Konsumsi</th>
-                                <th scope="col">Endowment Akhir Ronde</th>
+                                <th scope="col">Sisa Uang Akhir Ronde</th>
                             </tr>
                         </thead>
                     </thead>
                     <tbody>
                         {% for round in rounds_data %}
                             <tr>
-                                <td>Investment Panel Allocation - Ronde {{ round.round_number }}</td>
-                                <td>
-                                    {{ if round.return == 0 }}
-                                        <strong>{{ round.return }}</strong>
-                                    {{ else }}
-                                        <strong class="text-success">+{{ round.return }}</strong>
-                                    {{ endif }}
+                                <td>Ronde {% round.round_number %}</td>
+                                <td class="fw-bold">
+                                    {% if round.return == 0 %}
+                                        {% round.return %}
+                                    {% else %}
+                                        <span class="text-success">+{% round.return %}</span>
+                                    {% endif %}
                                 </td>
-                                <td>
-                                    {{ if round.cost == 0 }}
-                                        <strong>{{ round.cost }}</strong>
-                                    {{ else }}
-                                        <strong class="text-danger">-{{ round.cost }}</strong>
-                                    {{ endif }}
+                                <td class="fw-bold">
+                                    {% if round.cost == 0 %}
+                                        {% round.cost %}
+                                    {% else %}
+                                        <span class="text-danger">-{% round.cost %}</span>
+                                    {% endif %}
                                 </td>
-                                <td>
-                                    <strong class="text-success">+{{ round.additional_investment4 }}</strong>
+                                <td class="fw-bold">
+                                    <span class="text-success">+{% round.additional_investment4 %}</span>
                                 </td>
-                                <td>
-                                    <strong class="text-danger">-{{ round.consumption_investment4 }}</strong>
+                                <td class="fw-bold">
+                                    <span class="text-danger">-{% round.consumption_investment4 %}</span>
                                 </td>
-                                <td>
-                                    <strong>{{ round.endowment_investment4 }}</strong>
+                                <td class="fw-bold">
+                                    {% if round.endowment_investment4 < 0 %}
+                                        <span class="text-danger">{% round.endowment_investment4 %}</span>
+                                    {% elif round.endowment_investment4 >= 0 %}
+                                        {% round.endowment_investment4 %}
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -61,16 +65,8 @@
                     <tfoot>
                         <tr>
                             <th>Total</th>
-                            <td>
-                                <strong>{{ final_return }}</strong>
-                            </td>
-                            <td>
-                                {{ if final_cost == 0}}
-                                    <strong>0.0</strong>
-                                {{ else }}
-                                    <strong>{{ final_cost }}</strong>
-                                {{ endif }}
-                            </td>
+                            <td class="fw-bold">{% final_return %}</td>
+                            <td class="fw-bold">{% final_cost %}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -83,4 +79,4 @@
             </button>
         </div>
     </div>
-{{ endblock }}
+{% endblock %}
