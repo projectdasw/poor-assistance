@@ -68,6 +68,11 @@ class Player(BasePlayer):
     hasil_opsi_4 = models.FloatField(initial=0)
     opsi_5 = models.StringField(blank=True, initial="")
     hasil_opsi_5 = models.FloatField(initial=0)
+    total_akhir_profit = models.CurrencyField(initial=0)
+    total_akhir_beli_opsi = models.CurrencyField(initial=0)
+    total_akhir_bantuan_sosial = models.CurrencyField(initial=0)
+    total_akhir_beban_konsumsi = models.CurrencyField(initial=0)
+    total_akhir_uang = models.CurrencyField(initial=0)
 
 
 class Loading(WaitPage):
@@ -94,24 +99,6 @@ class game(Page):
     form_model = 'player'
     form_fields = ['opsi_1', 'opsi_2', 'opsi_3',
                    'opsi_4', 'opsi_5']
-
-    # @staticmethod
-    # def error_message(player, values):
-    #
-    #     # Hitung jumlah opsi yang dipilih
-    #     selected_count = sum(
-    #         1 for i in range(1, 6)
-    #         if values[f'opsi_{i}']
-    #     )
-    #
-    #     total_cost = selected_count * Constants.cost_per_option
-    #
-    #     if total_cost > player.uang_sesudah_tambah_bansos:
-    #         return (
-    #             f"Total biaya pembelian adalah {total_cost}, "
-    #             f"sedangkan uang yang Anda miliki hanya "
-    #             f"{player.uang_sesudah_tambah_bansos}."
-    #         )
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -212,19 +199,16 @@ class single_results(Page):
     def before_next_page(player: Player, timeout_happened):
         # Hitung total biaya berdasarkan jumlah opsi yang dipilih
         total_cost = (
-                sum(
-                    1
-                    for i in range(1, 6)
-                    if getattr(player, f"opsi_{i}")
-                )
-                * Constants.cost_per_option
+                sum(1 for i in range(1, 6) if getattr(player, f"opsi_{i}")) * Constants.cost_per_option
         )
+
+        player.total_biaya_beli_opsi = total_cost
 
         # Simpan hasil ronde
         player.participant.vars.setdefault("results_risky_purchase", []).append({
             "round_number_risky_purchase": player.round_number,
-            "payoff_risky_purchase": player.total_profit,
-            "cost_risky_purchase": total_cost,
+            "profit_risky_purchase": player.total_profit,
+            "cost_risky_purchase": player.total_biaya_beli_opsi,
             "endowment_risky_purchase": player.payoff,
             "additional_risky_purchase": player.bantuan_sosial,
             "consumption_risky_purchase": player.beban_konsumsi,
@@ -247,20 +231,16 @@ class final_results(Page):
             else player.round_number
         )
 
+        # Total Akhir Semua Pendapatan
+        player.total_akhir_profit = sum(item["profit_risky_purchase"] for item in results_risky_purchase)
+        player.total_akhir_beli_opsi = sum(item["cost_risky_purchase"] for item in results_risky_purchase)
+        player.total_akhir_bantuan_sosial = sum(item["additional_risky_purchase"] for item in results_risky_purchase)
+        player.total_akhir_beban_konsumsi = sum(item["consumption_risky_purchase"] for item in results_risky_purchase)
+        player.total_akhir_uang = sum(item["endowment_risky_purchase"] for item in results_risky_purchase)
+
         return {
             "results_risky_purchase": results_risky_purchase,
-            "total_payoff_risky_purchase": sum(
-                item["payoff_risky_purchase"]
-                for item in results_risky_purchase
-            ),
-            "total_cost_risky_purchase": sum(
-                item["cost_risky_purchase"]
-                for item in results_risky_purchase
-            ),
             "last_round_played_risky_purchase": last_round_risky_purchase,
-            "final_endowment_risky_purchase": player.in_round(
-                last_round_risky_purchase
-            ).payoff,
         }
 
 

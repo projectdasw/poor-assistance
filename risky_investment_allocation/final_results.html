@@ -33,10 +33,10 @@
                             <tr>
                                 <td>Ronde {% item.round_number_risky_allocation %}</td>
                                 <td class="fw-bold">
-                                    {% if item.payoff_risky_allocation != 0 %}
-                                        <span class="text-success">+{% item.payoff_risky_allocation %}</span>
+                                    {% if item.profit_risky_allocation != 0 %}
+                                        <span class="text-success">+{% item.profit_risky_allocation %}</span>
                                     {% else %}
-                                        {% item.payoff_risky_allocation %}
+                                        {% item.profit_risky_allocation %}
                                     {% endif %}
                                 </td>
                                 <td class="fw-bold">
@@ -65,8 +65,11 @@
                     <tfoot>
                         <tr>
                             <th>Total</th>
-                            <th>{% total_payoff_risky_allocation %}</th>
-                            <th>{% total_cost_risky_allocation %}</th>
+                            <th>{% player.total_akhir_profit %}</th>
+                            <th>{% player.total_akhir_alokasi_opsi %}</th>
+                            <th>{% player.total_akhir_bantuan_sosial %}</th>
+                            <th>{% player.total_akhir_beban_konsumsi %}</th>
+                            <th>{% player.total_akhir_uang %}</th>
                         </tr>
                     </tfoot>
                 </table>

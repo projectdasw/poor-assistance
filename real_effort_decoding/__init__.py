@@ -40,6 +40,11 @@ class Player(BasePlayer):
     count_guess = models.IntegerField(label="Berapa kali huruf/angka muncul:")
     actual_count = models.IntegerField(initial=0)
     current_target = models.StringField()  # Target huruf/angka yang diacak setiap putaran
+    total_akhir_score = models.CurrencyField(initial=0)
+    total_akhir_beli_waktu = models.CurrencyField(initial=0)
+    total_akhir_bantuan_sosial = models.CurrencyField(initial=0)
+    total_akhir_beban_konsumsi = models.CurrencyField(initial=0)
+    total_akhir_uang = models.CurrencyField(initial=0)
 
 
 class Loading(WaitPage):
@@ -75,23 +80,6 @@ class buy_time(Page):
             player.bantuan_sosial = Constants.additional
             player.uang_sesudah_tambah_bansos = player.uang_sebelum_tambah_bansos + player.bantuan_sosial
             player.beban_konsumsi = Constants.consumption
-
-    # @staticmethod
-    # def error_message(player: Player, values):
-    #     error_msgs = []
-    #     if values['beli_waktu'] > player.uang_sesudah_tambah_bansos:
-    #         error_msgs.append(
-    #             f"Uang Anda tidak cukup untuk membeli waktu."
-    #         )
-    #     elif values['beli_waktu'] % Constants.price_time != 0:
-    #         error_msgs.append(
-    #             f"Jumlah endowment yang dibelanjakan harus dalam kelipatan 5."
-    #         )
-    #
-    #     # Jika ada pesan kesalahan, gabungkan dan kembalikan
-    #     if error_msgs:
-    #         return "<br>".join(error_msgs)
-    #     return ""
 
 
 def live_method(player: Player, data):
@@ -160,10 +148,10 @@ class single_results(Page):
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         # Simpan hasil ronde ke participant.vars
-        if 'cognitive_task_results' not in player.participant.vars:
-            player.participant.vars['cognitive_task_results'] = []
+        if 'results_cognitive_task' not in player.participant.vars:
+            player.participant.vars['results_cognitive_task'] = []
 
-        player.participant.vars['cognitive_task_results'].append({
+        player.participant.vars['results_cognitive_task'].append({
             'round_number_cognitive': player.round_number,
             'score_cognitive': player.total_score,
             'time_cost_cognitive': player.beli_waktu,
@@ -181,8 +169,8 @@ class final_results(Page):
     @staticmethod
     def vars_for_template(player: Player):
         participant = player.participant
-        all_rounds_results_cognitive = participant.vars.get(
-            "cognitive_task_results", []
+        results_cognitive_task = participant.vars.get(
+            "results_cognitive_task", []
         )
 
         last_round_cognitive = (
@@ -191,20 +179,15 @@ class final_results(Page):
             else player.round_number
         )
 
+        player.total_akhir_score = sum(item["score_cognitive"] for item in results_cognitive_task)
+        player.total_akhir_beli_waktu = sum(item["time_cost_cognitive"] for item in results_cognitive_task)
+        player.total_akhir_bantuan_sosial = sum(item["additional_cognitive"] for item in results_cognitive_task)
+        player.total_akhir_beban_konsumsi = sum(item["consumption_cognitive"] for item in results_cognitive_task)
+        player.total_akhir_uang = sum(item["endowment_cognitive"] for item in results_cognitive_task)
+
         return {
+            "results_cognitive_task": results_cognitive_task,
             "last_round_cognitive": last_round_cognitive,
-            "final_endowment_cognitive": player.in_round(
-                last_round_cognitive
-            ).payoff,
-            "all_rounds_results_cognitive": all_rounds_results_cognitive,
-            "total_score_cognitive": sum(
-                item["score_cognitive"]
-                for item in all_rounds_results_cognitive
-            ),
-            "total_cost_cognitive": sum(
-                item["time_cost_cognitive"]
-                for item in all_rounds_results_cognitive
-            ),
         }
 
 

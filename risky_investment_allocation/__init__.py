@@ -72,6 +72,11 @@ class Player(BasePlayer):
     opsi_5 = models.StringField(blank=True, initial="")
     alokasi_opsi_5 = models.FloatField(initial=0)
     hasil_opsi_5 = models.FloatField(initial=0)
+    total_akhir_profit = models.CurrencyField(initial=0)
+    total_akhir_alokasi_opsi = models.CurrencyField(initial=0)
+    total_akhir_bantuan_sosial = models.CurrencyField(initial=0)
+    total_akhir_beban_konsumsi = models.CurrencyField(initial=0)
+    total_akhir_uang = models.CurrencyField(initial=0)
 
 
 class Loading(WaitPage):
@@ -200,10 +205,12 @@ class single_results(Page):
             for i in range(1, 6)
         )
 
+        player.total_alokasi_opsi = total_cost
+
         player.participant.vars.setdefault("results_risky_allocation", []).append({
             "round_number_risky_allocation": player.round_number,
-            "payoff_risky_allocation": player.total_profit,
-            "cost_risky_allocation": total_cost,
+            "profit_risky_allocation": player.total_profit,
+            "cost_risky_allocation": player.total_alokasi_opsi,
             "endowment_risky_allocation": player.payoff,
             "additional_risky_allocation": player.bantuan_sosial,
             "consumption_risky_allocation": player.beban_konsumsi,
@@ -228,20 +235,16 @@ class final_results(Page):
             else player.round_number
         )
 
+        # Total Akhir Semua Pendapatan
+        player.total_akhir_profit = sum(item["profit_risky_allocation"] for item in results_risky_allocation)
+        player.total_akhir_alokasi_opsi = sum(item["cost_risky_allocation"] for item in results_risky_allocation)
+        player.total_akhir_bantuan_sosial = sum(item["additional_risky_allocation"] for item in results_risky_allocation)
+        player.total_akhir_beban_konsumsi = sum(item["consumption_risky_allocation"] for item in results_risky_allocation)
+        player.total_akhir_uang = sum(item["endowment_risky_allocation"] for item in results_risky_allocation)
+
         return {
             "results_risky_allocation": results_risky_allocation,
-            "total_payoff_risky_allocation": sum(
-                item["payoff_risky_allocation"]
-                for item in results_risky_allocation
-            ),
-            "total_cost_risky_allocation": sum(
-                item["cost_risky_allocation"]
-                for item in results_risky_allocation
-            ),
             "last_round_risky_allocation": last_round_risky_allocation,
-            "final_endowment_risky_allocation": player.in_round(
-                last_round_risky_allocation
-            ).payoff,
         }
 
 

@@ -29,7 +29,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for result in all_rounds_results_cognitive %}
+                        {% for result in results_cognitive_task %}
                             <tr>
                                 <td>Ronde {% result.round_number_cognitive %}</td>
                                 <td class="fw-bold">
@@ -65,8 +65,11 @@
                     <tfoot>
                         <tr>
                             <th>Total</th>
-                            <th>{% total_score_cognitive %}</th>
-                            <th>{% total_cost_cognitive %}</th>
+                            <th>{% player.total_akhir_score %}</th>
+                            <th>{% player.total_akhir_beli_waktu %}</th>
+                            <th>{% player.total_akhir_bantuan_sosial %}</th>
+                            <th>{% player.total_akhir_beban_konsumsi %}</th>
+                            <th>{% player.total_akhir_uang %}</th>
                         </tr>
                     </tfoot>
                 </table>

@@ -47,7 +47,7 @@ class Player(BasePlayer):
     uang_sebelum_tambah_bansos = models.CurrencyField(initial=0)
     bantuan_sosial = models.CurrencyField(initial=0)
     beban_konsumsi = models.CurrencyField(initial=0)
-    total_profit_return = models.FloatField(initial=0)
+    total_profit_return = models.CurrencyField(initial=0)
     total_alokasi_opsi = models.CurrencyField(initial=0)
     asian_ev_1 = models.FloatField(initial=0)
     result_asian_1 = models.FloatField(initial=0)
@@ -83,6 +83,11 @@ class Player(BasePlayer):
     result_asian_16 = models.FloatField(initial=0)
     asian_ev_17 = models.FloatField(initial=0)
     result_asian_17 = models.FloatField(initial=0)
+    total_akhir_profit_return = models.CurrencyField(initial=0)
+    total_akhir_alokasi_opsi = models.CurrencyField(initial=0)
+    total_akhir_bantuan_sosial = models.CurrencyField(initial=0)
+    total_akhir_beban_konsumsi = models.CurrencyField(initial=0)
+    total_akhir_uang = models.CurrencyField(initial=0)
 
 
 class Loading(WaitPage):
@@ -151,40 +156,6 @@ class game(Page):
             for i in range(1, 18)
         )
 
-        # player.uang_sesudah_tambah_bansos = player.uang_sesudah_tambah_bansos - sum([
-        #     player.asian_ev_1, player.asian_ev_2, player.asian_ev_3, player.asian_ev_4, player.asian_ev_5,
-        #     player.asian_ev_6, player.asian_ev_7, player.asian_ev_8, player.asian_ev_9, player.asian_ev_10,
-        #     player.asian_ev_11, player.asian_ev_12, player.asian_ev_13, player.asian_ev_14,
-        #     player.asian_ev_15, player.asian_ev_16, player.asian_ev_17
-        # ])
-
-    # @staticmethod
-    # def error_message(player: Player, values):
-    #     # Hitung total investasi
-    #     total_investasi = (values['asian_ev_1'] + values['asian_ev_2'] + values['asian_ev_3'] +
-    #                        values['asian_ev_4'] + values['asian_ev_5'] + values['asian_ev_6'] +
-    #                        values['asian_ev_7'] + values['asian_ev_8'] + values['asian_ev_9'] +
-    #                        values['asian_ev_10'] + values['asian_ev_11'] + values['asian_ev_12'] +
-    #                        values['asian_ev_13'] + values['asian_ev_14'] + values['asian_ev_15'] +
-    #                        values['asian_ev_16'] + values['asian_ev_17'])
-
-        # # Periksa apakah total investasi melebihi uang_sebelum_tambah_bansos
-        # error_msgs = []
-        # if total_investasi > player.uang_sesudah_tambah_bansos:
-        #     error_msgs.append(
-        #         f"Endowment Anda tidak mencukupi untuk membeli opsi-opsi tersebut"
-        #         f" (Total alokasi: {total_investasi})."
-        #     )
-        # elif total_investasi == 0:
-        #     error_msgs.append(
-        #         f"Anda tidak mengalokasikan apapun pada setiap opsi-opsi yang tersedia"
-        #     )
-        #
-        # # Jika ada pesan kesalahan, gabungkan dan kembalikan
-        # if error_msgs:
-        #     return "<br>".join(error_msgs)
-        # return ""
-
 
 class single_results(Page):
     @staticmethod
@@ -248,28 +219,32 @@ class final_results(Page):
                 'round_number': p.round_number,
                 'return': p.total_profit_return,
                 "cost": sum(getattr(p, f"asian_ev_{i}") for i in range(1, 18)),
-                'payoff': p.payoff,
                 'endowment_panel_allocation': p.payoff,
                 'additional_panel_allocation': p.bantuan_sosial,
                 'consumption_panel_allocation': p.beban_konsumsi
             })
 
         # Hitung hasil akhir
-        final_return = sum([p.total_profit_return for p in player.in_rounds(1, last_round_panel_allocation)])
-        final_cost = sum(
+        player.total_akhir_profit_return = sum(
+            [p.total_profit_return for p in player.in_rounds(1, last_round_panel_allocation)]
+        )
+        player.total_akhir_alokasi_opsi = sum(
             getattr(p, f"asian_ev_{i}")
             for p in player.in_rounds(1, last_round_panel_allocation)
             for i in range(1, 18)
         )
-        final_payoff = sum([p.payoff for p in player.in_rounds(1, last_round_panel_allocation)])
+        player.total_akhir_bantuan_sosial = sum(
+            [p.bantuan_sosial for p in player.in_rounds(1, last_round_panel_allocation)]
+        )
+        player.total_akhir_beban_konsumsi = sum(
+            [p.beban_konsumsi for p in player.in_rounds(1, last_round_panel_allocation)]
+        )
+        player.total_akhir_uang = sum([p.payoff for p in player.in_rounds(1, last_round_panel_allocation)])
 
         return {
             'last_round': last_round_panel_allocation,
             'final_endowment': final_endowment,
             'rounds_data': rounds_data,
-            'final_return': final_return,
-            'final_cost': final_cost,
-            'final_payoff': final_payoff
         }
 
 
