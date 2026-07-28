@@ -1,14 +1,11 @@
-{% block styles  %}
-    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
-    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
-    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    <title>Eksperimen telah berakhir</title>
 {% endblock %}
 
-{{ block title }}
-    <title>Akhir Eksperimen</title>
-{{ endblock }}
-
-{{ block content }}
+{% block content %}
     <div class="card">
         <div class="card-header">
             <span class="badge bg-success fs-6 me-2">
@@ -24,4 +21,4 @@
             </div>
         </div>
     </div>
-{{ endblock }}
+{% endblock %}

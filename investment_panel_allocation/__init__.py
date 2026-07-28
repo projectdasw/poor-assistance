@@ -159,42 +159,62 @@ class game(Page):
 
 class single_results(Page):
     @staticmethod
-    def is_displayed(player: Player):
-        # Hanya tampilkan halaman ini jika pemain memilih "Ya" di ronde pertama
-        return not player.participant.vars.get('end_game', False)
+    def vars_for_template(player: Player):
+        investment_results = [
+            {
+                "no": i,
+                "allocation": allocation,
+                "return": result,
+                "profit": allocation * result,
+            }
+            for i in range(1, 18)
+            for allocation, result in [(
+                getattr(player, f"asian_ev_{i}"),
+                getattr(player, f"result_asian_{i}")
+            )]
+            if allocation > 0
+        ]
+
+        player.total_profit_return = sum(
+            item["profit"] for item in investment_results
+        )
+
+        player.total_alokasi_opsi = sum(
+            item["allocation"] for item in investment_results
+        )
+
+        player.payoff = (
+            player.uang_sesudah_tambah_bansos
+            + player.total_profit_return
+            - player.total_alokasi_opsi
+            - player.beban_konsumsi
+        )
+
+        return dict(
+            investment_results=investment_results,
+        )
 
     @staticmethod
-    def vars_for_template(player: Player):
-        # Kumpulkan data hasil dari setiap opsi investasi
-        investment_results = []
-        for i, investment_scheme in enumerate(Constants.investment_scheme, start=1):
-            ev_field = f"asian_ev_{i}"
-            result_field = f"result_asian_{i}"
-            ev_value = getattr(player, ev_field)  # Alokasi dana untuk opsi ini
-            result_value = getattr(player, result_field)  # Hasil dari opsi ini
-            if ev_value > 0:  # Hanya tampilkan opsi yang dialokasikan dana
-                investment_results.append({
-                    'option_number': i,
-                    'allocated': ev_value,
-                    'return': result_value,
-                })
+    def before_next_page(player: Player, timeout_happened):
+        total_cost = sum(
+            getattr(player, f"asian_ev_{i}")
+            for i in range(1, 18)
+        )
 
-        total_allocation = sum([inv['allocated'] for inv in investment_results])  # Total alokasi dana
-        total_return = round(sum([inv['allocated'] * inv['return'] for inv in investment_results]), 5)  # Total hasil
-        sum_profit = player.uang_sesudah_tambah_bansos + player.total_profit_return
-        player.total_alokasi_opsi = total_allocation
-        player.payoff = ((player.uang_sesudah_tambah_bansos + player.total_profit_return) -
-                         player.total_alokasi_opsi - player.beban_konsumsi)
+        player.total_alokasi_opsi = total_cost
 
-        return {
-            'investment_results': investment_results,
-            'total_allocation': total_allocation,
-            'total_profit_return': total_return,
-            'sum_profit': sum_profit,
-        }
+        player.participant.vars.setdefault("results_panel_allocation", []).append({
+            "round_number_panel_allocation": player.round_number,
+            "profit_panel_allocation": player.total_profit_return,
+            "cost_panel_allocation": player.total_alokasi_opsi,
+            "endowment_panel_allocation": player.payoff,
+            "additional_panel_allocation": player.bantuan_sosial,
+            "consumption_panel_allocation": player.beban_konsumsi,
+        })
 
 
 class final_results(Page):
+
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == Constants.num_rounds
@@ -203,49 +223,37 @@ class final_results(Page):
     def vars_for_template(player: Player):
         participant = player.participant
 
-        # Tentukan ronde terakhir yang dimainkan
-        end_game = participant.vars.get('end_game', False)
-        if end_game:
-            last_round_panel_allocation = participant.vars.get('last_round_played_panel_allocation', 1)
-        else:
-            last_round_panel_allocation = player.round_number
-
-        final_endowment = player.in_round(last_round_panel_allocation).payoff
-
-        # Ambil data semua ronde
-        rounds_data = []
-        for p in player.in_rounds(1, last_round_panel_allocation):
-            rounds_data.append({
-                'round_number': p.round_number,
-                'return': p.total_profit_return,
-                "cost": sum(getattr(p, f"asian_ev_{i}") for i in range(1, 18)),
-                'endowment_panel_allocation': p.payoff,
-                'additional_panel_allocation': p.bantuan_sosial,
-                'consumption_panel_allocation': p.beban_konsumsi
-            })
-
-        # Hitung hasil akhir
-        player.total_akhir_profit_return = sum(
-            [p.total_profit_return for p in player.in_rounds(1, last_round_panel_allocation)]
+        results_panel_allocation = participant.vars.get("results_panel_allocation", [])
+        last_round_panel_allocation = (
+            participant.vars.get("last_round_played_panel_allocation", 1)
+            if participant.vars.get("end_game", False)
+            else player.round_number
         )
-        player.total_akhir_alokasi_opsi = sum(
-            getattr(p, f"asian_ev_{i}")
-            for p in player.in_rounds(1, last_round_panel_allocation)
-            for i in range(1, 18)
-        )
+
+        player.total_akhir_profit_return = sum(item["profit_panel_allocation"] for item in results_panel_allocation)
+        player.total_akhir_alokasi_opsi = sum(item["cost_panel_allocation"] for item in results_panel_allocation)
         player.total_akhir_bantuan_sosial = sum(
-            [p.bantuan_sosial for p in player.in_rounds(1, last_round_panel_allocation)]
+            item["additional_panel_allocation"]
+            for item in results_panel_allocation
         )
         player.total_akhir_beban_konsumsi = sum(
-            [p.beban_konsumsi for p in player.in_rounds(1, last_round_panel_allocation)]
+            item["consumption_panel_allocation"]
+            for item in results_panel_allocation
         )
-        player.total_akhir_uang = sum([p.payoff for p in player.in_rounds(1, last_round_panel_allocation)])
+        player.total_akhir_uang = sum(item["endowment_panel_allocation"]for item in results_panel_allocation)
 
-        return {
-            'last_round': last_round_panel_allocation,
-            'final_endowment': final_endowment,
-            'rounds_data': rounds_data,
+        participant.vars["summary_panel_allocation"] = {
+            "profit": player.total_akhir_profit_return,
+            "cost": player.total_akhir_alokasi_opsi,
+            "additional": player.total_akhir_bantuan_sosial,
+            "consumption": player.total_akhir_beban_konsumsi,
+            "endowment": player.total_akhir_uang,
         }
+
+        return dict(
+            results_panel_allocation=results_panel_allocation,
+            last_round_panel_allocation=last_round_panel_allocation,
+        )
 
 
 page_sequence = [endowment_information, Loading, game, single_results, Loading, final_results]

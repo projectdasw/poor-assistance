@@ -24,13 +24,13 @@
                     <tbody>
                         {% for investment in investment_results %}
                             <tr>
-                                <td>Opsi {% investment.option_number %}</td>
+                                <td>Opsi {% investment.no %}</td>
                                 <td class="fw-bold">
                                     {% if investment.return != 0 %}
                                         <span class="text-success">+{% investment.return %}</span>
                                     {% else %}
                                         {% investment.return %}
-                                    {% endif %} x {% investment.allocated %}
+                                    {% endif %} x {% investment.allocation %}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -39,10 +39,10 @@
                         <tr>
                             <th>Total</th>
                             <th>
-                                {% if total_profit_return == 0 %}
-                                    {% total_profit_return %}
+                                {% if player.total_profit_return == 0 %}
+                                    {% player.total_profit_return %}
                                 {% else %}
-                                    <span class="text-success">+{% total_profit_return %}</span>
+                                    <span class="text-success">+{% player.total_profit_return %}</span>
                                 {% endif %}
                             </th>
                         </tr>

@@ -185,6 +185,14 @@ class final_results(Page):
         player.total_akhir_beban_konsumsi = sum(item["consumption_cognitive"] for item in results_cognitive_task)
         player.total_akhir_uang = sum(item["endowment_cognitive"] for item in results_cognitive_task)
 
+        participant.vars["summary_cognitive_task"] = {
+            "profit": player.total_akhir_score,
+            "cost": player.total_akhir_beli_waktu,
+            "additional": player.total_akhir_bantuan_sosial,
+            "consumption": player.total_akhir_beban_konsumsi,
+            "endowment": player.total_akhir_uang,
+        }
+
         return {
             "results_cognitive_task": results_cognitive_task,
             "last_round_cognitive": last_round_cognitive,

@@ -1,50 +1,42 @@
-{% block styles  %}
-    <link href="{{ static 'fontawesome/css/all.css' }}" rel="stylesheet"/>
-    <link href="{{ static 'fontawesome/css/solid.css' }}" rel="stylesheet"/>
-    <link href="{{ static 'fontawesome/css/brands.css' }}" rel="stylesheet"/>
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    <title>Pembayaran Eksperimen</title>
 {% endblock %}
 
-{{ block title }}
-    <title>Hasil Pembayaran Anda</title>
-{{ endblock }}
-
-{{ block content }}
+{% block content %}
     <div class="card">
         <div class="card-header">
-            <span class="badge bg-success fs-6 me-2">
-                Pembayaran Eksperimen
-            </span>
+            <h3 class="text-center m-0">Hasil Pembayaran Anda</h3>
         </div>
         <div class="card-body">
-            <h2 class="card-title">Hasil Pembayaran Anda</h2>
-            <div class="card-text">
-                <table class="table">
-                    <thead>
-                        <th>Investasi Berisiko terpilih</th>
-                        <th>Hasil Akhir Investasi Berisiko terpilih</th>
-                        <th>Pembayaran Anda</th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{{ selected_app }}</td>
-                            <td>{{ selected_payoff }}</td>
-                            <td>( {{ selected_payoff }} x 100 ) + 10000</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="2">Total Pembayaran Anda</td>
-                            <td><strong>{{ final_pay }}</strong></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
+            <table class="table m-0">
+                <thead>
+                    <th>Investasi terpilih</th>
+                    <th>Uang Akhir Investasi</th>
+                    <th>Pembayaran</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{% player.sesi_terpilih %}</td>
+                        <td>{% player.pembayaran_terpilih %}</td>
+                        <td>( {% player.pembayaran_terpilih %} x 100 ) + 10000</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">Total Pembayaran Anda</td>
+                        <td>{% player.pembayaran_akhir %}</td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
         <div class="card-footer">
             <button class="otree-btn-next btn btn-outline-primary">
+                <i class="fa-brands fa-cc-amazon-pay me-1"></i>
                 <span>Selesaikan Pembayaran</span>
-                <i class="fa-solid fa-chevron-right"></i>
             </button>
         </div>
     </div>
-{{ endblock }}
+{% endblock %}

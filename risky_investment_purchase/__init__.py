@@ -238,6 +238,14 @@ class final_results(Page):
         player.total_akhir_beban_konsumsi = sum(item["consumption_risky_purchase"] for item in results_risky_purchase)
         player.total_akhir_uang = sum(item["endowment_risky_purchase"] for item in results_risky_purchase)
 
+        participant.vars["summary_risky_purchase"] = {
+            "profit": player.total_akhir_profit,
+            "cost": player.total_akhir_beli_opsi,
+            "additional": player.total_akhir_bantuan_sosial,
+            "consumption": player.total_akhir_beban_konsumsi,
+            "endowment": player.total_akhir_uang,
+        }
+
         return {
             "results_risky_purchase": results_risky_purchase,
             "last_round_played_risky_purchase": last_round_risky_purchase,

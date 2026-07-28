@@ -14,7 +14,7 @@ SESSION_CONFIGS = [
             'risky_investment_allocation',
             'real_effort_decoding',
             'investment_panel_allocation',
-            # 'survey',
+            'survey',
             'payment_page'
         ],
         num_demo_participants=4
