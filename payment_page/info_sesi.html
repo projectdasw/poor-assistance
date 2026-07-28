@@ -1,0 +1,88 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    <title>Informasi Sesi Eksperimen</title>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title">Informasi Sesi Eksperimen</h1>
+            <p>
+                Anda telah melakukan seluruh rangkaian eksperimen. Anda akan mendapatkan pambayaran yang dimana
+                pembayaran tersebut diambil dari salah satu sesi investasi. Pembayaran akan diberikan kepada Anda
+                tergantung besaran jumlah yang Anda dapatkan pada sesi investasi tersebut. Berikut di bawah ini
+                hasil sesi investasi yang telah Anda lakukan dan profit/keuntungan yang telah Anda dapatkan:
+            </p>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h4 class="m-0">Risky Investment Purchase</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Round</th>
+                                <th>Payoff</th>
+                                <th>Cost</th>
+                                <th>Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for row in risky_purchase %}
+                        <tr>
+                            <td>{{ row.round_number_risky_purchase }}</td>
+                            <td>{{ row.profit_risky_purchase }}</td>
+                            <td>{{ row.cost_risky_purchase }}</td>
+                            <td>{{ row.additional_risky_purchase }}</td>
+                            <td>{{ row.consumption_risky_purchase }}</td>
+                            <td>{{ row.endowment_risky_purchase }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="alert alert-primary m-0" role="alert">
+                        Uang yang Anda peroleh adalah dari perhitungan di Total Akhir
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h4 class="m-0">Risky Investment Allocation</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-primary m-0" role="alert">
+                        Uang yang Anda peroleh adalah dari perhitungan di Total Akhir
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h4 class="m-0">Real Effort - Decoding</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-primary m-0" role="alert">
+                        Uang yang Anda peroleh adalah dari perhitungan di Total Akhir
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="m-0">Investment Panel Allocation</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-primary m-0" role="alert">
+                        Uang yang Anda peroleh adalah dari perhitungan di Total Akhir
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="otree-btn-next btn btn-outline-success">
+                <i class="fa-solid fa-sack-dollar me-1"></i>
+                <span>Dapatkan Pembayaran Anda</span>
+            </button>
+        </div>
+    </div>
+{% endblock %}

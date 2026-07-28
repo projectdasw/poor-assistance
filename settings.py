@@ -5,19 +5,19 @@ SESSION_CONFIGS = [
         display_name='Eksperimen Bantuan Sosial',
         name='poor_assistance_experiment',
         app_sequence=[
-            'welcome_instructions',
+            # 'welcome_instructions',
             # 'risky_investment_purchase_practice',
             # 'risky_investment_allocation_practice',
             # 'real_effort_decoding_practice',
             # 'investment_panel_allocation_practice',
             'risky_investment_purchase',
-            'risky_investment_allocation',
-            'real_effort_decoding',
-            'investment_panel_allocation',
+            # 'risky_investment_allocation',
+            # 'real_effort_decoding',
+            # 'investment_panel_allocation',
             # 'survey',
-            # 'payment_random'
+            'payment_page'
         ],
-        num_demo_participants=4
+        num_demo_participants=1
     ),
 ]
 
