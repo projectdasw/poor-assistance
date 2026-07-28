@@ -20,26 +20,28 @@
                     <h4 class="m-0">Risky Investment Purchase</h4>
                 </div>
                 <div class="card-body">
-                    <table class="table table-bordered">
+                    <table class="table">
                         <thead>
                             <tr>
-                                <th>Round</th>
-                                <th>Payoff</th>
-                                <th>Cost</th>
-                                <th>Profit</th>
+                                <th>Sesi Ronde</th>
+                                <th>Profit/Keuntungan</th>
+                                <th>Biaya Beli Opsi</th>
+                                <th>Bantuan</th>
+                                <th>Beban Konsumsi</th>
+                                <th>Sisa Uang Akhir Ronde</th>
                             </tr>
                         </thead>
                         <tbody>
-                        {% for row in risky_purchase %}
-                        <tr>
-                            <td>{{ row.round_number_risky_purchase }}</td>
-                            <td>{{ row.profit_risky_purchase }}</td>
-                            <td>{{ row.cost_risky_purchase }}</td>
-                            <td>{{ row.additional_risky_purchase }}</td>
-                            <td>{{ row.consumption_risky_purchase }}</td>
-                            <td>{{ row.endowment_risky_purchase }}</td>
-                        </tr>
-                        {% endfor %}
+                            {% for row in risky_purchase %}
+                                <tr>
+                                    <td>Ronde {{ row.round_number_risky_purchase }}</td>
+                                    <td>{{ row.profit_risky_purchase }}</td>
+                                    <td>{{ row.cost_risky_purchase }}</td>
+                                    <td>{{ row.additional_risky_purchase }}</td>
+                                    <td>{{ row.consumption_risky_purchase }}</td>
+                                    <td>{{ row.endowment_risky_purchase }}</td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                     <div class="alert alert-primary m-0" role="alert">
@@ -52,6 +54,30 @@
                     <h4 class="m-0">Risky Investment Allocation</h4>
                 </div>
                 <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Sesi Ronde</th>
+                                <th>Profit/Keuntungan</th>
+                                <th>Biaya Alokasi Opsi</th>
+                                <th>Bantuan</th>
+                                <th>Beban Konsumsi</th>
+                                <th>Sisa Uang Akhir Ronde</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in risky_allocation %}
+                                <tr>
+                                    <td>Ronde {{ row.round_number_risky_allocation }}</td>
+                                    <td>{{ row.profit_risky_allocation }}</td>
+                                    <td>{{ row.cost_risky_allocation }}</td>
+                                    <td>{{ row.additional_risky_allocation }}</td>
+                                    <td>{{ row.consumption_risky_allocation }}</td>
+                                    <td>{{ row.endowment_risky_allocation }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                     <div class="alert alert-primary m-0" role="alert">
                         Uang yang Anda peroleh adalah dari perhitungan di Total Akhir
                     </div>
@@ -62,6 +88,30 @@
                     <h4 class="m-0">Real Effort - Decoding</h4>
                 </div>
                 <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Sesi Ronde</th>
+                                <th>Skor</th>
+                                <th>Biaya Beli Waktu</th>
+                                <th>Bantuan</th>
+                                <th>Beban Konsumsi</th>
+                                <th>Sisa Uang Akhir Ronde</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in cognitive_task %}
+                                <tr>
+                                    <td>Ronde {{ row.round_number_cognitive }}</td>
+                                    <td>{{ row.score_cognitive }}</td>
+                                    <td>{{ row.time_cost_cognitive }}</td>
+                                    <td>{{ row.additional_cognitive }}</td>
+                                    <td>{{ row.consumption_cognitive }}</td>
+                                    <td>{{ row.endowment_cognitive }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                     <div class="alert alert-primary m-0" role="alert">
                         Uang yang Anda peroleh adalah dari perhitungan di Total Akhir
                     </div>

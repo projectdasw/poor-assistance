@@ -46,4 +46,4 @@ class akhir_eksperimen(Page):
     pass
 
 
-page_sequence = [info_sesi, pembayaran, akhir_eksperimen]
+page_sequence = [info_sesi]
