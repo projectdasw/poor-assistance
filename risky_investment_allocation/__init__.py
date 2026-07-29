@@ -9,7 +9,7 @@ Risky Investment Allocation
 class Constants(BaseConstants):
     name_in_url = 'risky_investment_allocation'
     players_per_group = None
-    num_rounds = 3
+    num_rounds = 10
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
