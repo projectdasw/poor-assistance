@@ -45,6 +45,14 @@ class Constants(BaseConstants):
 class Subsession(BaseSubsession):
     pass
 
+def creating_session(subsession):
+    players = subsession.get_players()
+    random_ids = list(range(1, len(players) + 1))
+    random.shuffle(random_ids)
+
+    for player, random_id in zip(players, random_ids):
+        player.round_player_id = random_id
+
 
 class Group(BaseGroup):
     pass
@@ -77,6 +85,70 @@ class Player(BasePlayer):
     total_akhir_bantuan_sosial = models.CurrencyField(initial=0)
     total_akhir_beban_konsumsi = models.CurrencyField(initial=0)
     total_akhir_uang = models.CurrencyField(initial=0)
+    realtime_status = models.StringField(initial="Belum Masuk Halaman")
+    round_player_id = models.IntegerField()
+
+def live_update(player, data):
+    if data["action"] == "page_loaded":
+        player.realtime_status = "Sudah Masuk Halaman"
+
+        players = [
+            dict(
+                id=p.id_in_group,
+                status=p.realtime_status,
+            )
+            for p in player.group.get_players()
+        ]
+
+        return {
+            0: {
+                "players": players
+            }
+        }
+
+    elif data["action"] == "allocation_changed":
+        allocations = data.get("allocations", {})
+
+        if sum(allocations.values()) > 0:
+            player.realtime_status = "Sedang Mengalokasikan Dana"
+        else:
+            player.realtime_status = "Sudah Masuk Halaman"
+
+        players = [
+            dict(
+                id=p.id_in_group,
+                status=p.realtime_status,
+            )
+            for p in player.group.get_players()
+        ]
+
+        return {
+            0: {
+                "players": players
+            }
+        }
+
+    elif data["action"] == "submit":
+        allocations = data.get("allocations", {})
+
+        if sum(allocations.values()) > 0:
+            player.realtime_status = "Player telah mengalokasikan dana"
+        else:
+            player.realtime_status = "Player tidak mengalokasikan dana"
+
+        players = [
+            dict(
+                id=p.id_in_group,
+                status=p.realtime_status,
+            )
+            for p in player.group.get_players()
+        ]
+
+        return {
+            0: {
+                "players": players
+            }
+        }
 
 
 class Loading(WaitPage):
@@ -101,10 +173,15 @@ class endowment_information(Page):
 
 class game(Page):
     form_model = 'player'
-    form_fields = ['opsi_1', 'alokasi_opsi_1', 'opsi_2',
-                   'alokasi_opsi_2', 'opsi_2', 'opsi_3',
-                   'alokasi_opsi_3', 'opsi_4', 'alokasi_opsi_4',
-                   'opsi_5', 'alokasi_opsi_5',]
+    form_fields = [
+        'opsi_1', 'alokasi_opsi_1',
+        'opsi_2', 'alokasi_opsi_2',
+        'opsi_3', 'alokasi_opsi_3',
+        'opsi_4', 'alokasi_opsi_4',
+        'opsi_5', 'alokasi_opsi_5',
+    ]
+
+    live_method = live_update # dirubah karna versi oTree berbeda
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -129,6 +206,7 @@ class game(Page):
 
         return {
             'random_options': random_options,
+            'my_id': player.round_player_id,
         }
 
     @staticmethod

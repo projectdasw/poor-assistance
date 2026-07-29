@@ -1,4 +1,5 @@
 .otree-body {
-    max-width: 70%;
+    max-width: 100%;
+    width: 95%;
     margin: 0 auto;
 }

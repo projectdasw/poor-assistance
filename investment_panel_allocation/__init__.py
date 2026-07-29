@@ -37,6 +37,14 @@ class Constants(BaseConstants):
 class Subsession(BaseSubsession):
     pass
 
+def creating_session(subsession):
+    players = subsession.get_players()
+    random_ids = list(range(1, len(players) + 1))
+    random.shuffle(random_ids)
+
+    for player, random_id in zip(players, random_ids):
+        player.round_player_id = random_id
+
 
 class Group(BaseGroup):
     pass
@@ -88,6 +96,59 @@ class Player(BasePlayer):
     total_akhir_bantuan_sosial = models.CurrencyField(initial=0)
     total_akhir_beban_konsumsi = models.CurrencyField(initial=0)
     total_akhir_uang = models.CurrencyField(initial=0)
+    realtime_status = models.StringField(initial="Belum Masuk Halaman")
+    round_player_id = models.IntegerField()
+
+def broadcast_status(player):
+    players = [
+        dict(
+            id=p.round_player_id,
+            status=p.realtime_status,
+        )
+        for p in player.group.get_players()
+    ]
+
+    return {
+        0: {
+            "players": players
+        }
+    }
+
+def live_update(player, data):
+
+    action = data.get("action")
+
+    if action == "page_loaded":
+
+        player.realtime_status = "Sudah Masuk Halaman"
+
+        return broadcast_status(player)
+
+    elif action == "allocation_changed":
+
+        allocations = data.get("allocations", {})
+
+        total = sum(allocations.values())
+
+        if total > 0:
+            player.realtime_status = "Sedang Mengalokasikan Dana"
+        else:
+            player.realtime_status = "Sudah Masuk Halaman"
+
+        return broadcast_status(player)
+
+    elif action == "submit":
+
+        allocations = data.get("allocations", {})
+
+        total = sum(allocations.values())
+
+        if total > 0:
+            player.realtime_status = "Player telah mengalokasikan dana"
+        else:
+            player.realtime_status = "Player tidak mengalokasikan dana"
+
+        return broadcast_status(player)
 
 
 class Loading(WaitPage):
@@ -113,6 +174,7 @@ class endowment_information(Page):
 class game(Page):
     form_model = "player"
     form_fields = [f"asian_ev_{i}" for i in range(1, 18)]
+    live_method = live_update
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -135,6 +197,7 @@ class game(Page):
 
         return {
             'investment_scheme': investment_scheme_with_percentage,
+            "my_id": player.round_player_id,
         }
 
     @staticmethod

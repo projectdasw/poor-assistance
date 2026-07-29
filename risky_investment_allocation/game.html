@@ -5,116 +5,232 @@
     <title>Risky Investment Allocation - Ronde {% player.round_number %}</title>
 {% endblock %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'global/style.css' %}">
+{% endblock %}
+
 {% block content %}
-    <div class="card mb-3">
-        <div class="card-header">
-            <h4 class="m-0">Informasi Pendapatan</h4>
-        </div>
-        <div class="card-body">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Uang + Bantuan</th>
-                        <th scope="col">Total Uang Anda</th>
-                        <th scope="col">Beban Konsumsi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="fw-bold">
-                            {% if player.uang_sebelum_tambah_bansos < 0 %}
-                                <span class="text-danger">{% player.uang_sebelum_tambah_bansos %}</span>
-                            {% elif player.uang_sebelum_tambah_bansos >= 0 %}
-                                {% player.uang_sebelum_tambah_bansos %}
-                            {% endif %} + <span class="text-success">{% player.bantuan_sosial %}</span>
-                        </td>
-                        <td class="fw-bold">
-                            {% if player.uang_sesudah_tambah_bansos < 0 %}
-                                <span class="text-danger">{% player.uang_sesudah_tambah_bansos %}</span>
-                            {% elif player.uang_sesudah_tambah_bansos >= 0 %}
-                                {% player.uang_sesudah_tambah_bansos %}
-                            {% endif %}
-                        </td>
-                        <td class="fw-bold">
-                            <span class="text-danger">{% player.beban_konsumsi %} (dikenakan setiap akhir ronde)</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="container">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4 class="m-0">Informasi Pendapatan</h4>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Uang + Bantuan</th>
+                            <th scope="col">Total Uang Anda</th>
+                            <th scope="col">Beban Konsumsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold">
+                                {% if player.uang_sebelum_tambah_bansos < 0 %}
+                                    <span class="text-danger">{% player.uang_sebelum_tambah_bansos %}</span>
+                                {% elif player.uang_sebelum_tambah_bansos >= 0 %}
+                                    {% player.uang_sebelum_tambah_bansos %}
+                                {% endif %} + <span class="text-success">{% player.bantuan_sosial %}</span>
+                            </td>
+                            <td class="fw-bold">
+                                {% if player.uang_sesudah_tambah_bansos < 0 %}
+                                    <span class="text-danger">{% player.uang_sesudah_tambah_bansos %}</span>
+                                {% elif player.uang_sesudah_tambah_bansos >= 0 %}
+                                    {% player.uang_sesudah_tambah_bansos %}
+                                {% endif %}
+                            </td>
+                            <td class="fw-bold">
+                                <span class="text-danger">{% player.beban_konsumsi %} (dikenakan setiap akhir ronde)</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-header">
-            <span class="badge bg-success fs-6 me-2">
-                Ronde: {% player.round_number %}
-            </span>
-            <span class="badge bg-danger fs-6 me-2">
-                Uang Anda saat ini: {% player.uang_sesudah_tambah_bansos %}
-            </span>
-            <span class="badge bg-primary fs-6">
-                Anda adalah Player [id_player]
-            </span>
-        </div>
-        <div class="card-body">
-            <div class="card-text">
-                <div class="p-0">
-                    <h2>Risky Investment Allocation</h2>
-                    <hr>
-                    <p class="m-0">
-                        <div class="alert alert-success" role="alert">
-                            Silahkan alokasikan Uang yang Anda inginkan pada opsi-opsi yang tersedia,
-                            dan dapatkan keuntungannya.
-                            <br>
-                            <strong>
-                                Jika Anda hanya mengisi pada opsi tertentu, maka opsi lain di isi dengan angka 0.
-                            </strong>
-                            <br>
-                            <strong>Tidak tertarik berinvestasi pada ronde ini?</strong>
-                            Silahkan klik tombol <strong>"Submit"</strong> tanpa mengalokasi opsi yang tersedia.
-                        </div>
-                    </p>
+    <div class="row">
+        <div class="col-9">
+            <div class="card">
+                <div class="card-header">
+                    <span class="badge bg-success fs-6 me-2">
+                        Ronde: {% player.round_number %}
+                    </span>
+                    <span class="badge bg-danger fs-6 me-2">
+                        Uang Anda saat ini: {% player.uang_sesudah_tambah_bansos %}
+                    </span>
+                    <span class="badge bg-primary fs-6">
+                        Anda adalah Player [id_player]
+                    </span>
                 </div>
-                <div class="mt-4">
-                    <form method="post">
-                        <div class="row row-cols-1 row-cols-md-2 g-2">
-                            {% for option in random_options %}
-                                <div class="col">
-                                    <div class="card h-100">
-                                        <div class="card-header">
-                                            <h3>
-                                                Opsi {% forloop.counter %}
-                                            </h3>
-                                            <input class="form-check-input" type="checkbox"
-                                               name="opsi_{% forloop.counter %}"
-                                               value="{% option.name %}" checked hidden>
-                                        </div>
-                                        <div class="card-body">
-                                            <ul class="list-group list-group-flush">
-                                                {% for outcome in option.formatted_outcomes %}
-                                                    <li class="list-group-item">{% outcome %}</li>
-                                                {% endfor %}
-                                            </ul>
-                                            <div class="mt-3">
-                                                <label for="alokasi_opsi_{% forloop.counter %}" class="form-label">
-                                                    Berapa Alokasi yang ingin di investasikan pada opsi ini?
-                                                </label>
-                                                <input type="number" class="form-control"
-                                                   name="alokasi_opsi_{% forloop.counter %}" value="0" required>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="p-0">
+                            <h2>Risky Investment Allocation</h2>
+                            <hr>
+                            <p class="m-0">
+                                <div class="alert alert-success" role="alert">
+                                    Silahkan alokasikan Uang yang Anda inginkan pada opsi-opsi yang tersedia,
+                                    dan dapatkan keuntungannya.
+                                    <br>
+                                    <strong>
+                                        Jika Anda hanya mengisi pada opsi tertentu, maka opsi lain di isi dengan angka 0.
+                                    </strong>
+                                    <br>
+                                    <strong>Tidak tertarik berinvestasi pada ronde ini?</strong>
+                                    Silahkan klik tombol <strong>"Submit"</strong> tanpa mengalokasi opsi yang tersedia.
+                                </div>
+                            </p>
+                        </div>
+                        <div class="mt-4">
+                            <form method="post">
+                                <div class="row row-cols-1 row-cols-md-2 g-2">
+                                    {% for option in random_options %}
+                                        <div class="col">
+                                            <div class="card h-100">
+                                                <div class="card-header">
+                                                    <h3>
+                                                        Opsi {% forloop.counter %}
+                                                    </h3>
+                                                    <input class="form-check-input" type="checkbox"
+                                                       name="opsi_{% forloop.counter %}"
+                                                       value="{% option.name %}" checked hidden>
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul class="list-group list-group-flush">
+                                                        {% for outcome in option.formatted_outcomes %}
+                                                            <li class="list-group-item">{% outcome %}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    <div class="mt-3">
+                                                        <label for="alokasi_opsi_{% forloop.counter %}" class="form-label">
+                                                            Berapa Alokasi yang ingin di investasikan pada opsi ini?
+                                                        </label>
+                                                        <input type="number" class="form-control allocation-input"
+                                                           name="alokasi_opsi_{% forloop.counter %}" value="0" required>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    {% endfor %}
                                 </div>
-                            {% endfor %}
+                            </form>
                         </div>
-                    </form>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button id="submit-btn" type="submit" class="btn btn-outline-success">
+                        <i class="fa-solid fa-money-bill-trend-up"></i>
+                        <span>Submit</span>
+                    </button>
                 </div>
             </div>
         </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-outline-success">
-                <i class="fa-solid fa-money-bill-trend-up"></i>
-                <span>Submit</span>
-            </button>
+        <div class="col-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Informasi Realtime Peserta</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered m-0">
+                        <thead>
+                            <tr>
+                                <th>List Peserta</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="realtime-table"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        const myPlayerId = {% my_id %};
+        const form = document.querySelector("form");
+        function getBadge(status){
+            switch(status){
+                case "Sudah Masuk Halaman":
+                    return '<span class="badge bg-primary">Sudah Masuk Halaman</span>';
+                case "Sedang Mengalokasikan Dana":
+                    return '<span class="badge bg-success">Sedang Mengalokasikan Dana</span>';
+                case "Player telah mengalokasikan dana":
+                    return '<span class="badge bg-success">Player telah mengalokasikan dana</span>';
+                case "Player tidak mengalokasikan dana":
+                    return '<span class="badge bg-warning text-dark">Player tidak mengalokasikan dana</span>';
+                default:
+                    return '<span class="badge bg-secondary">Belum Masuk Halaman</span>';
+            }
+        }
+
+        function getAllocations(){
+            const allocations = {};
+
+            document.querySelectorAll(".allocation-input").forEach(function(input){
+                allocations[input.name] = Number(input.value || 0);
+            });
+            return allocations;
+        }
+
+        document.addEventListener("DOMContentLoaded", function(){
+            liveSend({
+                action: "page_loaded"
+            });
+        });
+
+        document.querySelectorAll(".allocation-input").forEach(function(item){
+            item.addEventListener("input", function(){
+
+                liveSend({
+                    action: "allocation_changed",
+                    allocations: getAllocations()
+                });
+            });
+        });
+
+        document.getElementById("submit-btn").addEventListener("click", function(){
+            liveSend({
+                action: "submit"
+            });
+        });
+
+        form.addEventListener("submit", function(e){
+            e.preventDefault();
+
+            liveSend({
+                action: "submit",
+                allocations: getAllocations()
+            });
+
+            setTimeout(() => {
+                form.submit();
+            }, 100);
+        });
+
+        liveRecv = function(data){
+            if(!data.players){
+                return;
+            }
+
+            let html = "";
+            data.players.forEach(function(p){
+                html += `
+                    <tr>
+                        <td>
+                            Player ${p.id}
+                            ${
+                                p.id === myPlayerId
+                                ? '<span class="badge bg-primary ms-2">Anda</span>'
+                                : ''
+                            }
+                        </td>
+                        <td>${getBadge(p.status)}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("realtime-table").innerHTML = html;
+        }
+    </script>
 {% endblock %}

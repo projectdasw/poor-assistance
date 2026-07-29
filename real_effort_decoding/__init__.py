@@ -24,6 +24,14 @@ class Constants(BaseConstants):
 class Subsession(BaseSubsession):
     pass
 
+def creating_session(subsession):
+    players = subsession.get_players()
+    random_ids = list(range(1, len(players) + 1))
+    random.shuffle(random_ids)
+
+    for player, random_id in zip(players, random_ids):
+        player.round_player_id = random_id
+
 
 class Group(BaseGroup):
     pass
@@ -45,6 +53,90 @@ class Player(BasePlayer):
     total_akhir_bantuan_sosial = models.CurrencyField(initial=0)
     total_akhir_beban_konsumsi = models.CurrencyField(initial=0)
     total_akhir_uang = models.CurrencyField(initial=0)
+    realtime_status = models.StringField(initial="Belum Masuk Halaman")
+    round_player_id = models.IntegerField()
+
+def broadcast_status(player):
+    players = [
+        dict(
+            id=p.id_in_group,
+            status=p.realtime_status,
+        )
+        for p in player.group.get_players()
+    ]
+
+    return {
+        0: {
+            "players": players
+        }
+    }
+
+def live_game(player: Player, data):
+    action = data.get("action")
+    allocation = data.get("allocation", 0)
+
+    if action == "page_loaded":
+        player.realtime_status = "Sudah Masuk Halaman"
+        return broadcast_status(player)
+
+
+    elif action == "allocation_changed":
+        if allocation > 0:
+            player.realtime_status = "Sedang Mengalokasikan Dana"
+        else:
+            player.realtime_status = "Sudah Masuk Halaman"
+
+        return broadcast_status(player)
+
+    elif action == "submit_buy_time":
+        if allocation > 0:
+            player.realtime_status = "Player membeli waktu bermain"
+        else:
+            player.realtime_status = "Player tidak membeli waktu bermain"
+
+        return broadcast_status(player)
+
+    elif action == "start_decoding":
+        if player.beli_waktu > 0:
+            player.realtime_status = "Sedang Bermain Decoding"
+        return broadcast_status(player)
+
+    elif action == "finish_decoding":
+        player.realtime_status = "Telah menyelesaikan Decoding"
+        return broadcast_status(player)
+
+    elif action == "submit_guess":
+        guess = int(data["count_guess"])
+
+        if guess == player.actual_count:
+            player.total_score += 3
+
+        player.current_target = random.choice(
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        )
+
+        board = [
+            [
+                random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
+                for _ in range(Constants.board_columns)
+            ]
+            for _ in range(Constants.board_rows)
+        ]
+
+        player.actual_count = sum(
+            row.count(player.current_target)
+            for row in board
+        )
+
+        return {
+            player.id_in_group: {
+                "new_board": board,
+                "new_target_character": player.current_target,
+                "new_score": player.total_score,
+            },
+
+            0: broadcast_status(player)[0],
+        }
 
 
 class Loading(WaitPage):
@@ -71,6 +163,8 @@ class buy_time(Page):
     form_model = 'player'
     form_fields = ['beli_waktu']
 
+    live_method = live_game
+
     @staticmethod
     def vars_for_template(player: Player):
         # Ambil sisa uang subjek dari ronde sebelumnya
@@ -81,36 +175,19 @@ class buy_time(Page):
             player.uang_sesudah_tambah_bansos = player.uang_sebelum_tambah_bansos + player.bantuan_sosial
             player.beban_konsumsi = Constants.consumption
 
-
-def live_method(player: Player, data):
-    if 'count_guess' in data:
-        guess = int(data['count_guess'])
-        # Tambah skor jika jawaban benar
-        if guess == player.actual_count:
-            player.total_score += 3
-
-        # Randomize ulang papan dan target karakter
-        player.current_target = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
-        board = [
-            [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890') for _ in range(Constants.board_columns)]
-            for _ in range(Constants.board_rows)
-        ]
-        player.actual_count = sum(row.count(player.current_target) for row in board)
-
-        # Return data untuk diperbarui di sisi klien
         return {
-            player.id_in_group: {
-                'new_board': board,
-                'new_target_character': player.current_target,
-                'new_score': player.total_score,
-            }
+            'my_id': player.round_player_id,
         }
 
 
 class game(Page):
     form_model = 'player'
     form_fields = ['count_guess']
-    live_method = live_method
+    live_method = live_game
+
+    @staticmethod
+    def is_displayed(player):
+        return player.beli_waktu > 0
 
     # Menggunakan waktu yang dibeli oleh pemain
     @staticmethod
@@ -130,6 +207,7 @@ class game(Page):
             'board': board,
             'target_character': player.current_target,
             'player_score': player.total_score,
+            'my_id': player.round_player_id,
         }
 
 
