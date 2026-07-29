@@ -10,47 +10,47 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="card mb-3">
-        <div class="card-header">
-            <h4 class="m-0">Informasi Pendapatan</h4>
+    <div class="container mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="m-0">Informasi Pendapatan</h4>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Uang + Bantuan</th>
+                            <th scope="col">Total Uang Anda</th>
+                            <th scope="col">Beban Konsumsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold">
+                                {% if player.uang_sebelum_tambah_bansos < 0 %}
+                                    <span class="text-danger">{% player.uang_sebelum_tambah_bansos %}</span>
+                                {% elif player.uang_sebelum_tambah_bansos >= 0 %}
+                                    {% player.uang_sebelum_tambah_bansos %}
+                                {% endif %} + <span class="text-success">{% player.bantuan_sosial %}</span>
+                            </td>
+                            <td class="fw-bold">
+                                {% if player.uang_sesudah_tambah_bansos < 0 %}
+                                    <span class="text-danger">{% player.uang_sesudah_tambah_bansos %}</span>
+                                {% elif player.uang_sesudah_tambah_bansos >= 0 %}
+                                    {% player.uang_sesudah_tambah_bansos %}
+                                {% endif %}
+                            </td>
+                            <td class="fw-bold">
+                                <span class="text-danger">{% player.beban_konsumsi %} (dikenakan setiap akhir ronde)</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="card-body">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Uang + Bantuan</th>
-                        <th scope="col">Total Uang Anda</th>
-                        <th scope="col">Beban Konsumsi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="fw-bold">
-                            {% if player.uang_sebelum_tambah_bansos < 0 %}
-                                <span class="text-danger">{% player.uang_sebelum_tambah_bansos %}</span>
-                            {% elif player.uang_sebelum_tambah_bansos >= 0 %}
-                                {% player.uang_sebelum_tambah_bansos %}
-                            {% endif %} + <span class="text-success">{% player.bantuan_sosial %}</span>
-                        </td>
-                        <td class="fw-bold">
-                            {% if player.uang_sesudah_tambah_bansos < 0 %}
-                                <span class="text-danger">{% player.uang_sesudah_tambah_bansos %}</span>
-                            {% elif player.uang_sesudah_tambah_bansos >= 0 %}
-                                {% player.uang_sesudah_tambah_bansos %}
-                            {% endif %}
-                        </td>
-                        <td class="fw-bold">
-                            <span class="text-danger">{% player.beban_konsumsi %} (dikenakan setiap akhir ronde)</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
     </div>
     <div class="row">
-        <div class="col-9">
+        <div class="col-8">
             <div class="card">
                 <div class="card-header">
                     <span class="badge bg-success fs-6 me-2">
@@ -120,7 +120,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-4">
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0">Informasi Realtime Peserta</h5>
@@ -150,9 +150,9 @@
                 case "Sedang Berinvestasi":
                     return '<span class="badge bg-success">Sedang Berinvestasi</span>';
                 case "Player telah berinvestasi":
-                    return '<span class="badge bg-success">Player telah berinvestasi</span>';
+                    return '<span class="badge bg-success">Telah melakukan investasi</span>';
                 case "Player tidak berinvestasi":
-                    return '<span class="badge bg-warning text-dark">Player tidak berinvestasi</span>';
+                    return '<span class="badge bg-warning text-dark">Tidak melakukan investasi</span>';
                 default:
                     return '<span class="badge bg-secondary">Belum Masuk Halaman</span>';
             }

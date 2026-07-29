@@ -24,6 +24,7 @@ class Constants(BaseConstants):
 class Subsession(BaseSubsession):
     pass
 
+
 def creating_session(subsession):
     players = subsession.get_players()
     random_ids = list(range(1, len(players) + 1))
@@ -56,6 +57,7 @@ class Player(BasePlayer):
     realtime_status = models.StringField(initial="Belum Masuk Halaman")
     round_player_id = models.IntegerField()
 
+
 def broadcast_status(player):
     players = [
         dict(
@@ -71,6 +73,7 @@ def broadcast_status(player):
         }
     }
 
+
 def live_game(player: Player, data):
     action = data.get("action")
     allocation = data.get("allocation", 0)
@@ -78,7 +81,6 @@ def live_game(player: Player, data):
     if action == "page_loaded":
         player.realtime_status = "Sudah Masuk Halaman"
         return broadcast_status(player)
-
 
     elif action == "allocation_changed":
         if allocation > 0:
@@ -96,14 +98,14 @@ def live_game(player: Player, data):
 
         return broadcast_status(player)
 
-    elif action == "start_decoding":
-        if player.beli_waktu > 0:
-            player.realtime_status = "Sedang Bermain Decoding"
-        return broadcast_status(player)
-
-    elif action == "finish_decoding":
-        player.realtime_status = "Telah menyelesaikan Decoding"
-        return broadcast_status(player)
+    # elif action == "start_decoding":
+    #     if player.beli_waktu > 0:
+    #         player.realtime_status = "Sedang Bermain Decoding"
+    #     return broadcast_status(player)
+    #
+    # elif action == "finish_decoding":
+    #     player.realtime_status = "Telah menyelesaikan Decoding"
+    #     return broadcast_status(player)
 
     elif action == "submit_guess":
         guess = int(data["count_guess"])

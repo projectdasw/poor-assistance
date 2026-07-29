@@ -5,9 +5,13 @@
     <title>Investment Panel Allocation - Ronde {% player.round_number %}</title>
 {% endblock %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'global/style.css' %}">
+{% endblock %}
+
 {% block content %}
-    <div class="container">
-        <div class="card mb-3">
+    <div class="container mb-3">
+        <div class="card">
             <div class="card-header">
                 <h4 class="m-0">Informasi Pendapatan</h4>
             </div>
@@ -54,7 +58,7 @@
                 Uang Anda saat ini: {% player.uang_sesudah_tambah_bansos %}
             </span>
             <span class="badge bg-primary fs-6">
-                Anda adalah Player [id_player]
+                Anda adalah Player {% my_id %}
             </span>
         </div>
         <div class="card-body">
@@ -130,29 +134,23 @@
                 </div>
                 <div class="col-4">
                     <div class="card">
-    <div class="card-header">
-        <h5 class="mb-0">
-            Informasi Realtime Peserta
-        </h5>
-    </div>
-
-    <div class="card-body">
-
-        <table class="table table-bordered m-0">
-
-            <thead>
-                <tr>
-                    <th>List Peserta</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-
-            <tbody id="realtime-table"></tbody>
-
-        </table>
-
-    </div>
-</div>
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                Informasi Realtime Peserta
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered m-0">
+                                <thead>
+                                    <tr>
+                                        <th>List Peserta</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="realtime-table"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -165,130 +163,90 @@
     </div>
 
     <script>
+        const myPlayerId = {% my_id %};
+        const form = document.querySelector("form");
 
-const myPlayerId = {{ my_id }};
-const form = document.querySelector("form");
+        function getBadge(status){
+            switch(status){
+                case "Sudah Masuk Halaman":
+                    return '<span class="badge bg-primary">Sudah Masuk Halaman</span>';
+                case "Sedang Mengalokasikan Dana":
+                    return '<span class="badge bg-success">Sedang Mengalokasikan Dana</span>';
+                case "Player telah mengalokasikan dana":
+                    return '<span class="badge bg-success">Telah melakukan investasi</span>';
+                case "Player tidak mengalokasikan dana":
+                    return '<span class="badge bg-warning text-dark">Tidak melakukan investasi</span>';
+                default:
+                    return '<span class="badge bg-secondary">Belum Masuk Halaman</span>';
+            }
+        }
 
-function getBadge(status){
+        function getAllocations(){
+            const allocations = {};
 
-    switch(status){
+            document.querySelectorAll(".allocation-input").forEach(function(input){
+                allocations[input.name] = Number(input.value) || 0;
+            });
 
-        case "Sudah Masuk Halaman":
-            return '<span class="badge bg-primary">Sudah Masuk Halaman</span>';
+            return allocations;
+        }
 
-        case "Sedang Mengalokasikan Dana":
-            return '<span class="badge bg-success">Sedang Mengalokasikan Dana</span>';
-
-        case "Player telah mengalokasikan dana":
-            return '<span class="badge bg-success">Player telah mengalokasikan dana</span>';
-
-        case "Player tidak mengalokasikan dana":
-            return '<span class="badge bg-warning text-dark">Player tidak mengalokasikan dana</span>';
-
-        default:
-            return '<span class="badge bg-secondary">Belum Masuk Halaman</span>';
-
-    }
-
-}
-
-function getAllocations(){
-
-    const allocations = {};
-
-    document.querySelectorAll(".allocation-input").forEach(function(input){
-
-        allocations[input.name] = Number(input.value) || 0;
-
-    });
-
-    return allocations;
-
-}
-
-document.addEventListener("DOMContentLoaded", function(){
-
-    liveSend({
-        action: "page_loaded"
-    });
-
-});
-
-document.querySelectorAll(".allocation-input").forEach(function(input){
-
-    input.addEventListener("input", function(){
-
-        liveSend({
-
-            action: "allocation_changed",
-
-            allocations: getAllocations()
+        document.addEventListener("DOMContentLoaded", function(){
+            liveSend({
+                action: "page_loaded"
+            });
 
         });
 
-    });
+        document.querySelectorAll(".allocation-input").forEach(function(input){
+            input.addEventListener("input", function(){
 
-});
+                liveSend({
+                    action: "allocation_changed",
+                    allocations: getAllocations()
+                });
+            });
+        });
 
-form.addEventListener("submit", function(e){
+        form.addEventListener("submit", function(e){
+            e.preventDefault();
 
-    e.preventDefault();
+            liveSend({
+                action: "submit",
+                allocations: getAllocations()
+            });
 
-    liveSend({
+            setTimeout(function(){
+                form.submit();
+            }, 100);
 
-        action: "submit",
+        });
 
-        allocations: getAllocations()
+        liveRecv = function(data){
+            if(!data.players){
+                return;
+            }
 
-    });
+            let html="";
+            data.players.forEach(function(p){
+                html += `
+                    <tr>
+                        <td>
+                            Player ${p.id}
+                            ${
+                                p.id===myPlayerId
+                                ? '<span class="badge bg-primary ms-2">Anda</span>'
+                                : ''
+                            }
+                        </td>
+                        <td>
+                            ${getBadge(p.status)}
+                        </td>
+                    </tr>
+                `;
+            });
 
-    setTimeout(function(){
-
-        form.submit();
-
-    },200);
-
-});
-
-liveRecv = function(data){
-
-    if(!data.players){
-        return;
-    }
-
-    let html="";
-
-    data.players.forEach(function(p){
-
-        html += `
-            <tr>
-
-                <td>
-
-                    Player ${p.id}
-
-                    ${
-                        p.id===myPlayerId
-                        ? '<span class="badge bg-primary ms-2">Anda</span>'
-                        : ''
-                    }
-
-                </td>
-
-                <td>
-
-                    ${getBadge(p.status)}
-
-                </td>
-
-            </tr>
-        `;
-
-    });
-
-    document.getElementById("realtime-table").innerHTML = html;
-
-};
-
-</script>
+            document.getElementById("realtime-table").innerHTML = html;
+        };
+    </script>
 {% endblock %}

@@ -10,8 +10,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="card mb-3">
+    <div class="container mb-3">
+        <div class="card">
             <div class="card-header">
                 <h4 class="m-0">Informasi Pendapatan</h4>
             </div>
@@ -50,7 +50,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-9">
+        <div class="col-8">
             <div class="card">
                 <div class="card-header">
                     <span class="badge bg-success fs-6 me-2">
@@ -60,7 +60,7 @@
                         Uang Anda saat ini: {% player.uang_sesudah_tambah_bansos %}
                     </span>
                     <span class="badge bg-primary fs-6">
-                        Anda adalah Player [id_player]
+                        Anda adalah Player {% my_id %}
                     </span>
                 </div>
                 <div class="card-body">
@@ -126,7 +126,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-4">
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0">Informasi Realtime Peserta</h5>
@@ -156,9 +156,9 @@
                 case "Sedang Mengalokasikan Dana":
                     return '<span class="badge bg-success">Sedang Mengalokasikan Dana</span>';
                 case "Player telah mengalokasikan dana":
-                    return '<span class="badge bg-success">Player telah mengalokasikan dana</span>';
+                    return '<span class="badge bg-success">Telah melakukan investasi</span>';
                 case "Player tidak mengalokasikan dana":
-                    return '<span class="badge bg-warning text-dark">Player tidak mengalokasikan dana</span>';
+                    return '<span class="badge bg-warning text-dark">Tidak melakukan investasi</span>';
                 default:
                     return '<span class="badge bg-secondary">Belum Masuk Halaman</span>';
             }
