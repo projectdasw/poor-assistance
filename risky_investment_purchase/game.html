@@ -5,8 +5,13 @@
     <title>Risky Investment Purchase - Ronde {% player.round_number %}</title>
 {% endblock %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'global/style.css' %}">
+{% endblock %}
+
 {% block content %}
-    <div class="card mb-3">
+    <div class="container">
+        <div class="card mb-3">
         <div class="card-header">
             <h4 class="m-0">Informasi Pendapatan</h4>
         </div>
@@ -43,73 +48,184 @@
             </table>
         </div>
     </div>
-    <div class="card">
-        <div class="card-header">
-            <span class="badge bg-success fs-6 me-2">
-                Ronde: {% player.round_number %}
-            </span>
-            <span class="badge bg-danger fs-6 me-2">
-                Uang Anda saat ini: {% player.uang_sesudah_tambah_bansos %}
-            </span>
-            <span class="badge bg-primary fs-6">
-                Anda adalah Player [id_player]
-            </span>
-        </div>
-        <div class="card-body">
-            <div class="card-text">
-                <div class="p-0">
-                    <h2>Risky Investment Purchase</h2>
-                    <hr>
-                    <p class="m-0">
-                        <div class="alert alert-success" role="alert">
-                            Silahkan pilih opsi yang Anda inginkan, dan dapatkan keuntungannya.
-                            <br>
-                            <strong>Tidak tertarik berinvestasi pada ronde ini?</strong>
-                            Silahkan klik tombol <strong>"Submit"</strong> tanpa memilih opsi yang tersedia.
-                        </div>
-                    </p>
+    </div>
+    <div class="row">
+        <div class="col-9">
+            <div class="card">
+                <div class="card-header">
+                    <span class="badge bg-success fs-6 me-2">
+                        Ronde: {% player.round_number %}
+                    </span>
+                    <span class="badge bg-danger fs-6 me-2">
+                        Uang Anda saat ini: {% player.uang_sesudah_tambah_bansos %}
+                    </span>
+                    <span class="badge bg-primary fs-6">
+                        Anda adalah Player {% my_id %}
+                    </span>
                 </div>
-                <div class="mt-4">
-                    <form method="post">
-                        <div class="row row-cols-1 row-cols-md-3 g-2">
-                            {% for option in random_options %}
-                                <div class="col">
-                                    <div class="card h-100">
-                                        <div class="card-header">
-                                            <div class="form-check fs-4">
-                                                <input class="form-check-input" type="checkbox"
-                                                   name="opsi_{% forloop.counter %}" value="{% option.name %}">
-                                                <label class="form-check-label" for="{% option.name %}">
-                                                    Opsi {% forloop.counter %}
-                                                </label>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="p-0">
+                            <h2>Risky Investment Purchase</h2>
+                            <hr>
+                            <p class="m-0">
+                                <div class="alert alert-success" role="alert">
+                                    Silahkan pilih opsi yang Anda inginkan, dan dapatkan keuntungannya.
+                                    <br>
+                                    <strong>Tidak tertarik berinvestasi pada ronde ini?</strong>
+                                    Silahkan klik tombol <strong>"Submit"</strong> tanpa memilih opsi yang tersedia.
+                                </div>
+                            </p>
+                        </div>
+                        <div class="mt-4">
+                            <form method="post">
+                                <div class="row row-cols-1 row-cols-md-3 g-2">
+                                    {% for option in random_options %}
+                                        <div class="col">
+                                            <div class="card h-100">
+                                                <div class="card-header">
+                                                    <div class="form-check fs-4">
+                                                        <input class="form-check-input investment-option" type="checkbox"
+                                                           name="opsi_{% forloop.counter %}" value="{% option.name %}">
+                                                        <label class="form-check-label" for="{% option.name %}">
+                                                            Opsi {% forloop.counter %}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul class="list-group list-group-flush">
+                                                        {% for outcome in option.formatted_outcomes %}
+                                                            <li class="list-group-item">{% outcome %}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <span class="badge bg-danger fs-6">
+                                                        Harga Opsi : {% Constants.cost_per_option %}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="card-body">
-                                            <ul class="list-group list-group-flush">
-                                                {% for outcome in option.formatted_outcomes %}
-                                                    <li class="list-group-item">{% outcome %}</li>
-                                                {% endfor %}
-                                            </ul>
-                                        </div>
-                                        <div class="card-footer">
-                                            <span class="badge bg-danger fs-6">
-                                                Harga Opsi : {% Constants.cost_per_option %}
-                                            </span>
-                                        </div>
-                                    </div>
+                                    {% endfor %}
                                 </div>
-                            {% endfor %}
+                            </form>
                         </div>
-                    </form>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button id="submit-btn" type="submit" class="btn btn-outline-success">
+                        <i class="fa-solid fa-money-bill-trend-up"></i>
+                        <span>Submit</span>
+                    </button>
                 </div>
             </div>
-
         </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-outline-success">
-                <i class="fa-solid fa-money-bill-trend-up"></i>
-                <span>Submit</span>
-            </button>
+        <div class="col-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Informasi Realtime Peserta</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered m-0">
+                        <thead>
+                            <tr>
+                                <th>List Peserta</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="realtime-table"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        const myPlayerId = {% my_id %};
+        const form = document.querySelector("form");
+        function getBadge(status){
+            switch(status){
+                case "Sudah Masuk Halaman":
+                    return '<span class="badge bg-primary">Sudah Masuk Halaman</span>';
+                case "Sedang Berinvestasi":
+                    return '<span class="badge bg-success">Sedang Berinvestasi</span>';
+                case "Player telah berinvestasi":
+                    return '<span class="badge bg-success">Player telah berinvestasi</span>';
+                case "Player tidak berinvestasi":
+                    return '<span class="badge bg-warning text-dark">Player tidak berinvestasi</span>';
+                default:
+                    return '<span class="badge bg-secondary">Belum Masuk Halaman</span>';
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function(){
+            liveSend({
+                action: "page_loaded"
+            });
+        });
+
+        document.querySelectorAll(".investment-option").forEach(function(item){
+            item.addEventListener("change", function(){
+                const selected = [];
+                document.querySelectorAll(".investment-option:checked")
+                    .forEach(function(cb){
+                        selected.push(cb.value);
+                    });
+
+                liveSend({
+                    action: "option_changed",
+                    selected: selected
+                });
+            });
+        });
+
+        document.getElementById("submit-btn").addEventListener("click", function(){
+            liveSend({
+                action: "submit"
+            });
+        });
+
+        form.addEventListener("submit", function(e){
+            e.preventDefault();
+            const selected = [];
+
+            document.querySelectorAll(".investment-option:checked").forEach(function(cb){
+                selected.push(cb.value);
+            });
+
+            liveSend({
+                action: "submit",
+                selected: selected
+            });
+
+            setTimeout(() => {
+                form.submit();
+            }, 100);
+        });
+
+        liveRecv = function(data){
+            if(!data.players){
+                return;
+            }
+
+            let html = "";
+            data.players.forEach(function(p){
+                html += `
+                    <tr>
+                        <td>
+                            Player ${p.id}
+                            ${
+                                p.id === myPlayerId
+                                ? '<span class="badge bg-primary ms-2">Anda</span>'
+                                : ''
+                            }
+                        </td>
+                        <td>${getBadge(p.status)}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("realtime-table").innerHTML = html;
+        }
+    </script>
 {% endblock %}
