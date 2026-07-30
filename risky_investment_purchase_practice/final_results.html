@@ -1,0 +1,90 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    <title>Sesi Latihan - Hasil Akhir Risky Investment Purchase</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="alert alert-warning" role="alert">
+            <h3 class="m-0 text-center">Sesi Latihan Eksperimen</h3>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="alert p-0 mb-0" role="alert">
+                    <h3 class="alert-heading">Hasil Akhir Latihan Risky Investment Purchase</h3>
+                    <p>
+                        Selamat Anda telah menyelesaikan sesi latihan <strong>Risky Investment Purchase</strong>.
+                        Selanjutnya Anda akan memasuki sesi latihan berikutnya, yaitu
+                        <strong>Risky Investment Allocation</strong>. Berikut di bawah ini hasil keseluruhan ronde sesi
+                        latihan Risky Investment Purchase:
+                    </p>
+                    <hr>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Sesi Ronde</th>
+                                <th scope="col">Profit</th>
+                                <th scope="col">Biaya Opsi</th>
+                                <th scope="col">Bantuan</th>
+                                <th scope="col">Beban Konsumsi</th>
+                                <th scope="col">Sisa Uang Akhir Ronde</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in results_risky_purchase %}
+                            <tr>
+                                <td>Ronde Latihan {% item.round_number_risky_purchase %}</td>
+                                <td class="fw-bold">
+                                    {% if item.profit_risky_purchase != 0 %}
+                                        <span class="text-success">+{% item.profit_risky_purchase %}</span>
+                                    {% else %}
+                                        {% item.profit_risky_purchase %}
+                                    {% endif %}
+                                </td>
+                                <td class="fw-bold">
+                                    {% if item.cost_risky_purchase != 0 %}
+                                        <span class="text-danger">-{% item.cost_risky_purchase %}</span>
+                                    {% else %}
+                                        {% item.cost_risky_purchase %}
+                                    {% endif %}
+                                </td>
+                                <td class="fw-bold">
+                                    <span class="text-success">+{% item.additional_risky_purchase %}</span>
+                                </td>
+                                <td class="fw-bold">
+                                    <span class="text-danger">-{% item.consumption_risky_purchase %}</span>
+                                </td>
+                                <td class="fw-bold">
+                                    {% if item.endowment_risky_purchase < 0 %}
+                                        <span class="text-danger">{% item.endowment_risky_purchase %}</span>
+                                    {% elif item.endowment_risky_purchase >= 0 %}
+                                        {% item.endowment_risky_purchase %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Total Akhir</th>
+                                <th>{% player.total_akhir_profit %}</th>
+                                <th>{% player.total_akhir_beli_opsi %}</th>
+                                <th>{% player.total_akhir_bantuan_sosial %}</th>
+                                <th>{% player.total_akhir_beban_konsumsi %}</th>
+                                <th>{% player.total_akhir_uang %}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="otree-btn-next btn btn-outline-primary">
+                    <span>Lanjut menuju sesi latihan selanjutnya</span>
+                    <i class="fa-solid fa-circle-arrow-right ms-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

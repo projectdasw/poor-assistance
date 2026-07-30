@@ -2,14 +2,14 @@
 {% load otree static %}
 
 {% block title %}
-    <title>Risky Investment Allocation</title>
+    <title>Sesi Latihan - Real Effort Decoding</title>
 {% endblock %}
 
 {% block content %}
     <div class="container">
-        <div class="alert alert-success" role="alert">
-            <h4 class="m-0 text-center">Anda memasuki Sesi Investasi Berisiko</h4>
-            <h3 class="m-0 text-center">Risky Investment Allocation</h3>
+        <div class="alert alert-warning" role="alert">
+            <h4 class="m-0 text-center">Anda memasuki Sesi Latihan Eksperimen</h4>
+            <h3 class="m-0 text-center">Real Effort - Decoding</h3>
         </div>
         <div class="card">
             <div class="card-header">
@@ -32,11 +32,15 @@
                                         {% player.uang_sebelum_tambah_bansos %}
                                     {% endif %}
                                 </td>
-                                <td class="fw-bold">
-                                    <span class="text-success">+{% player.bantuan_sosial %}</span>
+                                <td>
+                                    <strong class="text-success">
+                                        +{% player.bantuan_sosial %}
+                                    </strong>
                                 </td>
-                                <td class="fw-bold">
-                                    <span class="text-danger">{% player.beban_konsumsi %}</span>
+                                <td>
+                                    <strong class="text-danger">
+                                        {% player.beban_konsumsi %}
+                                    </strong>
                                 </td>
                             </tr>
                         </tbody>
