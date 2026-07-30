@@ -91,4 +91,41 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function submitGuess() {
+            const guess = document.getElementById("countGuess").value;
+            liveSend({ count_guess: guess }); // Kirim jawaban
+        }
+
+        liveRecv = function(data) {
+            // Update skor dan target karakter baru
+            if (data.new_score !== undefined) {
+                document.getElementById("playerScore").textContent = data.new_score;
+            }
+            if (data.new_target_character) {
+                document.getElementById("targetCharacter").textContent = data.new_target_character;
+            }
+
+            // Update papan baru
+            if (data.new_board) {
+                const boardContainer = document.getElementById("boardContainer");
+                boardContainer.innerHTML = ""; // Bersihkan papan lama
+
+                // Generate papan baru
+                data.new_board.forEach(row => {
+                    const rowDiv = document.createElement("div");
+                    row.forEach(char => {
+                        const cell = document.createElement("span");
+                        cell.textContent = char;
+                        cell.className = "board-cell";
+                        rowDiv.appendChild(cell);
+                    });
+                    boardContainer.appendChild(rowDiv);
+                });
+            }
+
+            document.getElementById("countGuess").value = ""; // Reset input setelah submit
+        };
+    </script>
 {% endblock %}

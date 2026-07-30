@@ -107,7 +107,7 @@ def live_game(player: Player, data):
     #     player.realtime_status = "Telah menyelesaikan Decoding"
     #     return broadcast_status(player)
 
-    elif action == "submit_guess":
+    elif 'count_guess' in data:
         guess = int(data["count_guess"])
 
         if guess == player.actual_count:
@@ -192,9 +192,9 @@ class game(Page):
         return player.beli_waktu > 0
 
     # Menggunakan waktu yang dibeli oleh pemain
-    @staticmethod
-    def get_timeout_seconds(player: Player):
-        return (player.beli_waktu // Constants.price_time) * 20
+    # @staticmethod
+    # def get_timeout_seconds(player: Player):
+    #     return (player.beli_waktu // Constants.price_time) * 20
 
     @staticmethod
     def vars_for_template(player: Player):
