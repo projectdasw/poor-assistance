@@ -192,9 +192,9 @@ class game(Page):
         return player.beli_waktu > 0
 
     # Menggunakan waktu yang dibeli oleh pemain
-    # @staticmethod
-    # def get_timeout_seconds(player: Player):
-    #     return (player.beli_waktu // Constants.price_time) * 20
+    @staticmethod
+    def get_timeout_seconds(player: Player):
+        return (player.beli_waktu // Constants.price_time) * 20
 
     @staticmethod
     def vars_for_template(player: Player):
