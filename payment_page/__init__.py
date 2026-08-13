@@ -25,10 +25,6 @@ class Player(BasePlayer):
     pembayaran_akhir = models.CurrencyField(initial=0)
     sesi_terpilih = models.StringField()
     pembayaran_terpilih = models.CurrencyField(initial=0)
-    # total_endowment_risky_purchase = models.CurrencyField()
-    # total_endowment_risky_allocation = models.CurrencyField()
-    # total_endowment_cognitive_task = models.CurrencyField()
-    # total_endowment_panel_allocation = models.CurrencyField()
 
 
 # PAGES
@@ -37,25 +33,58 @@ class info_sesi(Page):
     def vars_for_template(player):
         participant = player.participant
 
-        # risky_purchase = participant.vars["summary_risky_purchase"]
-        # risky_allocation = participant.vars["summary_risky_allocation"]
-        # cognitive_task = participant.vars["summary_cognitive_task"]
-        # panel_allocation = participant.vars["summary_panel_allocation"]
+        # Hasil setiap ronde
+        risky_purchase = participant.vars.get("results_risky_purchase", [])
+        risky_allocation = participant.vars.get("results_risky_allocation", [])
+        cognitive_task = participant.vars.get("results_cognitive_task", [])
+        panel_allocation = participant.vars.get("results_panel_allocation", [])
 
-        # player.total_endowment_risky_purchase = risky_purchase["endowment"]
-        # player.total_endowment_risky_allocation = risky_allocation["endowment"]
-        # player.total_endowment_cognitive_task = cognitive_task["endowment"]
-        # player.total_endowment_panel_allocation = panel_allocation["endowment"]
+        # Ringkasan akhir masing-masing app
+        risky_purchase_summary = participant.vars.get(
+            "summary_risky_purchase", {}
+        )
+        risky_allocation_summary = participant.vars.get(
+            "summary_risky_allocation", {}
+        )
+        cognitive_task_summary = participant.vars.get(
+            "summary_cognitive_task", {}
+        )
+        panel_allocation_summary = participant.vars.get(
+            "summary_panel_allocation", {}
+        )
 
         return dict(
-            risky_purchase=participant.vars.get("results_risky_purchase", []),
-            risky_purchase_summary=participant.vars.get("summary_risky_purchase", {}),
-            risky_allocation=participant.vars.get("results_risky_allocation", []),
-            risky_allocation_summary=participant.vars.get("summary_risky_allocation", {}),
-            cognitive_task=participant.vars.get("results_cognitive_task", []),
-            cognitive_task_summary=participant.vars.get("summary_cognitive_task", {}),
-            panel_allocation=participant.vars.get("results_panel_allocation", []),
-            panel_allocation_summary=participant.vars.get("summary_panel_allocation", {}),
+            # Hasil setiap ronde
+            risky_purchase=risky_purchase,
+            risky_allocation=risky_allocation,
+            cognitive_task=cognitive_task,
+            panel_allocation=panel_allocation,
+
+            # Jumlah ronde
+            risky_purchase_rounds=len(risky_purchase),
+            risky_allocation_rounds=len(risky_allocation),
+            cognitive_task_rounds=len(cognitive_task),
+            panel_allocation_rounds=len(panel_allocation),
+
+            # Summary
+            risky_purchase_summary=risky_purchase_summary,
+            risky_allocation_summary=risky_allocation_summary,
+            cognitive_task_summary=cognitive_task_summary,
+            panel_allocation_summary=panel_allocation_summary,
+
+            # Payment selected
+            risky_purchase_payment_selected=risky_purchase_summary.get(
+                "payment_selected", False
+            ),
+            risky_allocation_payment_selected=risky_allocation_summary.get(
+                "payment_selected", False
+            ),
+            cognitive_task_payment_selected=cognitive_task_summary.get(
+                "payment_selected", False
+            ),
+            panel_allocation_payment_selected=panel_allocation_summary.get(
+                "payment_selected", False
+            ),
         )
 
     @staticmethod

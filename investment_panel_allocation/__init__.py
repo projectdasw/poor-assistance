@@ -9,7 +9,7 @@ Investment Panel Allocation
 class Constants(BaseConstants):
     name_in_url = 'investment_panel_allocation'
     players_per_group = None
-    num_rounds = 2
+    num_rounds = 10
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -258,6 +258,7 @@ class single_results(Page):
 
         player.participant.vars.setdefault("results_panel_allocation", []).append({
             "round_number_panel_allocation": player.round_number,
+            "endowment_round": player.uang_sesudah_tambah_bansos,
             "profit_panel_allocation": player.total_profit_return,
             "cost_panel_allocation": player.total_alokasi_opsi,
             "endowment_panel_allocation": player.payoff,
@@ -282,6 +283,7 @@ class final_results(Page):
             if participant.vars.get("end_game", False)
             else player.round_number
         )
+        final_payment = player.in_round(player.round_number).payoff
 
         player.total_akhir_profit_return = sum(item["profit_panel_allocation"] for item in results_panel_allocation)
         player.total_akhir_alokasi_opsi = sum(item["cost_panel_allocation"] for item in results_panel_allocation)
@@ -307,6 +309,7 @@ class final_results(Page):
         return dict(
             results_panel_allocation=results_panel_allocation,
             last_round_panel_allocation=last_round_panel_allocation,
+            final_payment=final_payment,
         )
 
 

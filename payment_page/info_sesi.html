@@ -7,13 +7,16 @@
 
 {% block content %}
     <div class="card">
+        <div class="card-header">
+            <h3 class="card-title m-0">Informasi Pembayaran</h3>
+        </div>
         <div class="card-body">
-            <h1 class="card-title">Informasi Sesi Eksperimen</h1>
             <p>
-                Anda telah melakukan seluruh rangkaian eksperimen. Anda akan mendapatkan pambayaran yang dimana
-                pembayaran tersebut diambil dari salah satu sesi investasi. Pembayaran akan diberikan kepada Anda
-                tergantung besaran jumlah yang Anda dapatkan pada sesi investasi tersebut. Berikut di bawah ini
-                hasil sesi investasi yang telah Anda lakukan dan profit/keuntungan yang telah Anda dapatkan:
+                Anda telah melakukan seluruh rangkaian eksperimen. Anda akan mendapatkan pembayaran yang dimana
+                pembayaran tersebut diambil dari salah satu sesi eksperimen. Pembayaran akan diberikan kepada Anda
+                tergantung besaran jumlah <strong>Sisa Uang Akhir</strong> pada <strong>ronde terakhir dari
+                masing-masing sesi eksperimen</strong>. Berikut di bawah ini hasil keseluruhan sesi eksperimen yang
+                telah Anda lakukan dan profit/keuntungan yang telah Anda dapatkan:
             </p>
             <div class="card mb-3">
                 <div class="card-header">
@@ -24,6 +27,7 @@
                         <thead>
                             <tr>
                                 <th>Sesi Ronde</th>
+                                <th>Uang Ronde</th>
                                 <th>Profit/Keuntungan</th>
                                 <th>Biaya Beli Opsi</th>
                                 <th>Bantuan</th>
@@ -35,6 +39,7 @@
                             {% for row in risky_purchase %}
                                 <tr>
                                     <td>Ronde {% row.round_number_risky_purchase %}</td>
+                                    <td class="fw-bold">{% row.endowment_round %}</td>
                                     <td class="fw-bold">
                                         {% if row.profit_risky_purchase != 0 %}
                                             <span class="text-success">+{% row.profit_risky_purchase %}</span>
@@ -69,41 +74,12 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <td class="fw-bold">Total</td>
-                                <td class="fw-bold">
-                                    {% if risky_purchase_summary.profit != 0 %}
-                                        <span class="fw-bold">+{% risky_purchase_summary.profit %}</span>
-                                    {% else %}
-                                        {% risky_purchase_summary.profit %}
-                                    {% endif %}
-                                </td>
-                                <td class="fw-bold">
-                                    {% if risky_purchase_summary.cost != 0 %}
-                                        <span class="text-danger">-{% risky_purchase_summary.cost %}</span>
-                                    {% else %}
-                                        {% risky_purchase_summary.profit %}
-                                    {% endif %}
-                                </td>
-                                <td class="fw-bold">
-                                    <span class="text-success">+{% risky_purchase_summary.additional %}</span>
-                                </td>
-                                <td class="fw-bold">
-                                    <span class="text-danger">-{% risky_purchase_summary.consumption %}</span>
-                                </td>
-                                <td class="fw-bold">
-                                    {% if risky_purchase_summary.endowment < 0 %}
-                                        <span class="text-danger">{% risky_purchase_summary.endowment %}</span>
-                                    {% elif risky_purchase_summary.endowment >= 0 %}
-                                        {% risky_purchase_summary.endowment %}
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        </tfoot>
                     </table>
-                    <div class="alert alert-primary m-0" role="alert">
-                        Uang yang Anda peroleh adalah dari perhitungan di Total Akhir
+                    <div class="alert bg-primary text-light m-0" role="alert">
+                        <h5 class="m-0">
+                            Pembayaran yang terpilih pada sesi Risky Investment Purchase adalah
+                            {% risky_purchase_payment_selected %} (Ronde {% risky_purchase_rounds %})
+                        </h5>
                     </div>
                 </div>
             </div>
@@ -116,6 +92,7 @@
                         <thead>
                             <tr>
                                 <th>Sesi Ronde</th>
+                                <th>Uang Ronde</th>
                                 <th>Profit/Keuntungan</th>
                                 <th>Biaya Alokasi Opsi</th>
                                 <th>Bantuan</th>
@@ -127,6 +104,7 @@
                             {% for row in risky_allocation %}
                                 <tr>
                                     <td>Ronde {% row.round_number_risky_allocation %}</td>
+                                    <td class="fw-bold">{% row.endowment_round %}</td>
                                     <td class="fw-bold">
                                         {% if row.profit_risky_allocation != 0 %}
                                             <span class="text-success">+{% row.profit_risky_allocation %}</span>
@@ -161,41 +139,12 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <td class="fw-bold">Total</td>
-                                <td class="fw-bold">
-                                    {% if risky_allocation_summary.profit != 0 %}
-                                        <span class="fw-bold">+{% risky_allocation_summary.profit %}</span>
-                                    {% else %}
-                                        {% risky_allocation_summary.profit %}
-                                    {% endif %}
-                                </td>
-                                <td class="fw-bold">
-                                    {% if risky_allocation_summary.cost != 0 %}
-                                        <span class="text-danger">-{% risky_allocation_summary.cost %}</span>
-                                    {% else %}
-                                        {% risky_allocation_summary.profit %}
-                                    {% endif %}
-                                </td>
-                                <td class="fw-bold">
-                                    <span class="text-success">+{% risky_allocation_summary.additional %}</span>
-                                </td>
-                                <td class="fw-bold">
-                                    <span class="text-danger">-{% risky_allocation_summary.consumption %}</span>
-                                </td>
-                                <td class="fw-bold">
-                                    {% if risky_allocation_summary.endowment < 0 %}
-                                        <span class="text-danger">{% risky_allocation_summary.endowment %}</span>
-                                    {% elif risky_allocation_summary.endowment >= 0 %}
-                                        {% risky_allocation_summary.endowment %}
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        </tfoot>
                     </table>
-                    <div class="alert alert-primary m-0" role="alert">
-                        Uang yang Anda peroleh adalah dari perhitungan di Total Akhir
+                    <div class="alert bg-primary text-light m-0" role="alert">
+                        <h5 class="m-0">
+                            Pembayaran yang terpilih pada sesi Risky Investment Allocation adalah
+                            {% risky_allocation_payment_selected %} (Ronde {% risky_allocation_rounds %})
+                        </h5>
                     </div>
                 </div>
             </div>
@@ -208,6 +157,7 @@
                         <thead>
                             <tr>
                                 <th>Sesi Ronde</th>
+                                <th>Uang Ronde</th>
                                 <th>Skor</th>
                                 <th>Biaya Beli Waktu</th>
                                 <th>Bantuan</th>
@@ -219,6 +169,7 @@
                             {% for row in cognitive_task %}
                                 <tr>
                                     <td>Ronde {% row.round_number_cognitive %}</td>
+                                    <td class="fw-bold">{% row.endowment_round %}</td>
                                     <td class="fw-bold">
                                         {% if row.score_cognitive != 0 %}
                                             <span class="text-success">+{% row.score_cognitive %}</span>
@@ -253,41 +204,12 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <td class="fw-bold">Total</td>
-                                <td class="fw-bold">
-                                    {% if cognitive_task_summary.profit != 0 %}
-                                        <span class="fw-bold">+{% cognitive_task_summary.profit %}</span>
-                                    {% else %}
-                                        {% cognitive_task_summary.profit %}
-                                    {% endif %}
-                                </td>
-                                <td class="fw-bold">
-                                    {% if cognitive_task_summary.cost != 0 %}
-                                        <span class="text-danger">-{% cognitive_task_summary.cost %}</span>
-                                    {% else %}
-                                        {% cognitive_task_summary.profit %}
-                                    {% endif %}
-                                </td>
-                                <td class="fw-bold">
-                                    <span class="text-success">+{% cognitive_task_summary.additional %}</span>
-                                </td>
-                                <td class="fw-bold">
-                                    <span class="text-danger">-{% cognitive_task_summary.consumption %}</span>
-                                </td>
-                                <td class="fw-bold">
-                                    {% if cognitive_task_summary.endowment < 0 %}
-                                        <span class="text-danger">{% cognitive_task_summary.endowment %}</span>
-                                    {% elif cognitive_task_summary.endowment >= 0 %}
-                                        {% cognitive_task_summary.endowment %}
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        </tfoot>
                     </table>
-                    <div class="alert alert-primary m-0" role="alert">
-                        Uang yang Anda peroleh adalah dari perhitungan di Total Akhir
+                    <div class="alert bg-primary text-light m-0" role="alert">
+                        <h5 class="m-0">
+                            Pembayaran yang terpilih pada sesi Real Effort - Decoding adalah
+                            {% cognitive_task_payment_selected %} (Ronde {% cognitive_task_rounds %})
+                        </h5>
                     </div>
                 </div>
             </div>
@@ -300,6 +222,7 @@
                         <thead>
                             <tr>
                                 <th>Sesi Ronde</th>
+                                <th>Uang Ronde</th>
                                 <th>Profit/Keuntungan</th>
                                 <th>Biaya Alokasi Opsi</th>
                                 <th>Bantuan</th>
@@ -307,9 +230,11 @@
                                 <th>Sisa Uang Akhir Ronde</th>
                             </tr>
                         </thead>
-                        {% for row in panel_allocation %}
+                        <tbody>
+                            {% for row in panel_allocation %}
                                 <tr>
                                     <td>Ronde {% row.round_number_panel_allocation %}</td>
+                                    <td class="fw-bold">{% row.endowment_round %}</td>
                                     <td class="fw-bold">
                                         {% if row.profit_panel_allocation != 0 %}
                                             <span class="text-success">+{% row.profit_panel_allocation %}</span>
@@ -344,41 +269,12 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <td class="fw-bold">Total</td>
-                                <td class="fw-bold">
-                                    {% if panel_allocation_summary.profit != 0 %}
-                                        <span class="fw-bold">+{% panel_allocation_summary.profit %}</span>
-                                    {% else %}
-                                        {% panel_allocation_summary.profit %}
-                                    {% endif %}
-                                </td>
-                                <td class="fw-bold">
-                                    {% if panel_allocation_summary.cost != 0 %}
-                                        <span class="text-danger">-{% panel_allocation_summary.cost %}</span>
-                                    {% else %}
-                                        {% panel_allocation_summary.profit %}
-                                    {% endif %}
-                                </td>
-                                <td class="fw-bold">
-                                    <span class="text-success">+{% panel_allocation_summary.additional %}</span>
-                                </td>
-                                <td class="fw-bold">
-                                    <span class="text-danger">-{% panel_allocation_summary.consumption %}</span>
-                                </td>
-                                <td class="fw-bold">
-                                    {% if panel_allocation_summary.endowment < 0 %}
-                                        <span class="text-danger">{% panel_allocation_summary.endowment %}</span>
-                                    {% elif panel_allocation_summary.endowment >= 0 %}
-                                        {% panel_allocation_summary.endowment %}
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        </tfoot>
                     </table>
-                    <div class="alert alert-primary m-0" role="alert">
-                        Uang yang Anda peroleh adalah dari perhitungan di Total Akhir
+                    <div class="alert bg-primary text-light m-0" role="alert">
+                        <h5 class="m-0">
+                            Pembayaran yang terpilih pada sesi Investment Panel Allocation adalah
+                            {% panel_allocation_payment_selected %} (Ronde {% panel_allocation_rounds %})
+                        </h5>
                     </div>
                 </div>
             </div>

@@ -22,7 +22,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">Sesi Ronde</th>
-                                <th scope="col">Uang Anda</th>
+                                <th scope="col">Uang Ronde</th>
                                 <th scope="col">Profit</th>
                                 <th scope="col">Alokasi Opsi</th>
                                 <th scope="col">Bantuan</th>
@@ -34,7 +34,7 @@
                             {% for item in results_risky_allocation %}
                                 <tr>
                                     <td>Ronde {% item.round_number_risky_allocation %}</td>
-                                    <td></td>
+                                    <td class="fw-bold">{% item.endowment_round %}</td>
                                     <td class="fw-bold">
                                         {% if item.profit_risky_allocation != 0 %}
                                             <span class="text-success">+{% item.profit_risky_allocation %}</span>
@@ -74,8 +74,8 @@
                         </p>
                         <hr>
                         <h5 class="m-0">
-                            Sisa Uang Akhir Ronde yang akan dihitung pada halaman pembayaran adalah [uang-akhir]
-                            (Ronde 10).
+                            Sisa Uang Akhir Ronde yang akan dihitung sebagai pembayaran adalah
+                            {% final_payment %} (Ronde {% player.round_number %})
                         </h5>
                     </div>
                 </div>

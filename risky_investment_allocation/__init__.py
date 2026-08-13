@@ -9,7 +9,7 @@ Risky Investment Allocation
 class Constants(BaseConstants):
     name_in_url = 'risky_investment_allocation'
     players_per_group = None
-    num_rounds = 2
+    num_rounds = 10
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -286,6 +286,7 @@ class single_results(Page):
 
         player.participant.vars.setdefault("results_risky_allocation", []).append({
             "round_number_risky_allocation": player.round_number,
+            "endowment_round": player.uang_sesudah_tambah_bansos,
             "profit_risky_allocation": player.total_profit,
             "cost_risky_allocation": player.total_alokasi_opsi,
             "endowment_risky_allocation": player.payoff,
@@ -331,6 +332,7 @@ class final_results(Page):
         return {
             "results_risky_allocation": results_risky_allocation,
             "last_round_risky_allocation": last_round_risky_allocation,
+            "final_payment": player.in_round(player.round_number).payoff,
         }
 
 

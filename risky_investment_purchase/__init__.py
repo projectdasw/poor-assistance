@@ -9,7 +9,7 @@ Risky Investment Purchase
 class Constants(BaseConstants):
     name_in_url = 'risky_investment_purchase'
     players_per_group = None
-    num_rounds = 2
+    num_rounds = 10
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -282,6 +282,7 @@ class single_results(Page):
         # Simpan hasil ronde
         player.participant.vars.setdefault("results_risky_purchase", []).append({
             "round_number_risky_purchase": player.round_number,
+            "endowment_round": player.uang_sesudah_tambah_bansos,
             "profit_risky_purchase": player.total_profit,
             "cost_risky_purchase": player.total_biaya_beli_opsi,
             "endowment_risky_purchase": player.payoff,
@@ -326,6 +327,7 @@ class final_results(Page):
         return {
             "results_risky_purchase": results_risky_purchase,
             "last_round_played_risky_purchase": last_round_risky_purchase,
+            "final_payment": player.in_round(player.round_number).payoff,
         }
 
 

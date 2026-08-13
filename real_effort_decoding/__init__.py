@@ -9,7 +9,7 @@ Real Effort Decoding
 class Constants(BaseConstants):
     name_in_url = 'real_effort_decoding'
     players_per_group = None
-    num_rounds = 2
+    num_rounds = 10
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -233,6 +233,7 @@ class single_results(Page):
 
         player.participant.vars['results_cognitive_task'].append({
             'round_number_cognitive': player.round_number,
+            "endowment_round": player.uang_sesudah_tambah_bansos,
             'score_cognitive': player.total_score,
             'time_cost_cognitive': player.beli_waktu,
             'endowment_cognitive': player.payoff,
@@ -277,6 +278,7 @@ class final_results(Page):
         return {
             "results_cognitive_task": results_cognitive_task,
             "last_round_cognitive": last_round_cognitive,
+            "final_payment": player.in_round(player.round_number).payoff,
         }
 
 

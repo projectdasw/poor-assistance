@@ -1,16 +1,16 @@
-{% extends "global/Page.html" %}
+{% extends "global/experiment_page.html" %}
 {% load otree static %}
 
 {% block title %}
     <title>Durasi Waktu - Real Effort Decoding - Ronde {% player.round_number %}</title>
 {% endblock %}
 
-{% block styles %}
-    <link rel="stylesheet" href="{% static 'global/style.css' %}">
-{% endblock %}
-
 {% block content %}
     <div class="container mb-3">
+        <div class="alert alert-success" role="alert">
+            <h4 class="m-0 text-center">Anda sedang berada pada sesi eksperimen</h4>
+            <h3 class="m-0 text-center">Real Effort - Decoding</h3>
+        </div>
         <div class="card">
             <div class="card-header">
                 <h4 class="m-0">Informasi Pendapatan</h4>
