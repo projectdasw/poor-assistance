@@ -9,7 +9,7 @@ Risky Investment Allocation
 class Constants(BaseConstants):
     name_in_url = 'risky_investment_allocation'
     players_per_group = None
-    num_rounds = 10
+    num_rounds = 2
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -240,8 +240,7 @@ class game(Page):
                     setattr(player, f"hasil_opsi_{i}", outcome)
                     break
 
-        player.total_profit = sum(
-            getattr(player, f"alokasi_opsi_{i}") *
+        player.total_profit = sum(getattr(player, f"alokasi_opsi_{i}") *
             getattr(player, f"hasil_opsi_{i}")
             for i in range(1, 6)
         )
@@ -326,6 +325,7 @@ class final_results(Page):
             "additional": player.total_akhir_bantuan_sosial,
             "consumption": player.total_akhir_beban_konsumsi,
             "endowment": player.total_akhir_uang,
+            "payment_selected": player.in_round(player.round_number).payoff,
         }
 
         return {

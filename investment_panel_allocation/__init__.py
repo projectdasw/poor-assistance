@@ -9,7 +9,7 @@ Investment Panel Allocation
 class Constants(BaseConstants):
     name_in_url = 'investment_panel_allocation'
     players_per_group = None
-    num_rounds = 10
+    num_rounds = 2
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -115,21 +115,13 @@ def broadcast_status(player):
     }
 
 def live_update(player, data):
-
     action = data.get("action")
-
     if action == "page_loaded":
-
         player.realtime_status = "Sudah Masuk Halaman"
-
         return broadcast_status(player)
-
     elif action == "allocation_changed":
-
         allocations = data.get("allocations", {})
-
         total = sum(allocations.values())
-
         if total > 0:
             player.realtime_status = "Sedang Mengalokasikan Dana"
         else:
@@ -138,9 +130,7 @@ def live_update(player, data):
         return broadcast_status(player)
 
     elif action == "submit":
-
         allocations = data.get("allocations", {})
-
         total = sum(allocations.values())
 
         if total > 0:
@@ -311,6 +301,7 @@ class final_results(Page):
             "additional": player.total_akhir_bantuan_sosial,
             "consumption": player.total_akhir_beban_konsumsi,
             "endowment": player.total_akhir_uang,
+            "payment_selected": player.in_round(player.round_number).payoff,
         }
 
         return dict(

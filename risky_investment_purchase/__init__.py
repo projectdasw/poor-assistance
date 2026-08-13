@@ -9,7 +9,7 @@ Risky Investment Purchase
 class Constants(BaseConstants):
     name_in_url = 'risky_investment_purchase'
     players_per_group = None
-    num_rounds = 3
+    num_rounds = 2
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -300,6 +300,7 @@ class final_results(Page):
         participant = player.participant
         results_risky_purchase = participant.vars.get("results_risky_purchase", [])
 
+
         last_round_risky_purchase = (
             participant.vars.get("last_round_played_risky_purchase", 1)
             if participant.vars.get("end_game", False)
@@ -319,6 +320,7 @@ class final_results(Page):
             "additional": player.total_akhir_bantuan_sosial,
             "consumption": player.total_akhir_beban_konsumsi,
             "endowment": player.total_akhir_uang,
+            "payment_selected": player.in_round(player.round_number).payoff,
         }
 
         return {

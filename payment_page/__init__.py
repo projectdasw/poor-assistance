@@ -71,7 +71,7 @@ class info_sesi(Page):
 
         selected_app, summary = random.choice(apps)
         player.sesi_terpilih = selected_app
-        player.pembayaran_terpilih = summary["endowment"]
+        player.pembayaran_terpilih = summary["payment_selected"]
         player.pembayaran_akhir = (player.pembayaran_terpilih * 100) + 10000
 
 
