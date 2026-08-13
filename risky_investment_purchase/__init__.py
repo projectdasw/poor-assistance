@@ -9,7 +9,7 @@ Risky Investment Purchase
 class Constants(BaseConstants):
     name_in_url = 'risky_investment_purchase'
     players_per_group = None
-    num_rounds = 10
+    num_rounds = 3
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)

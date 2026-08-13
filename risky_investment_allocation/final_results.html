@@ -22,6 +22,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">Sesi Ronde</th>
+                                <th scope="col">Uang Anda</th>
                                 <th scope="col">Profit</th>
                                 <th scope="col">Alokasi Opsi</th>
                                 <th scope="col">Bantuan</th>
@@ -33,6 +34,7 @@
                             {% for item in results_risky_allocation %}
                                 <tr>
                                     <td>Ronde {% item.round_number_risky_allocation %}</td>
+                                    <td></td>
                                     <td class="fw-bold">
                                         {% if item.profit_risky_allocation != 0 %}
                                             <span class="text-success">+{% item.profit_risky_allocation %}</span>
@@ -63,17 +65,19 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>Total</th>
-                                <th>{% player.total_akhir_profit %}</th>
-                                <th>{% player.total_akhir_alokasi_opsi %}</th>
-                                <th>{% player.total_akhir_bantuan_sosial %}</th>
-                                <th>{% player.total_akhir_beban_konsumsi %}</th>
-                                <th>{% player.total_akhir_uang %}</th>
-                            </tr>
-                        </tfoot>
                     </table>
+                    <div class="alert bg-success text-light m-0" role="alert">
+                        <h4 class="alert-heading">Informasi Pembayaran</h4>
+                        <p>
+                            Pembayaran akan dihitung berdasarkan jumlah Sisa Uang Akhir Ronde yang Anda miliki pada
+                            ronde terakhir.
+                        </p>
+                        <hr>
+                        <h5 class="m-0">
+                            Sisa Uang Akhir Ronde yang akan dihitung pada halaman pembayaran adalah [uang-akhir]
+                            (Ronde 10).
+                        </h5>
+                    </div>
                 </div>
             </div>
             <div class="card-footer">
