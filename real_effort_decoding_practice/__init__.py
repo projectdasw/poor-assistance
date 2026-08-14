@@ -2,12 +2,12 @@ from otree.api import *
 import random
 
 doc = """
-Real Effort Decoding
+Real Effort Decoding - Sesi Latihan
 """
 
 
 class Constants(BaseConstants):
-    name_in_url = 'real_effort_decoding'
+    name_in_url = 'real_effort_decoding_practice'
     players_per_group = None
     num_rounds = 2
     endowment = cu(100)
@@ -228,10 +228,10 @@ class single_results(Page):
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         # Simpan hasil ronde ke participant.vars
-        if 'results_cognitive_task' not in player.participant.vars:
-            player.participant.vars['results_cognitive_task'] = []
+        if 'results_cognitive_task_practice' not in player.participant.vars:
+            player.participant.vars['results_cognitive_task_practice'] = []
 
-        player.participant.vars['results_cognitive_task'].append({
+        player.participant.vars['results_cognitive_task_practice'].append({
             'round_number_cognitive': player.round_number,
             "endowment_round": player.uang_sesudah_tambah_bansos,
             'score_cognitive': player.total_score,
@@ -251,11 +251,11 @@ class final_results(Page):
     def vars_for_template(player: Player):
         participant = player.participant
         results_cognitive_task = participant.vars.get(
-            "results_cognitive_task", []
+            "results_cognitive_task_practice", []
         )
 
         last_round_cognitive = (
-            participant.vars.get("last_round_played_cognitive", 1)
+            participant.vars.get("last_round_played_cognitive_practice", 1)
             if participant.vars.get("end_game", False)
             else player.round_number
         )
@@ -266,7 +266,7 @@ class final_results(Page):
         player.total_akhir_beban_konsumsi = sum(item["consumption_cognitive"] for item in results_cognitive_task)
         player.total_akhir_uang = sum(item["endowment_cognitive"] for item in results_cognitive_task)
 
-        participant.vars["summary_cognitive_task"] = {
+        participant.vars["summary_cognitive_task_practice"] = {
             "profit": player.total_akhir_score,
             "cost": player.total_akhir_beli_waktu,
             "additional": player.total_akhir_bantuan_sosial,
@@ -276,10 +276,15 @@ class final_results(Page):
         }
 
         return {
-            "results_cognitive_task": results_cognitive_task,
-            "last_round_cognitive": last_round_cognitive,
-            "final_payment": player.in_round(player.round_number).payoff,
+            "results_cognitive_task_practice": results_cognitive_task,
+            "last_round_cognitive_practice": last_round_cognitive,
+            "final_payment_practice": player.in_round(player.round_number).payoff,
         }
 
+class end_practice(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == Constants.num_rounds
 
-page_sequence = [endowment_information, Loading, buy_time, game, single_results, Loading, final_results]
+
+page_sequence = [endowment_information, Loading, buy_time, game, single_results, Loading, final_results, end_practice]

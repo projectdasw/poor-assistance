@@ -2,12 +2,12 @@ from otree.api import *
 import random
 
 doc = """
-Risky Investment Allocation
+Risky Investment Allocation - Sesi Latihan
 """
 
 
 class Constants(BaseConstants):
-    name_in_url = 'risky_investment_allocation'
+    name_in_url = 'risky_investment_allocation_practice'
     players_per_group = None
     num_rounds = 2
     endowment = cu(100)
@@ -284,7 +284,7 @@ class single_results(Page):
 
         player.total_alokasi_opsi = total_cost
 
-        player.participant.vars.setdefault("results_risky_allocation", []).append({
+        player.participant.vars.setdefault("results_risky_allocation_practice", []).append({
             "round_number_risky_allocation": player.round_number,
             "endowment_round": player.uang_sesudah_tambah_bansos,
             "profit_risky_allocation": player.total_profit,
@@ -304,11 +304,11 @@ class final_results(Page):
     def vars_for_template(player: Player):
         participant = player.participant
         results_risky_allocation = participant.vars.get(
-            "results_risky_allocation", []
+            "results_risky_allocation_practice", []
         )
 
         last_round_risky_allocation = (
-            participant.vars.get("last_round_played_risky_allocation", 1)
+            participant.vars.get("last_round_played_risky_allocation_practice", 1)
             if participant.vars.get("end_game", False)
             else player.round_number
         )
@@ -320,7 +320,7 @@ class final_results(Page):
         player.total_akhir_beban_konsumsi = sum(item["consumption_risky_allocation"] for item in results_risky_allocation)
         player.total_akhir_uang = sum(item["endowment_risky_allocation"] for item in results_risky_allocation)
 
-        participant.vars["summary_risky_allocation"] = {
+        participant.vars["summary_risky_allocation_practice"] = {
             "profit": player.total_akhir_profit,
             "cost": player.total_akhir_alokasi_opsi,
             "additional": player.total_akhir_bantuan_sosial,
@@ -330,15 +330,16 @@ class final_results(Page):
         }
 
         return {
-            "results_risky_allocation": results_risky_allocation,
-            "last_round_risky_allocation": last_round_risky_allocation,
-            "final_payment": player.in_round(player.round_number).payoff,
+            "results_risky_allocation_practice": results_risky_allocation,
+            "last_round_risky_allocation_practice": last_round_risky_allocation,
+            "final_payment_practice": player.in_round(player.round_number).payoff,
         }
 
-class end_session(Page):
+
+class end_practice(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == Constants.num_rounds
 
 
-page_sequence = [endowment_information, Loading, game, single_results, Loading, final_results, end_session]
+page_sequence = [endowment_information, Loading, game, single_results, Loading, final_results, end_practice]

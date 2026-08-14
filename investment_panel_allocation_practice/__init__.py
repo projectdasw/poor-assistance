@@ -2,12 +2,12 @@ from otree.api import *
 import random
 
 doc = """
-Investment Panel Allocation
+Investment Panel Allocation - Sesi Latihan
 """
 
 
 class Constants(BaseConstants):
-    name_in_url = 'investment_panel_allocation'
+    name_in_url = 'investment_panel_allocation_practice'
     players_per_group = None
     num_rounds = 2
     endowment = cu(100)

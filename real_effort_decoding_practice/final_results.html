@@ -2,7 +2,7 @@
 {% load otree static %}
 
 {% block title %}
-    <title>Hasil Akhir Real Effort Decoding</title>
+    <title>Hasil Akhir Latihan Real Effort Decoding</title>
 {% endblock %}
 
 {% block content %}
@@ -10,18 +10,17 @@
         <div class="card">
             <div class="card-body">
                 <div class="alert p-0 mb-0" role="alert">
-                    <h3 class="alert-heading">Hasil Akhir Real Effort Decoding</h3>
+                    <h3 class="alert-heading">Hasil Akhir Latihan Real Effort Decoding</h3>
                     <p>
-                        Selamat Anda telah menyelesaikan sesi eksperimen <strong>Real Effort - Decoding</strong>.
-                        Selanjutnya Anda akan memasuki sesi eksperimen berikutnya yaitu
-                        <strong>Investment Panel Allocation</strong>. Berikut di bawah ini hasil keseluruhan ronde sesi
-                        eksperimen Real Effort - Decoding:
+                        Selamat Anda telah menyelesaikan sesi latihan <strong>Real Effort - Decoding</strong>.
+                        Selanjutnya Anda akan memasuki sesi eksperimen <strong>Real Effort - Decoding</strong>.
+                        Berikut di bawah ini hasil keseluruhan ronde sesi latihan Real Effort - Decoding:
                     </p>
                     <hr>
-                    <table class="table m-0">
+                    <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">Sesi Ronde</th>
+                                <th scope="col">Sesi Ronde Latihan</th>
                                 <th scope="col">Uang Ronde</th>
                                 <th scope="col">Skor</th>
                                 <th scope="col">Total Biaya Waktu</th>
@@ -31,9 +30,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for result in results_cognitive_task %}
+                            {% for result in results_cognitive_task_practice %}
                                 <tr>
-                                    <td>Ronde {% result.round_number_cognitive %}</td>
+                                    <td>Ronde Latihan {% result.round_number_cognitive %}</td>
                                     <td class="fw-bold">{% result.endowment_round %}</td>
                                     <td class="fw-bold">
                                         {% if result.score_cognitive != 0 %}
@@ -66,23 +65,24 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                    <div class="alert bg-success text-light m-0" role="alert">
-                        <h4 class="alert-heading">Informasi Pembayaran</h4>
+                    <div class="alert bg-warning text-dark m-0" role="alert">
+                        <h4 class="alert-heading">Informasi Peserta</h4>
                         <p>
-                            Pembayaran akan dihitung berdasarkan jumlah Sisa Uang Akhir Ronde yang Anda miliki pada
-                            ronde terakhir.
+                            Pada sesi eksperimen, Anda akan mendapatkan Pembayaran dari salah satu sesi eksperimen.
+                            Pembayaran yang akan diambil sebagai acuan berdasarkan jumlah Sisa Uang Akhir Ronde yang
+                            Anda miliki pada ronde terakhir.
                         </p>
                         <hr>
                         <h5 class="m-0">
-                            Sisa Uang Akhir Ronde yang akan dihitung sebagai pembayaran adalah
-                            {% final_payment %} (Ronde {% player.round_number %})
+                            Maka Sisa Uang Akhir Ronde yang akan dihitung sebagai pembayaran pada sesi eksperimen adalah
+                            {% final_payment_practice %} (Ronde {% player.round_number %})
                         </h5>
                     </div>
                 </div>
             </div>
             <div class="card-footer">
                 <button class="otree-btn-next btn btn-outline-primary">
-                    <span>Lanjut menuju sesi eksperimen selanjutnya</span>
+                    <span>Lanjut menuju sesi eksperimen</span>
                     <i class="fa-solid fa-circle-arrow-right ms-1"></i>
                 </button>
             </div>
