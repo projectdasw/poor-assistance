@@ -9,7 +9,7 @@ Investment Panel Allocation
 class Constants(BaseConstants):
     name_in_url = 'investment_panel_allocation'
     players_per_group = None
-    num_rounds = 2
+    num_rounds = 10
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -313,4 +313,9 @@ class final_results(Page):
         )
 
 
-page_sequence = [endowment_information, Loading, game, single_results, Loading, final_results]
+class end_session(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == Constants.num_rounds
+
+page_sequence = [endowment_information, Loading, game, single_results, final_results, end_session]

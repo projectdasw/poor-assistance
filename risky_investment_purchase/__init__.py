@@ -9,7 +9,7 @@ Risky Investment Purchase
 class Constants(BaseConstants):
     name_in_url = 'risky_investment_purchase'
     players_per_group = None
-    num_rounds = 2
+    num_rounds = 10
     endowment = cu(100)
     additional = cu(30)
     consumption = cu(50)
@@ -337,4 +337,4 @@ class end_session(Page):
         return player.round_number == Constants.num_rounds
 
 
-page_sequence = [endowment_information, Loading, game, single_results, Loading, final_results, end_session]
+page_sequence = [endowment_information, Loading, game, single_results, final_results, end_session]

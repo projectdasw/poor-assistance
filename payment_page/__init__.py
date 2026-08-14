@@ -27,6 +27,10 @@ class Player(BasePlayer):
     pembayaran_terpilih = models.CurrencyField(initial=0)
 
 
+class Loading(WaitPage):
+    title_text = "Ruang Tunggu Eksperimen"
+
+
 # PAGES
 class info_sesi(Page):
     @staticmethod
@@ -112,4 +116,4 @@ class akhir_eksperimen(Page):
     pass
 
 
-page_sequence = [info_sesi, pembayaran]
+page_sequence = [Loading, info_sesi, pembayaran, akhir_eksperimen]

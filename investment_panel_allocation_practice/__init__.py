@@ -256,7 +256,7 @@ class single_results(Page):
 
         player.total_alokasi_opsi = total_cost
 
-        player.participant.vars.setdefault("results_panel_allocation", []).append({
+        player.participant.vars.setdefault("results_panel_allocation_practice", []).append({
             "round_number_panel_allocation": player.round_number,
             "endowment_round": player.uang_sesudah_tambah_bansos,
             "profit_panel_allocation": player.total_profit_return,
@@ -268,7 +268,6 @@ class single_results(Page):
 
 
 class final_results(Page):
-
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == Constants.num_rounds
@@ -277,9 +276,9 @@ class final_results(Page):
     def vars_for_template(player: Player):
         participant = player.participant
 
-        results_panel_allocation = participant.vars.get("results_panel_allocation", [])
+        results_panel_allocation = participant.vars.get("results_panel_allocation_practice", [])
         last_round_panel_allocation = (
-            participant.vars.get("last_round_played_panel_allocation", 1)
+            participant.vars.get("last_round_played_panel_allocation_practice", 1)
             if participant.vars.get("end_game", False)
             else player.round_number
         )
@@ -297,7 +296,7 @@ class final_results(Page):
         )
         player.total_akhir_uang = sum(item["endowment_panel_allocation"]for item in results_panel_allocation)
 
-        participant.vars["summary_panel_allocation"] = {
+        participant.vars["summary_panel_allocation_practice"] = {
             "profit": player.total_akhir_profit_return,
             "cost": player.total_akhir_alokasi_opsi,
             "additional": player.total_akhir_bantuan_sosial,
@@ -307,10 +306,15 @@ class final_results(Page):
         }
 
         return dict(
-            results_panel_allocation=results_panel_allocation,
-            last_round_panel_allocation=last_round_panel_allocation,
-            final_payment=final_payment,
+            results_panel_allocation_practice=results_panel_allocation,
+            last_round_panel_allocation_practice=last_round_panel_allocation,
+            final_payment_practice=final_payment,
         )
 
 
-page_sequence = [endowment_information, Loading, game, single_results, Loading, final_results]
+class end_practice(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == Constants.num_rounds
+
+page_sequence = [endowment_information, Loading, game, single_results, final_results, end_practice]

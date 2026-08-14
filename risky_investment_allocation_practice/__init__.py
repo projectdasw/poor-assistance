@@ -342,4 +342,4 @@ class end_practice(Page):
         return player.round_number == Constants.num_rounds
 
 
-page_sequence = [endowment_information, Loading, game, single_results, Loading, final_results, end_practice]
+page_sequence = [endowment_information, Loading, game, single_results, final_results, end_practice]

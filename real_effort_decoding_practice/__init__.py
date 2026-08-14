@@ -181,6 +181,19 @@ class buy_time(Page):
             'my_id': player.round_player_id,
         }
 
+    @staticmethod
+    def error_message(player: Player, values):
+        error_msgs = []
+        if values['beli_waktu'] % Constants.price_time != 0:
+            error_msgs.append(
+                f"Jumlah uang yang dibelanjakan harus dalam kelipatan 5."
+            )
+
+        # Jika ada pesan kesalahan, gabungkan dan kembalikan
+        if error_msgs:
+            return "<br>".join(error_msgs)
+        return ""
+
 
 class game(Page):
     form_model = 'player'
@@ -287,4 +300,4 @@ class end_practice(Page):
         return player.round_number == Constants.num_rounds
 
 
-page_sequence = [endowment_information, Loading, buy_time, game, single_results, Loading, final_results, end_practice]
+page_sequence = [endowment_information, Loading, buy_time, game, single_results, final_results, end_practice]

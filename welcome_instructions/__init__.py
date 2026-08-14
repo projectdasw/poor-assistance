@@ -19,6 +19,10 @@ class Player(BasePlayer):
     pass
 
 
+class Loading(WaitPage):
+    title_text = "Ruang Tunggu Eksperimen"
+
+
 class welcome(Page):
     pass
 
@@ -54,5 +58,6 @@ page_sequence = [
     risky_investment_allocation_instruction,
     real_effort_decoding_instruction,
     investment_panel_allocation_instruction,
-    confirmation
+    confirmation,
+    Loading
 ]
