@@ -12,7 +12,7 @@ class Constants(BaseConstants):
     num_rounds = 10
     endowment = cu(100)
     additional = cu(30)
-    consumption = cu(50)
+    consumption = cu(35)
     investment_scheme = [
         {"investment_return": 1.15, "probability": 0.9},
         {"investment_return": 1.2, "probability": 0.85},
@@ -53,6 +53,7 @@ class Group(BaseGroup):
 class Player(BasePlayer):
     uang_sesudah_tambah_bansos = models.CurrencyField(initial=0)
     uang_sebelum_tambah_bansos = models.CurrencyField(initial=0)
+    uang_sisa_tidak_untuk_investasi = models.CurrencyField(initial=0)
     bantuan_sosial = models.CurrencyField(initial=0)
     beban_konsumsi = models.CurrencyField(initial=0)
     total_profit_return = models.CurrencyField(initial=0)
@@ -155,9 +156,6 @@ class endowment_information(Page):
         player.uang_sebelum_tambah_bansos = Constants.endowment
         player.bantuan_sosial = Constants.additional
         player.beban_konsumsi = Constants.consumption
-
-    @staticmethod
-    def before_next_page(player, timeout_happened):
         player.uang_sesudah_tambah_bansos = player.uang_sebelum_tambah_bansos + player.bantuan_sosial
 
 
@@ -209,6 +207,32 @@ class game(Page):
             for i in range(1, 18)
         )
 
+    @staticmethod
+    def error_message(player: Player, values):
+        allocations = [
+            values[f'asian_ev_{i}'] or 0
+            for i in range(1, 18)
+        ]
+
+        total_allocation = sum(allocations)
+
+        error_msgs = []
+        if player.uang_sebelum_tambah_bansos >= 0:
+            if total_allocation > player.uang_sesudah_tambah_bansos:
+                error_msgs.append(
+                    f"Uang Anda tidak mencukupi untuk melakukan alokasi sebesar {total_allocation}"
+                )
+        elif player.uang_sebelum_tambah_bansos < 0:
+            if total_allocation > player.bantuan_sosial:
+                error_msgs.append(
+                    f"Uang Bantuan Anda tidak mencukupi melakukan alokasi sebesar {total_allocation}"
+                )
+
+        # Jika ada pesan kesalahan, gabungkan dan kembalikan
+        if error_msgs:
+            return "<br>".join(error_msgs)
+        return ""
+
 
 class single_results(Page):
     @staticmethod
@@ -236,12 +260,15 @@ class single_results(Page):
             item["allocation"] for item in investment_results
         )
 
-        player.payoff = (
-            player.uang_sesudah_tambah_bansos
-            + player.total_profit_return
-            - player.total_alokasi_opsi
-            - player.beban_konsumsi
-        )
+        # Perhitungan jika Uang Utama subjek kurang dari 0 (minus) - menjadi Hutang
+        if player.uang_sebelum_tambah_bansos >= 0:
+            player.payoff = ((player.uang_sesudah_tambah_bansos + player.total_profit_return) -
+                             player.total_alokasi_opsi - player.beban_konsumsi)
+        elif player.uang_sebelum_tambah_bansos < 0:
+            player.uang_sisa_tidak_untuk_investasi = player.bantuan_sosial - player.total_alokasi_opsi
+            player.payoff = (player.uang_sebelum_tambah_bansos + (player.uang_sisa_tidak_untuk_investasi +
+                                                                  player.total_profit_return) -
+                             player.total_alokasi_opsi - player.beban_konsumsi)
 
         return dict(
             investment_results=investment_results,
@@ -258,11 +285,12 @@ class single_results(Page):
 
         player.participant.vars.setdefault("results_panel_allocation", []).append({
             "round_number_panel_allocation": player.round_number,
-            "endowment_round": player.uang_sesudah_tambah_bansos,
+            "endowment_round": player.uang_sebelum_tambah_bansos,
             "profit_panel_allocation": player.total_profit_return,
             "cost_panel_allocation": player.total_alokasi_opsi,
             "endowment_panel_allocation": player.payoff,
             "additional_panel_allocation": player.bantuan_sosial,
+            "charge_additional_panel_allocation": player.uang_sisa_tidak_untuk_investasi,
             "consumption_panel_allocation": player.beban_konsumsi,
         })
 
@@ -283,7 +311,6 @@ class final_results(Page):
             if participant.vars.get("end_game", False)
             else player.round_number
         )
-        final_payment = player.in_round(player.round_number).payoff
 
         player.total_akhir_profit_return = sum(item["profit_panel_allocation"] for item in results_panel_allocation)
         player.total_akhir_alokasi_opsi = sum(item["cost_panel_allocation"] for item in results_panel_allocation)
@@ -297,19 +324,27 @@ class final_results(Page):
         )
         player.total_akhir_uang = sum(item["endowment_panel_allocation"]for item in results_panel_allocation)
 
+        # Menentukan Final Payment
+        if player.in_round(player.round_number).payoff < 0:
+            final_payment = player.in_round(player.round_number).payoff
+            final_round_endowment = player.in_round(player.round_number).payoff
+        else:
+            final_payment = 0
+            final_round_endowment = player.in_round(player.round_number).payoff
+
         participant.vars["summary_panel_allocation"] = {
             "profit": player.total_akhir_profit_return,
             "cost": player.total_akhir_alokasi_opsi,
             "additional": player.total_akhir_bantuan_sosial,
             "consumption": player.total_akhir_beban_konsumsi,
             "endowment": player.total_akhir_uang,
-            "payment_selected": player.in_round(player.round_number).payoff,
+            "payment_selected": final_payment,
         }
 
         return dict(
             results_panel_allocation=results_panel_allocation,
             last_round_panel_allocation=last_round_panel_allocation,
-            final_payment=final_payment,
+            final_payment=final_round_endowment,
         )
 
 

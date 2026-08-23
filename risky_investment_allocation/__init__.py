@@ -12,7 +12,7 @@ class Constants(BaseConstants):
     num_rounds = 10
     endowment = cu(100)
     additional = cu(30)
-    consumption = cu(50)
+    consumption = cu(35)
     options_data_allocation = [
         {'name': 'Opsi 1', 'outcomes': [(1.5, 0.65), (0.25, 0.1), (0, 0.25)]},
         {'name': 'Opsi 2', 'outcomes': [(1.5, 0.6), (0.5, 0.2), (0, 0.2)]},
@@ -61,6 +61,7 @@ class Group(BaseGroup):
 class Player(BasePlayer):
     uang_sesudah_tambah_bansos = models.CurrencyField(initial=0)
     uang_sebelum_tambah_bansos = models.CurrencyField(initial=0)
+    uang_sisa_tidak_untuk_investasi = models.CurrencyField(initial=0)
     bantuan_sosial = models.CurrencyField(initial=0)
     beban_konsumsi = models.CurrencyField(initial=0)
     total_profit = models.CurrencyField(initial=0)
@@ -165,9 +166,6 @@ class endowment_information(Page):
         player.uang_sebelum_tambah_bansos = Constants.endowment
         player.bantuan_sosial = Constants.additional
         player.beban_konsumsi = Constants.consumption
-
-    @staticmethod
-    def before_next_page(player, timeout_happened):
         player.uang_sesudah_tambah_bansos = player.uang_sebelum_tambah_bansos + player.bantuan_sosial
 
 
@@ -210,6 +208,32 @@ class game(Page):
         }
 
     @staticmethod
+    def error_message(player: Player, values):
+        allocations = [
+            values[f'alokasi_opsi_{i}']
+            for i in range(1, 6)
+        ]
+
+        total_allocation = sum(allocation or 0 for allocation in allocations)
+
+        error_msgs = []
+        if player.uang_sebelum_tambah_bansos >= 0:
+            if total_allocation > player.uang_sesudah_tambah_bansos:
+                error_msgs.append(
+                    f"Uang Anda tidak mencukupi untuk melakukan alokasi sebesar {total_allocation}"
+                )
+        elif player.uang_sebelum_tambah_bansos < 0:
+            if total_allocation > player.bantuan_sosial:
+                error_msgs.append(
+                    f"Uang Bantuan Anda tidak mencukupi melakukan alokasi sebesar {total_allocation}"
+                )
+
+        # Jika ada pesan kesalahan, gabungkan dan kembalikan
+        if error_msgs:
+            return "<br>".join(error_msgs)
+        return ""
+
+    @staticmethod
     def before_next_page(player: Player, timeout_happened):
         for i in range(1, 6):
             selected_name = getattr(player, f"opsi_{i}")
@@ -240,11 +264,6 @@ class game(Page):
                     setattr(player, f"hasil_opsi_{i}", outcome)
                     break
 
-        player.total_profit = sum(getattr(player, f"alokasi_opsi_{i}") *
-            getattr(player, f"hasil_opsi_{i}")
-            for i in range(1, 6)
-        )
-
 
 class single_results(Page):
     @staticmethod
@@ -268,8 +287,15 @@ class single_results(Page):
         player.total_profit = sum(item["profit"] for item in allocations)
         player.total_alokasi_opsi = sum(item["allocation"] for item in allocations)
 
-        player.payoff = ((player.uang_sesudah_tambah_bansos + player.total_profit) -
-                         player.total_alokasi_opsi - player.beban_konsumsi)
+        # Perhitungan jika Uang Utama subjek kurang dari 0 (minus) - menjadi Hutang
+        if player.uang_sebelum_tambah_bansos >= 0:
+            player.payoff = ((player.uang_sesudah_tambah_bansos + player.total_alokasi_opsi) +
+                             player.total_profit - player.beban_konsumsi)
+        elif player.uang_sebelum_tambah_bansos < 0:
+            player.uang_sisa_tidak_untuk_investasi = player.bantuan_sosial - player.total_alokasi_opsi
+            player.payoff = (player.uang_sebelum_tambah_bansos + (player.uang_sisa_tidak_untuk_investasi +
+                                                                  player.total_profit) -
+                             player.total_alokasi_opsi - player.beban_konsumsi)
 
         return {
             "allocations": allocations,
@@ -277,13 +303,6 @@ class single_results(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        total_cost = sum(
-            getattr(player, f"alokasi_opsi_{i}")
-            for i in range(1, 6)
-        )
-
-        player.total_alokasi_opsi = total_cost
-
         player.participant.vars.setdefault("results_risky_allocation", []).append({
             "round_number_risky_allocation": player.round_number,
             "endowment_round": player.uang_sesudah_tambah_bansos,
@@ -291,6 +310,7 @@ class single_results(Page):
             "cost_risky_allocation": player.total_alokasi_opsi,
             "endowment_risky_allocation": player.payoff,
             "additional_risky_allocation": player.bantuan_sosial,
+            "charge_additional_risky_allocation": player.uang_sisa_tidak_untuk_investasi,
             "consumption_risky_allocation": player.beban_konsumsi,
         })
 
@@ -320,19 +340,27 @@ class final_results(Page):
         player.total_akhir_beban_konsumsi = sum(item["consumption_risky_allocation"] for item in results_risky_allocation)
         player.total_akhir_uang = sum(item["endowment_risky_allocation"] for item in results_risky_allocation)
 
+        # Menentukan Final Payment
+        if player.in_round(player.round_number).payoff < 0:
+            final_payment = player.in_round(player.round_number).payoff
+            final_round_endowment = player.in_round(player.round_number).payoff
+        else:
+            final_payment = 0
+            final_round_endowment = player.in_round(player.round_number).payoff
+
         participant.vars["summary_risky_allocation"] = {
             "profit": player.total_akhir_profit,
             "cost": player.total_akhir_alokasi_opsi,
             "additional": player.total_akhir_bantuan_sosial,
             "consumption": player.total_akhir_beban_konsumsi,
             "endowment": player.total_akhir_uang,
-            "payment_selected": player.in_round(player.round_number).payoff,
+            "payment_selected": final_payment,
         }
 
         return {
             "results_risky_allocation": results_risky_allocation,
             "last_round_risky_allocation": last_round_risky_allocation,
-            "final_payment": player.in_round(player.round_number).payoff,
+            "final_payment": final_round_endowment,
         }
 
 class end_session(Page):

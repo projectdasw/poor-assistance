@@ -12,7 +12,7 @@ class Constants(BaseConstants):
     num_rounds = 10
     endowment = cu(100)
     additional = cu(30)
-    consumption = cu(50)
+    consumption = cu(35)
 
     # game Setup
     board_rows = 5  # Jumlah baris papan
@@ -41,6 +41,7 @@ class Group(BaseGroup):
 class Player(BasePlayer):
     uang_sesudah_tambah_bansos = models.CurrencyField(initial=0)
     uang_sebelum_tambah_bansos = models.CurrencyField(initial=0)
+    uang_sisa_tidak_untuk_investasi = models.CurrencyField(initial=0)
     bantuan_sosial = models.CurrencyField(initial=0)
     beban_konsumsi = models.CurrencyField(initial=0)
     beli_waktu = models.IntegerField(initial=0)
@@ -155,9 +156,6 @@ class endowment_information(Page):
         player.uang_sebelum_tambah_bansos = Constants.endowment
         player.bantuan_sosial = Constants.additional
         player.beban_konsumsi = Constants.consumption
-
-    @staticmethod
-    def before_next_page(player, timeout_happened):
         player.uang_sesudah_tambah_bansos = player.uang_sebelum_tambah_bansos + player.bantuan_sosial
 
 
@@ -184,16 +182,29 @@ class buy_time(Page):
     @staticmethod
     def error_message(player: Player, values):
         error_msgs = []
-        if values['beli_waktu'] % Constants.price_time != 0:
-            error_msgs.append(
-                f"Jumlah uang yang dibelanjakan harus dalam kelipatan 5."
-            )
+        if player.uang_sebelum_tambah_bansos >= 0:
+            if values['beli_waktu'] % Constants.price_time != 0:
+                error_msgs.append(
+                    f"Jumlah uang yang dibelanjakan harus dalam kelipatan 5."
+                )
+            elif values['beli_waktu'] > player.uang_sesudah_tambah_bansos:
+                error_msgs.append(
+                    f"Uang Anda tidak mencukupi untuk membeli waktu bermain."
+                )
+        elif player.uang_sebelum_tambah_bansos < 0:
+            if values['beli_waktu'] % Constants.price_time != 0:
+                error_msgs.append(
+                    f"Jumlah uang yang dibelanjakan harus dalam kelipatan 5."
+                )
+            elif values['beli_waktu'] > player.bantuan_sosial:
+                error_msgs.append(
+                    f"Uang Bantuan Anda tidak mencukupi untuk membeli waktu bermain."
+                )
 
         # Jika ada pesan kesalahan, gabungkan dan kembalikan
         if error_msgs:
             return "<br>".join(error_msgs)
         return ""
-
 
 class game(Page):
     form_model = 'player'
@@ -229,8 +240,15 @@ class game(Page):
 class single_results(Page):
     @staticmethod
     def vars_for_template(player: Player):
-        player.payoff = ((player.uang_sesudah_tambah_bansos + player.total_score) -
-                         player.beli_waktu - player.beban_konsumsi)
+        # Perhitungan jika Uang Utama subjek kurang dari 0 (minus) - menjadi Hutang
+        if player.uang_sebelum_tambah_bansos >= 0:
+            player.payoff = ((player.uang_sesudah_tambah_bansos + player.total_score) -
+                             player.beli_waktu - player.beban_konsumsi)
+        elif player.uang_sebelum_tambah_bansos < 0:
+            player.uang_sisa_tidak_untuk_investasi = player.bantuan_sosial - player.beli_waktu
+            player.payoff = (player.uang_sebelum_tambah_bansos + (player.uang_sisa_tidak_untuk_investasi +
+                                                                  player.total_score) -
+                             player.beli_waktu - player.beban_konsumsi)
 
         return {
             'final_score': player.total_score,
@@ -246,11 +264,12 @@ class single_results(Page):
 
         player.participant.vars['results_cognitive_task'].append({
             'round_number_cognitive': player.round_number,
-            "endowment_round": player.uang_sesudah_tambah_bansos,
+            "endowment_round": player.uang_sebelum_tambah_bansos,
             'score_cognitive': player.total_score,
             'time_cost_cognitive': player.beli_waktu,
             'endowment_cognitive': player.payoff,
             'additional_cognitive': player.bantuan_sosial,
+            'charge_additional_cognitive': player.uang_sisa_tidak_untuk_investasi,
             'consumption_cognitive': player.beban_konsumsi
         })
 
@@ -279,19 +298,27 @@ class final_results(Page):
         player.total_akhir_beban_konsumsi = sum(item["consumption_cognitive"] for item in results_cognitive_task)
         player.total_akhir_uang = sum(item["endowment_cognitive"] for item in results_cognitive_task)
 
+        # Menentukan Final Payment
+        if player.in_round(player.round_number).payoff < 0:
+            final_payment = player.in_round(player.round_number).payoff
+            final_round_endowment = player.in_round(player.round_number).payoff
+        else:
+            final_payment = 0
+            final_round_endowment = player.in_round(player.round_number).payoff
+
         participant.vars["summary_cognitive_task"] = {
             "profit": player.total_akhir_score,
             "cost": player.total_akhir_beli_waktu,
             "additional": player.total_akhir_bantuan_sosial,
             "consumption": player.total_akhir_beban_konsumsi,
             "endowment": player.total_akhir_uang,
-            "payment_selected": player.in_round(player.round_number).payoff,
+            "payment_selected": final_payment,
         }
 
         return {
             "results_cognitive_task": results_cognitive_task,
             "last_round_cognitive": last_round_cognitive,
-            "final_payment": player.in_round(player.round_number).payoff,
+            "final_payment": final_round_endowment,
         }
 
 
