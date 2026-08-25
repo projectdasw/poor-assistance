@@ -1,5 +1,14 @@
 from os import environ
 
+ROOMS = [
+    dict(
+        name='experiment',
+        display_name='Experiment',
+        participant_label_file='_rooms/econ101.txt',
+        use_secure_urls=True
+    ),
+]
+
 SESSION_CONFIGS = [
     dict(
         display_name='Eksperimen Bantuan Sosial',
@@ -71,7 +80,7 @@ LANGUAGE_CODE = 'en'
 REAL_WORLD_CURRENCY_CODE = ''
 USE_POINTS = False
 
-DEBUG = True
+DEBUG = False
 ADMIN_USERNAME = 'admin'
 # for security, best to set admin passwordInput in an environment variable
 ADMIN_PASSWORD = 'admin'

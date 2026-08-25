@@ -7,12 +7,12 @@ Risky Investment Allocation - Sesi Latihan
 
 
 class Constants(BaseConstants):
-    name_in_url = 'risky_investment_allocation_practice'
+    name_in_url = 'risky_investment_allocation_pratice'
     players_per_group = None
     num_rounds = 2
     endowment = cu(100)
     additional = cu(30)
-    consumption = cu(50)
+    consumption = cu(35)
     options_data_allocation = [
         {'name': 'Opsi 1', 'outcomes': [(1.5, 0.65), (0.25, 0.1), (0, 0.25)]},
         {'name': 'Opsi 2', 'outcomes': [(1.5, 0.6), (0.5, 0.2), (0, 0.2)]},
@@ -45,14 +45,6 @@ class Constants(BaseConstants):
 class Subsession(BaseSubsession):
     pass
 
-def creating_session(subsession):
-    players = subsession.get_players()
-    random_ids = list(range(1, len(players) + 1))
-    random.shuffle(random_ids)
-
-    for player, random_id in zip(players, random_ids):
-        player.round_player_id = random_id
-
 
 class Group(BaseGroup):
     pass
@@ -61,6 +53,7 @@ class Group(BaseGroup):
 class Player(BasePlayer):
     uang_sesudah_tambah_bansos = models.CurrencyField(initial=0)
     uang_sebelum_tambah_bansos = models.CurrencyField(initial=0)
+    uang_sisa_tidak_untuk_investasi = models.CurrencyField(initial=0)
     bantuan_sosial = models.CurrencyField(initial=0)
     beban_konsumsi = models.CurrencyField(initial=0)
     total_profit = models.CurrencyField(initial=0)
@@ -85,70 +78,6 @@ class Player(BasePlayer):
     total_akhir_bantuan_sosial = models.CurrencyField(initial=0)
     total_akhir_beban_konsumsi = models.CurrencyField(initial=0)
     total_akhir_uang = models.CurrencyField(initial=0)
-    realtime_status = models.StringField(initial="Belum Masuk Halaman")
-    round_player_id = models.IntegerField()
-
-def live_update(player, data):
-    if data["action"] == "page_loaded":
-        player.realtime_status = "Sudah Masuk Halaman"
-
-        players = [
-            dict(
-                id=p.id_in_group,
-                status=p.realtime_status,
-            )
-            for p in player.group.get_players()
-        ]
-
-        return {
-            0: {
-                "players": players
-            }
-        }
-
-    elif data["action"] == "allocation_changed":
-        allocations = data.get("allocations", {})
-
-        if sum(allocations.values()) > 0:
-            player.realtime_status = "Sedang Mengalokasikan Dana"
-        else:
-            player.realtime_status = "Sudah Masuk Halaman"
-
-        players = [
-            dict(
-                id=p.id_in_group,
-                status=p.realtime_status,
-            )
-            for p in player.group.get_players()
-        ]
-
-        return {
-            0: {
-                "players": players
-            }
-        }
-
-    elif data["action"] == "submit":
-        allocations = data.get("allocations", {})
-
-        if sum(allocations.values()) > 0:
-            player.realtime_status = "Player telah mengalokasikan dana"
-        else:
-            player.realtime_status = "Player tidak mengalokasikan dana"
-
-        players = [
-            dict(
-                id=p.id_in_group,
-                status=p.realtime_status,
-            )
-            for p in player.group.get_players()
-        ]
-
-        return {
-            0: {
-                "players": players
-            }
-        }
 
 
 class Loading(WaitPage):
@@ -165,9 +94,6 @@ class endowment_information(Page):
         player.uang_sebelum_tambah_bansos = Constants.endowment
         player.bantuan_sosial = Constants.additional
         player.beban_konsumsi = Constants.consumption
-
-    @staticmethod
-    def before_next_page(player, timeout_happened):
         player.uang_sesudah_tambah_bansos = player.uang_sebelum_tambah_bansos + player.bantuan_sosial
 
 
@@ -181,10 +107,11 @@ class game(Page):
         'opsi_5', 'alokasi_opsi_5',
     ]
 
-    live_method = live_update
-
     @staticmethod
     def vars_for_template(player: Player):
+        # Key berdasarkan ronde
+        key = f'random_options_round_{player.round_number}'
+
         # Ambil sisa uang subjek dari ronde sebelumnya
         if player.round_number > 1:
             previous_round_endowment = player.in_round(player.round_number - 1).payoff
@@ -193,24 +120,58 @@ class game(Page):
             player.uang_sesudah_tambah_bansos = player.uang_sebelum_tambah_bansos + player.bantuan_sosial
             player.beban_konsumsi = Constants.consumption
 
-        # Mendapatkan 5 pilihan acak unik dari daftar opsi
-        random_options = random.sample(Constants.options_data_allocation, 5)
+        # Acak hanya sekali untuk ronde ini
+        if key not in player.participant.vars:
+            # Mendapatkan 5 pilihan acak unik dari daftar opsi
+            random_options = random.sample(Constants.options_data_allocation, 5)
 
-        # Membuat teks yang terstruktur untuk setiap opsi
-        for option in random_options:
-            option_outcomes = option['outcomes']
-            formatted_outcomes = []
-            for j, (value, probability) in enumerate(option_outcomes):
-                formatted_outcomes.append(f"Anda mendapatkan {value}x dengan peluang {int(probability * 100)}%")
-            option['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
+            # Membuat teks yang terstruktur untuk setiap opsi
+            for option in random_options:
+                option_outcomes = option['outcomes']
+                formatted_outcomes = []
+                for j, (value, probability) in enumerate(option_outcomes):
+                    formatted_outcomes.append(f"Anda mendapatkan {value}x dengan peluang {int(probability * 100)}%")
+                option['formatted_outcomes'] = formatted_outcomes  # List of outcomes for each option
+
+            player.participant.vars[key] = random_options
+
+        random_options = player.participant.vars[key]
 
         return {
             'random_options': random_options,
-            'my_id': player.round_player_id,
         }
 
     @staticmethod
+    def error_message(player: Player, values):
+        allocations = [
+            values[f'alokasi_opsi_{i}']
+            for i in range(1, 6)
+        ]
+
+        total_allocation = sum(allocation or 0 for allocation in allocations)
+
+        error_msgs = []
+        if player.uang_sebelum_tambah_bansos >= 0:
+            if total_allocation > player.uang_sesudah_tambah_bansos:
+                error_msgs.append(
+                    f"Uang Anda tidak mencukupi untuk melakukan alokasi sebesar {total_allocation}"
+                )
+        elif player.uang_sebelum_tambah_bansos < 0:
+            if total_allocation > player.bantuan_sosial:
+                error_msgs.append(
+                    f"Uang Bantuan Anda tidak mencukupi melakukan alokasi sebesar {total_allocation}"
+                )
+
+        # Jika ada pesan kesalahan, gabungkan dan kembalikan
+        if error_msgs:
+            return "<br>".join(error_msgs)
+        return ""
+
+    @staticmethod
     def before_next_page(player: Player, timeout_happened):
+        # Key berdasarkan ronde
+        key = f'random_options_round_{player.round_number}'
+
         for i in range(1, 6):
             selected_name = getattr(player, f"opsi_{i}")
             allocation = getattr(player, f"alokasi_opsi_{i}")
@@ -240,10 +201,8 @@ class game(Page):
                     setattr(player, f"hasil_opsi_{i}", outcome)
                     break
 
-        player.total_profit = sum(getattr(player, f"alokasi_opsi_{i}") *
-            getattr(player, f"hasil_opsi_{i}")
-            for i in range(1, 6)
-        )
+        # Hapus data acakan ronde ini
+        player.participant.vars.pop(key, None)
 
 
 class single_results(Page):
@@ -268,8 +227,14 @@ class single_results(Page):
         player.total_profit = sum(item["profit"] for item in allocations)
         player.total_alokasi_opsi = sum(item["allocation"] for item in allocations)
 
-        player.payoff = ((player.uang_sesudah_tambah_bansos + player.total_profit) -
-                         player.total_alokasi_opsi - player.beban_konsumsi)
+        # Perhitungan jika Uang Utama subjek kurang dari 0 (minus) - menjadi Hutang
+        if player.uang_sebelum_tambah_bansos >= 0:
+            player.payoff = ((player.uang_sesudah_tambah_bansos + player.total_profit) - player.total_alokasi_opsi -
+                             player.beban_konsumsi)
+        elif player.uang_sebelum_tambah_bansos < 0:
+            player.uang_sisa_tidak_untuk_investasi = player.bantuan_sosial - player.total_alokasi_opsi
+            player.payoff = ((player.uang_sisa_tidak_untuk_investasi + player.total_profit) +
+                             player.uang_sebelum_tambah_bansos - player.total_alokasi_opsi - player.beban_konsumsi)
 
         return {
             "allocations": allocations,
@@ -277,13 +242,6 @@ class single_results(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        total_cost = sum(
-            getattr(player, f"alokasi_opsi_{i}")
-            for i in range(1, 6)
-        )
-
-        player.total_alokasi_opsi = total_cost
-
         player.participant.vars.setdefault("results_risky_allocation_practice", []).append({
             "round_number_risky_allocation": player.round_number,
             "endowment_round": player.uang_sesudah_tambah_bansos,
@@ -291,6 +249,7 @@ class single_results(Page):
             "cost_risky_allocation": player.total_alokasi_opsi,
             "endowment_risky_allocation": player.payoff,
             "additional_risky_allocation": player.bantuan_sosial,
+            "charge_additional_risky_allocation": player.uang_sisa_tidak_untuk_investasi,
             "consumption_risky_allocation": player.beban_konsumsi,
         })
 
@@ -320,21 +279,28 @@ class final_results(Page):
         player.total_akhir_beban_konsumsi = sum(item["consumption_risky_allocation"] for item in results_risky_allocation)
         player.total_akhir_uang = sum(item["endowment_risky_allocation"] for item in results_risky_allocation)
 
+        # Menentukan Final Payment
+        if player.in_round(player.round_number).payoff < 0:
+            final_payment = player.in_round(player.round_number).payoff
+            final_round_endowment = player.in_round(player.round_number).payoff
+        else:
+            final_payment = 0
+            final_round_endowment = player.in_round(player.round_number).payoff
+
         participant.vars["summary_risky_allocation_practice"] = {
             "profit": player.total_akhir_profit,
             "cost": player.total_akhir_alokasi_opsi,
             "additional": player.total_akhir_bantuan_sosial,
             "consumption": player.total_akhir_beban_konsumsi,
             "endowment": player.total_akhir_uang,
-            "payment_selected": player.in_round(player.round_number).payoff,
+            "payment_selected": final_payment,
         }
 
         return {
             "results_risky_allocation_practice": results_risky_allocation,
             "last_round_risky_allocation_practice": last_round_risky_allocation,
-            "final_payment_practice": player.in_round(player.round_number).payoff,
+            "final_payment_practice": final_round_endowment,
         }
-
 
 class end_practice(Page):
     @staticmethod

@@ -12,7 +12,7 @@ class Constants(BaseConstants):
     num_rounds = 2
     endowment = cu(100)
     additional = cu(30)
-    consumption = cu(50)
+    consumption = cu(35)
 
     # game Setup
     board_rows = 5  # Jumlah baris papan
@@ -25,15 +25,6 @@ class Subsession(BaseSubsession):
     pass
 
 
-def creating_session(subsession):
-    players = subsession.get_players()
-    random_ids = list(range(1, len(players) + 1))
-    random.shuffle(random_ids)
-
-    for player, random_id in zip(players, random_ids):
-        player.round_player_id = random_id
-
-
 class Group(BaseGroup):
     pass
 
@@ -41,6 +32,7 @@ class Group(BaseGroup):
 class Player(BasePlayer):
     uang_sesudah_tambah_bansos = models.CurrencyField(initial=0)
     uang_sebelum_tambah_bansos = models.CurrencyField(initial=0)
+    uang_sisa_tidak_untuk_investasi = models.CurrencyField(initial=0)
     bantuan_sosial = models.CurrencyField(initial=0)
     beban_konsumsi = models.CurrencyField(initial=0)
     beli_waktu = models.IntegerField(initial=0)
@@ -54,60 +46,10 @@ class Player(BasePlayer):
     total_akhir_bantuan_sosial = models.CurrencyField(initial=0)
     total_akhir_beban_konsumsi = models.CurrencyField(initial=0)
     total_akhir_uang = models.CurrencyField(initial=0)
-    realtime_status = models.StringField(initial="Belum Masuk Halaman")
-    round_player_id = models.IntegerField()
-
-
-def broadcast_status(player):
-    players = [
-        dict(
-            id=p.id_in_group,
-            status=p.realtime_status,
-        )
-        for p in player.group.get_players()
-    ]
-
-    return {
-        0: {
-            "players": players
-        }
-    }
 
 
 def live_game(player: Player, data):
-    action = data.get("action")
-    allocation = data.get("allocation", 0)
-
-    if action == "page_loaded":
-        player.realtime_status = "Sudah Masuk Halaman"
-        return broadcast_status(player)
-
-    elif action == "allocation_changed":
-        if allocation > 0:
-            player.realtime_status = "Sedang Mengalokasikan Dana"
-        else:
-            player.realtime_status = "Sudah Masuk Halaman"
-
-        return broadcast_status(player)
-
-    elif action == "submit_buy_time":
-        if allocation > 0:
-            player.realtime_status = "Player membeli waktu bermain"
-        else:
-            player.realtime_status = "Player tidak membeli waktu bermain"
-
-        return broadcast_status(player)
-
-    # elif action == "start_decoding":
-    #     if player.beli_waktu > 0:
-    #         player.realtime_status = "Sedang Bermain Decoding"
-    #     return broadcast_status(player)
-    #
-    # elif action == "finish_decoding":
-    #     player.realtime_status = "Telah menyelesaikan Decoding"
-    #     return broadcast_status(player)
-
-    elif 'count_guess' in data:
+    if 'count_guess' in data:
         guess = int(data["count_guess"])
 
         if guess == player.actual_count:
@@ -155,9 +97,6 @@ class endowment_information(Page):
         player.uang_sebelum_tambah_bansos = Constants.endowment
         player.bantuan_sosial = Constants.additional
         player.beban_konsumsi = Constants.consumption
-
-    @staticmethod
-    def before_next_page(player, timeout_happened):
         player.uang_sesudah_tambah_bansos = player.uang_sebelum_tambah_bansos + player.bantuan_sosial
 
 
@@ -177,23 +116,32 @@ class buy_time(Page):
             player.uang_sesudah_tambah_bansos = player.uang_sebelum_tambah_bansos + player.bantuan_sosial
             player.beban_konsumsi = Constants.consumption
 
-        return {
-            'my_id': player.round_player_id,
-        }
-
     @staticmethod
     def error_message(player: Player, values):
         error_msgs = []
-        if values['beli_waktu'] % Constants.price_time != 0:
-            error_msgs.append(
-                f"Jumlah uang yang dibelanjakan harus dalam kelipatan 5."
-            )
+        if player.uang_sebelum_tambah_bansos >= 0:
+            if values['beli_waktu'] % Constants.price_time != 0:
+                error_msgs.append(
+                    f"Jumlah uang yang dibelanjakan harus dalam kelipatan 5."
+                )
+            elif values['beli_waktu'] > player.uang_sesudah_tambah_bansos:
+                error_msgs.append(
+                    f"Uang Anda tidak mencukupi untuk membeli waktu bermain."
+                )
+        elif player.uang_sebelum_tambah_bansos < 0:
+            if values['beli_waktu'] % Constants.price_time != 0:
+                error_msgs.append(
+                    f"Jumlah uang yang dibelanjakan harus dalam kelipatan 5."
+                )
+            elif values['beli_waktu'] > player.bantuan_sosial:
+                error_msgs.append(
+                    f"Uang Bantuan Anda tidak mencukupi untuk membeli waktu bermain."
+                )
 
         # Jika ada pesan kesalahan, gabungkan dan kembalikan
         if error_msgs:
             return "<br>".join(error_msgs)
         return ""
-
 
 class game(Page):
     form_model = 'player'
@@ -211,26 +159,47 @@ class game(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        board = [
-            [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890') for _ in range(Constants.board_columns)]
-            for _ in range(Constants.board_rows)
-        ]
-        player.current_target = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
-        player.actual_count = sum(row.count(player.current_target) for row in board)
+        # Key berdasarkan ronde
+        key = f'random_options_round_{player.round_number}'
+
+        # Acak hanya sekali untuk ronde ini
+        if key not in player.participant.vars:
+            board = [
+                [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890') for _ in range(Constants.board_columns)]
+                for _ in range(Constants.board_rows)
+            ]
+            player.current_target = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
+            player.actual_count = sum(row.count(player.current_target) for row in board)
+
+            player.participant.vars[key] = board
+
+        board = player.participant.vars[key]
 
         return {
             'board': board,
             'target_character': player.current_target,
             'player_score': player.total_score,
-            'my_id': player.round_player_id,
         }
 
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        # Key berdasarkan ronde
+        key = f'random_options_round_{player.round_number}'
+
+        # Hapus data acakan ronde ini
+        player.participant.vars.pop(key, None)
 
 class single_results(Page):
     @staticmethod
     def vars_for_template(player: Player):
-        player.payoff = ((player.uang_sesudah_tambah_bansos + player.total_score) -
-                         player.beli_waktu - player.beban_konsumsi)
+        # Perhitungan jika Uang Utama subjek kurang dari 0 (minus) - menjadi Hutang
+        if player.uang_sebelum_tambah_bansos >= 0:
+            player.payoff = ((player.uang_sesudah_tambah_bansos + player.total_score) - player.beli_waktu -
+                             player.beban_konsumsi)
+        elif player.uang_sebelum_tambah_bansos < 0:
+            player.uang_sisa_tidak_untuk_investasi = player.bantuan_sosial - player.beli_waktu
+            player.payoff = ((player.uang_sisa_tidak_untuk_investasi + player.total_score) +
+                             player.uang_sebelum_tambah_bansos - player.beli_waktu - player.beban_konsumsi)
 
         return {
             'final_score': player.total_score,
@@ -246,11 +215,12 @@ class single_results(Page):
 
         player.participant.vars['results_cognitive_task_practice'].append({
             'round_number_cognitive': player.round_number,
-            "endowment_round": player.uang_sesudah_tambah_bansos,
+            "endowment_round": player.uang_sebelum_tambah_bansos,
             'score_cognitive': player.total_score,
             'time_cost_cognitive': player.beli_waktu,
             'endowment_cognitive': player.payoff,
             'additional_cognitive': player.bantuan_sosial,
+            'charge_additional_cognitive': player.uang_sisa_tidak_untuk_investasi,
             'consumption_cognitive': player.beban_konsumsi
         })
 
@@ -279,20 +249,29 @@ class final_results(Page):
         player.total_akhir_beban_konsumsi = sum(item["consumption_cognitive"] for item in results_cognitive_task)
         player.total_akhir_uang = sum(item["endowment_cognitive"] for item in results_cognitive_task)
 
+        # Menentukan Final Payment
+        if player.in_round(player.round_number).payoff < 0:
+            final_payment = player.in_round(player.round_number).payoff
+            final_round_endowment = player.in_round(player.round_number).payoff
+        else:
+            final_payment = 0
+            final_round_endowment = player.in_round(player.round_number).payoff
+
         participant.vars["summary_cognitive_task_practice"] = {
             "profit": player.total_akhir_score,
             "cost": player.total_akhir_beli_waktu,
             "additional": player.total_akhir_bantuan_sosial,
             "consumption": player.total_akhir_beban_konsumsi,
             "endowment": player.total_akhir_uang,
-            "payment_selected": player.in_round(player.round_number).payoff,
+            "payment_selected": final_payment,
         }
 
         return {
             "results_cognitive_task_practice": results_cognitive_task,
             "last_round_cognitive_practice": last_round_cognitive,
-            "final_payment_practice": player.in_round(player.round_number).payoff,
+            "final_payment_practice": final_round_endowment,
         }
+
 
 class end_practice(Page):
     @staticmethod

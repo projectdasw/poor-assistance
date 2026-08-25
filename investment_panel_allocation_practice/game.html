@@ -132,4 +132,46 @@
             </button>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputs = document.querySelectorAll('input[name^="asian_ev_"]');
+
+            inputs.forEach(function (input) {
+                input.addEventListener("keydown", function (event) {
+                    const allowedKeys = [
+                        "Backspace",
+                        "Delete",
+                        "Tab",
+                        "Escape",
+                        "Enter",
+                        "ArrowLeft",
+                        "ArrowRight",
+                        "ArrowUp",
+                        "ArrowDown",
+                        "Home",
+                        "End"
+                    ];
+
+                    if (allowedKeys.includes(event.key)) {
+                        return;
+                    }
+
+                    // Izinkan shortcut Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                    if (event.ctrlKey || event.metaKey) {
+                        return;
+                    }
+
+                    // Hanya izinkan angka 0-9
+                    if (!/^[0-9]$/.test(event.key)) {
+                        event.preventDefault();
+                    }
+                });
+
+                // Membersihkan karakter yang masuk melalui paste
+                input.addEventListener("input", function () {
+                    this.value = this.value.replace(/[^0-9]/g, "");
+                });
+            });
+        });
+    </script>
 {% endblock %}

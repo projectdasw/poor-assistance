@@ -53,7 +53,7 @@ def creating_session(subsession):
     random.shuffle(random_ids)
 
     for player, random_id in zip(players, random_ids):
-        player.round_player_id = random_id
+        player.id_in_group = random_id
 
 
 class Group(BaseGroup):
@@ -84,7 +84,6 @@ class Player(BasePlayer):
     total_akhir_beban_konsumsi = models.CurrencyField(initial=0)
     total_akhir_uang = models.CurrencyField(initial=0)
     realtime_status = models.StringField(initial="Belum Masuk Halaman")
-    round_player_id = models.IntegerField()
 
 
 def live_update(player, data):
@@ -199,7 +198,7 @@ class game(Page):
 
         return {
             'random_options': random_options,
-            'my_id': player.round_player_id,
+            'my_id': player.id_in_group,
         }
 
     @staticmethod
@@ -281,13 +280,12 @@ class single_results(Page):
 
         # Perhitungan jika Uang Utama subjek kurang dari 0 (minus) - menjadi Hutang
         if player.uang_sebelum_tambah_bansos >= 0:
-            player.payoff = ((player.uang_sesudah_tambah_bansos + player.total_biaya_beli_opsi) +
-                             player.total_profit - player.beban_konsumsi)
+            player.payoff = ((player.uang_sesudah_tambah_bansos + player.total_profit) -
+                              player.total_biaya_beli_opsi - player.beban_konsumsi)
         elif player.uang_sebelum_tambah_bansos < 0:
             player.uang_sisa_tidak_untuk_investasi = player.bantuan_sosial - player.total_biaya_beli_opsi
-            player.payoff = (player.uang_sebelum_tambah_bansos + (player.uang_sisa_tidak_untuk_investasi +
-                                                                  player.total_profit) -
-                             player.total_biaya_beli_opsi - player.beban_konsumsi)
+            player.payoff = ((player.uang_sisa_tidak_untuk_investasi + player.total_profit) +
+                             player.uang_sebelum_tambah_bansos - player.total_biaya_beli_opsi - player.beban_konsumsi)
 
         return {
             "options": [
@@ -340,10 +338,10 @@ class final_results(Page):
 
         # Menentukan Final Payment
         if player.in_round(player.round_number).payoff < 0:
-            final_payment = player.in_round(player.round_number).payoff
+            final_payment = 0
             final_round_endowment = player.in_round(player.round_number).payoff
         else:
-            final_payment = 0
+            final_payment = player.in_round(player.round_number).payoff
             final_round_endowment = player.in_round(player.round_number).payoff
 
         participant.vars["summary_risky_purchase"] = {

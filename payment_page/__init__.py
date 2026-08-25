@@ -25,6 +25,7 @@ class Player(BasePlayer):
     pembayaran_akhir = models.CurrencyField(initial=0)
     sesi_terpilih = models.StringField()
     pembayaran_terpilih = models.CurrencyField(initial=0)
+    uang_kehadiran = models.CurrencyField(initial=0)
 
 
 class Loading(WaitPage):
@@ -105,7 +106,8 @@ class info_sesi(Page):
         selected_app, summary = random.choice(apps)
         player.sesi_terpilih = selected_app
         player.pembayaran_terpilih = summary["payment_selected"]
-        player.pembayaran_akhir = (player.pembayaran_terpilih * 100) + 10000
+        player.uang_kehadiran = 10000
+        player.pembayaran_akhir = (player.pembayaran_terpilih * 1000) + player.uang_kehadiran
 
 
 class pembayaran(Page):

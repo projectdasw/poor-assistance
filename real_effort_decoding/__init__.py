@@ -31,7 +31,7 @@ def creating_session(subsession):
     random.shuffle(random_ids)
 
     for player, random_id in zip(players, random_ids):
-        player.round_player_id = random_id
+        player.id_in_group = random_id
 
 
 class Group(BaseGroup):
@@ -56,7 +56,6 @@ class Player(BasePlayer):
     total_akhir_beban_konsumsi = models.CurrencyField(initial=0)
     total_akhir_uang = models.CurrencyField(initial=0)
     realtime_status = models.StringField(initial="Belum Masuk Halaman")
-    round_player_id = models.IntegerField()
 
 
 def broadcast_status(player):
@@ -176,7 +175,7 @@ class buy_time(Page):
             player.beban_konsumsi = Constants.consumption
 
         return {
-            'my_id': player.round_player_id,
+            'my_id': player.id_in_group,
         }
 
     @staticmethod
@@ -222,33 +221,48 @@ class game(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        board = [
-            [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890') for _ in range(Constants.board_columns)]
-            for _ in range(Constants.board_rows)
-        ]
-        player.current_target = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
-        player.actual_count = sum(row.count(player.current_target) for row in board)
+        # Key berdasarkan ronde
+        key = f'random_options_round_{player.round_number}'
+
+        # Acak hanya sekali untuk ronde ini
+        if key not in player.participant.vars:
+            board = [
+                [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890') for _ in range(Constants.board_columns)]
+                for _ in range(Constants.board_rows)
+            ]
+            player.current_target = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
+            player.actual_count = sum(row.count(player.current_target) for row in board)
+
+            player.participant.vars[key] = board
+
+        board = player.participant.vars[key]
 
         return {
             'board': board,
             'target_character': player.current_target,
             'player_score': player.total_score,
-            'my_id': player.round_player_id,
+            'my_id': player.id_in_group,
         }
 
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        # Key berdasarkan ronde
+        key = f'random_options_round_{player.round_number}'
+
+        # Hapus data acakan ronde ini
+        player.participant.vars.pop(key, None)
 
 class single_results(Page):
     @staticmethod
     def vars_for_template(player: Player):
         # Perhitungan jika Uang Utama subjek kurang dari 0 (minus) - menjadi Hutang
         if player.uang_sebelum_tambah_bansos >= 0:
-            player.payoff = ((player.uang_sesudah_tambah_bansos + player.total_score) -
-                             player.beli_waktu - player.beban_konsumsi)
+            player.payoff = ((player.uang_sesudah_tambah_bansos + player.total_score) - player.beli_waktu -
+                             player.beban_konsumsi)
         elif player.uang_sebelum_tambah_bansos < 0:
             player.uang_sisa_tidak_untuk_investasi = player.bantuan_sosial - player.beli_waktu
-            player.payoff = (player.uang_sebelum_tambah_bansos + (player.uang_sisa_tidak_untuk_investasi +
-                                                                  player.total_score) -
-                             player.beli_waktu - player.beban_konsumsi)
+            player.payoff = ((player.uang_sisa_tidak_untuk_investasi + player.total_score) +
+                             player.uang_sebelum_tambah_bansos - player.beli_waktu - player.beban_konsumsi)
 
         return {
             'final_score': player.total_score,
@@ -300,10 +314,10 @@ class final_results(Page):
 
         # Menentukan Final Payment
         if player.in_round(player.round_number).payoff < 0:
-            final_payment = player.in_round(player.round_number).payoff
+            final_payment = 0
             final_round_endowment = player.in_round(player.round_number).payoff
         else:
-            final_payment = 0
+            final_payment = player.in_round(player.round_number).payoff
             final_round_endowment = player.in_round(player.round_number).payoff
 
         participant.vars["summary_cognitive_task"] = {
