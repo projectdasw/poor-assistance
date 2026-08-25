@@ -159,35 +159,18 @@ class game(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        # Key berdasarkan ronde
-        key = f'random_options_round_{player.round_number}'
-
-        # Acak hanya sekali untuk ronde ini
-        if key not in player.participant.vars:
-            board = [
-                [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890') for _ in range(Constants.board_columns)]
-                for _ in range(Constants.board_rows)
-            ]
-            player.current_target = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
-            player.actual_count = sum(row.count(player.current_target) for row in board)
-
-            player.participant.vars[key] = board
-
-        board = player.participant.vars[key]
+        board = [
+            [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890') for _ in range(Constants.board_columns)]
+            for _ in range(Constants.board_rows)
+        ]
+        player.current_target = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
+        player.actual_count = sum(row.count(player.current_target) for row in board)
 
         return {
             'board': board,
             'target_character': player.current_target,
             'player_score': player.total_score,
         }
-
-    @staticmethod
-    def before_next_page(player: Player, timeout_happened):
-        # Key berdasarkan ronde
-        key = f'random_options_round_{player.round_number}'
-
-        # Hapus data acakan ronde ini
-        player.participant.vars.pop(key, None)
 
 class single_results(Page):
     @staticmethod
