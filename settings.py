@@ -1,14 +1,5 @@
 from os import environ
 
-ROOMS = [
-    dict(
-        name='experiment',
-        display_name='Experiment',
-        participant_label_file='_rooms/econ101.txt',
-        use_secure_urls=True
-    ),
-]
-
 SESSION_CONFIGS = [
     dict(
         display_name='Eksperimen Bantuan Sosial',
@@ -35,6 +26,14 @@ SESSION_CONFIGS = [
 # the session config can be accessed from methods in your apps as self.session.config,
 # e.g. self.session.config['participation_fee']
 
+ROOMS = [
+    dict(
+        name='experiment',
+        display_name='Experiment',
+        participant_label_file='_rooms/econ101.txt',
+        use_secure_urls=False
+    ),
+]
 SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00, participation_fee=0.00, doc=""
 )
@@ -82,9 +81,8 @@ USE_POINTS = False
 
 DEBUG = False
 ADMIN_USERNAME = 'admin'
-# for security, best to set admin password
-# Input in an environment variable
-ADMIN_PASSWORD = 'admin'
+# for security, best to set admin passwordInput in an environment variable
+ADMIN_PASSWORD = environ.get("OTREE_ADMIN_PASSWORD")
 AUTH_LEVEL = environ.get('OTREE_AUTH_LEVEL')
 
 DEMO_PAGE_INTRO_HTML = """ """
