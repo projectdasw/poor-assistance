@@ -13,66 +13,120 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     # Define form fields based on the questions
-    # q1 = models.StringField(
-    #     label="Saya yakin saya akan selalu membeli BBM Pertamax Green 95 demi lingkungan dan pembangunan yang berkelanjutan meski SPBU yang menjualnya cukup jauh (3 km) dari tempat saya tinggal.",
-    #     choices=['Di bawah 3km', '3km-5km','Di atas 5km'],
-    #     widget=widgets.RadioSelect
-    # )
-    # q2 = models.StringField(
-    #     label="Saya yakin bahwa pemerintah akan segera membangun infrastruktur yang baik untuk mendukung lingkungan dan pembangunan yang berkelanjutan (misal: memperluas pembangunan pembangkit listrik tenaga surya).",
-    #     choices=['Ya', 'Tidak'],
-    #     widget=widgets.RadioSelect
-    # )
-    # q3 = models.StringField(
-    #     label="Saya yakin bahwa pihak swasta (investor) akan segera ikut dalam pembangunan infrastruktur yang tepat dan baik untuk mendukung lingkungan yang berkelanjutan (misal: terkait penyediaan stasiun pengisian kendaraan listrik umum/SPKLU).",
-    #     choices=['Ya', 'Tidak'],
-    #     widget=widgets.RadioSelect
-    # )
-    # q4 = models.StringField(
-    #     label="Saya yakin bahwa saya akan tetap membeli mobil listrik (jika memiliki uang cukup) meski saya tinggal di daerah pedesaan yang jauh dari dealer mobil tersebut demi mendukung lingkungan dan pembangunan yang berkelanjutan.",
-    #     choices=['Ya', 'Tidak'],
-    #     widget=widgets.RadioSelect
-    # )
-    # q5 = models.StringField(
-    #     label="Saya yakin dalam waktu dekat akan banyak produsen panel surya rumahan, termasuk di sekitar daerah saya tinggal, dan saya akan membelinya jika memiliki uang yang cukup untuk mendukung pembangunan yang berkelanjutan.",
-    #     choices=['Ya', 'Tidak'],
-    #     widget=widgets.RadioSelect
-    # )
-    # q6 = models.StringField(
-    #     label="Saya yakin pemerintah akan segera merealisasikan jaringan gas rumah tangga di sekitar saya tinggal dan saya (rumah saya) akan berlangganan jaringan gas tersebut untuk mendukung pembangunan yang berkelanjutan.",
-    #     choices=['Ya', 'Tidak'],
-    #     widget=widgets.RadioSelect
-    # )
-    # q7 = models.StringField(
-    #     label="Saya yakin untuk tetap menggunakan kompor listrik di rumah saya (jika memiliki uang cukup) demi mendukung lingkungan dan pembangunan berkelanjutan meskipun tidak banyak tetangga sekitar dan orang yang saya kenal menggunakan kompor listrik tersebut.",
-    #     choices=['Ya', 'Tidak'],
-    #     widget=widgets.RadioSelect
-    # )
-    # q8 = models.StringField(
-    #     label="Saya yakin dalam waktu dekat akan banyak yang sadar dan menggunakan BBM Pertamax Green 95 demi lingkungan dan pembangunan berkelanjutan di Indonesia yang berkelanjutan.",
-    #     choices=['Ya', 'Tidak'],
-    #     widget=widgets.RadioSelect
-    # )
-    # q9 = models.StringField(
-    #     label="Saya yakin bahwa keluarga, kolega, dan teman saya akan ikut menggunakan BBM Pertamax Green 95 demi lingkungan dan pembangunan berkelanjutan meskipun mereka setelahnya tidak tahu apa manfaatnya.",
-    #     choices=['Ya', 'Tidak'],
-    #     widget=widgets.RadioSelect
-    # )
-    # q10 = models.StringField(
-    #     label="Saya yakin akan tetap membeli mobil listrik (jika memiliki uang cukup) meskipun saya tahu bahwa mobil listrik tersebut diproduksi perusahaan asing.",
-    #     choices=['Ya', 'Tidak'],
-    #     widget=widgets.RadioSelect
-    # )
-    # q11 = models.StringField(
-    #     label="Saya yakin untuk tetap mendukung program kompor listrik dari pemerintah meskipun saya tahu jika listrik di Indonesia kebanyakan masih dihasilkan dari Batubara.",
-    #     choices=['Ya', 'Tidak'],
-    #     widget=widgets.RadioSelect
-    # )
-    # q12 = models.StringField(
-    #     label="Saya yakin untuk tetap mendukung dan menggunakan BBM Pertamax Green 95 meskipun saya tahu bahwa bahan utama campuran BBM Pertamax Green 95 berasal dari kelapa sawit yang banyak ditanam di Pulau Kalimantan, Sumatera, dan Sulawesi.",
-    #     choices=['Ya', 'Tidak'],
-    #     widget=widgets.RadioSelect
-    # )
+    q1 = models.StringField(
+        label="Saya selalu bisa menyelesaikan masalah sulit jika saya berusaha cukup keras.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q2 = models.StringField(
+        label="Jika seseorang menentang saya, saya dapat menemukan cara dan sarana untuk mendapatkan apa yang saya"
+              " inginkan.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q3 = models.StringField(
+        label="Saya yakin bahwa saya dapat mencapai tujuan saya.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q4 = models.StringField(
+        label="Saya yakin bahwa saya dapat menangani kejadian tak terduga dengan efisien.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q5 = models.StringField(
+        label="Berkat kemampuan saya dalam mengatasi berbagai situasi, saya bisa menangani keadaan yang tak terduga.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q6 = models.StringField(
+        label="Saya bisa menyelesaikan sebagian besar masalah jika saya mengerahkan upaya yang diperlukan.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q7 = models.StringField(
+        label="Saya bisa tetap tenang saat menghadapi kesulitan karena saya bisa mengandalkan kemampuan saya untuk"
+              " mengatasi masalah.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q8 = models.StringField(
+        label="Ketika saya dihadapkan dengan suatu masalah, saya dapat menemukan beberapa solusi.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q9 = models.StringField(
+        label="Jika saya sedang dalam kesulitan, saya bisa memikirkan solusi yang baik.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q10 = models.StringField(
+        label="Saya bisa mengatasi apa pun yang datang menghampiri saya.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q11 = models.StringField(
+        label="Saya sering menetapkan tujuan tetapi kemudian memilih untuk mengejar tujuan yang berbeda.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q12 = models.StringField(
+        label="Ide-ide baru dan proyek-proyek baru terkadang mengalihkan perhatian saya dari yang sebelumnya.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q13 = models.StringField(
+        label="Saya tertarik pada kegiatan baru setiap beberapa bulan sekali.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q14 = models.StringField(
+        label="Minat saya berubah dari tahun ke tahun.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q15 = models.StringField(
+        label="Saya pernah terobsesi dengan ide atau proyek tertentu untuk waktu yang singkat, tetapi kemudian"
+              " kehilangan minat.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q16 = models.StringField(
+        label="Saya kesulitan mempertahankan fokus pada proyek yang membutuhkan waktu lebih dari beberapa bulan untuk"
+              " diselesaikan.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q17 = models.StringField(
+        label="Saya telah mencapai tujuan yang membutuhkan kerja keras selama bertahun-tahun.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q18 = models.StringField(
+        label="Saya telah mengatasi berbagai rintangan untuk menaklukkan tantangan penting.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q19 = models.StringField(
+        label="Saya menyelesaikan apa pun yang saya mulai.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q20 = models.StringField(
+        label="Kemunduran tidak membuatku patah semangat.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q21 = models.StringField(
+        label="Saya seorang pekerja keras.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
+    q22 = models.StringField(
+        label="Saya seorang yang rajin.",
+        choices=['Sama Sekali Tidak Benar', 'Tidak Benar', 'Netral', 'Benar', 'Sangat Benar'],
+        widget=widgets.RadioSelect
+    )
 
     # Demographic questions
     usia = models.IntegerField(
@@ -93,19 +147,22 @@ class Player(BasePlayer):
         choices=['Kuliah', 'Lulus belum bekerja', 'Bekerja'],
         widget=widgets.RadioSelect
     )
-    tahu_program = models.StringField(
-        label="Apakah Anda merasa cukup mengetahui program transisi energi dan pembangunan berkelanjutan yang sedang direncanakan dan dijalankan di Indonesia:",
-        choices=['Ya', 'Tidak'],
-        widget=widgets.RadioSelect
-    )
-    ikuti_isu = models.StringField(
-        label="Apakah Anda merasa cukup mengikuti perkembangan isu transisi energi dan Pembangunan berkelanjutan di tingkat global:",
-        choices=['Ya', 'Tidak'],
-        widget=widgets.RadioSelect
-    )
     bidang_studi = models.StringField(
         label="Cakupan bidang studi yang sedang atau telah Anda tempuh:",
-        choices=['Sosio humaniora', 'Sains dan Teknologi Rekayasa', 'Agro, Hayati, dan Veteriner', 'Medis'],
+        choices=['Ilmu Pendidikan (Bimbingan Konseling, Teknologi Pendidika, Administratsi Pendidikan, PGSD, PGPAUD,'
+                 ' PLB, PLS)',
+                 'Sastra (Pendidikan Bahasa, Ilmu Perpustakaan, Seni & Desain)',
+                 'MIPA (Matematika, Fisika, Kimia, Biologi, Bioteknologi, Gizi, Pendidikan IPA)',
+                 'Ekonomi & Bisnis (Manajemen, Akuntansi, Ekonomi Pembangunan, Pendidikan Bisnis, Pendidikan'
+                 ' Administrasi Perkantoran)',
+                 'Teknik (Mesin, Sipil, Elektro, Informatika, Otomotif, Tata Boga, Rias, Busana)',
+                 'Ilmu Keolaragaan (Pendidikan Jasmani, Kesehatan, Rekreasi (PJKR), Ilmu Olahraga, Pendidikan'
+                 ' Kepelatihan Olahraga)',
+                 'Ilmu Sosial (Hukun & Kewarganegaraan, Geografi, Sejaran, Sosiologi, Ilmu Komunikasi)',
+                 'Psikologi',
+                 'Vokasi (Perpustakaan Digital, Animasi, Manajemen Pemasaran & Akuntansi, Teknologi Rekayasa)',
+                 'Kedokteran (Kedokteran & Ilmu Kesehatan Masyarakat)',
+                 ],
         widget=widgets.RadioSelect
     )
     metode_pembayaran = models.StringField(
@@ -122,16 +179,14 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect
     )
 
-# class Survey(Page):
-#     form_model = 'player'
-#     form_fields = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11', 'q12']
+class Survey(Page):
+    form_model = 'player'
+    form_fields = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11', 'q12', 'q13', 'q14', 'q15',
+                   'q16', 'q17', 'q18', 'q19', 'q20', 'q21', 'q22']
 
 class Demographic(Page):
     form_model = 'player'
-    form_fields = [
-        'usia', 'jenis_kelamin', 'pendidikan', 'aktivitas',
-        'tahu_program', 'ikuti_isu', 'bidang_studi',
-        'metode_pembayaran', 'no_hp_rekening', 'menariknya_eksperimen'
-    ]
+    form_fields = ['usia', 'jenis_kelamin', 'pendidikan', 'aktivitas', 'bidang_studi', 'metode_pembayaran',
+                   'no_hp_rekening', 'menariknya_eksperimen']
 
-page_sequence = [Demographic]
+page_sequence = [Demographic, Survey]
