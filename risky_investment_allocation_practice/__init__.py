@@ -7,7 +7,7 @@ Risky Investment Allocation - Sesi Latihan
 
 
 class Constants(BaseConstants):
-    name_in_url = 'risky_investment_allocation_pratice'
+    name_in_url = 'risky_investment_allocation_practice'
     players_per_group = None
     num_rounds = 2
     endowment = cu(100)
