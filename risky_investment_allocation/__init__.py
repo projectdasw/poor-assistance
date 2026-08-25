@@ -318,7 +318,7 @@ class single_results(Page):
     def before_next_page(player: Player, timeout_happened):
         player.participant.vars.setdefault("results_risky_allocation", []).append({
             "round_number_risky_allocation": player.round_number,
-            "endowment_round": player.uang_sesudah_tambah_bansos,
+            "endowment_round": player.uang_sebelum_tambah_bansos,
             "profit_risky_allocation": player.total_profit,
             "cost_risky_allocation": player.total_alokasi_opsi,
             "endowment_risky_allocation": player.payoff,
