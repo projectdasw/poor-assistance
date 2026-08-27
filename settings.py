@@ -33,6 +33,18 @@ ROOMS = [
         participant_label_file='_rooms/econ101.txt',
         use_secure_urls=False
     ),
+    dict(
+        name='poor_assistance_session_1_27082026',
+        display_name='Eksperimen Sesi 1 - 27 Agustus 2026',
+        participant_label_file='_rooms/econ101.txt',
+        use_secure_urls=False
+    ),
+    dict(
+        name='poor_assistance_extrasession_27082026',
+        display_name='Eksperimen Sesi Extra - 27 Agustus 2026',
+        participant_label_file='_rooms/econ101.txt',
+        use_secure_urls=False
+    ),
 ]
 SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00, participation_fee=0.00, doc=""
